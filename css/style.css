@@ -267,7 +267,7 @@ body {
 /* ABAS DE STATUS (TODOS, EM PROGRESSO, FINALIZADOS) */
 .abas-status {
     max-width: 1000px;
-    margin: 10px auto 20px auto;
+    margin: 15px auto;
     display: flex;
     justify-content: center;
     gap: 15px;
@@ -276,18 +276,18 @@ body {
 
 .btn-aba {
     background-color: #ffffff;
-    border: 2px solid #e2e8f0;
-    padding: 10px 20px;
-    border-radius: 25px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #64748b;
+    border: 2px solid #cbd5e1;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #475569;
     cursor: pointer;
-    transition: 0.2s ease;
+    transition: 0.2s;
 }
 
 .btn-aba:hover {
-    border-color: #cbd5e1;
+    border-color: #94a3b8;
 }
 
 .btn-aba.ativa {
@@ -295,7 +295,6 @@ body {
     color: #ffffff;
     border-color: #0f172a;
 }
-
 /* CONTAINER DA BARRA DE PROGRESSO NOS CARTÕES */
 .container-progresso {
     width: 100%;
