@@ -221,6 +221,10 @@ body {
     height: 100%;
 }
 
+#camada-pincel {
+    pointer-events: none; /* Deixa o clique passar direto para o SVG */
+}
+
 .parte-pintavel {
     cursor: pointer;
     transition: fill 0.2s ease;
