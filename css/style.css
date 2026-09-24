@@ -9,8 +9,8 @@
 }
 
 body {
-    background-color: #0f172a !important; /* Tom ardósia/grafite escuro para eliminar totalmente o branco de fundo */
-    color: #f8fafc;
+    background-color: #e0eafc !important; /* Fundo azul clarinho bem suave e confortável */
+    color: #0f172a;
     min-height: 100vh;
 }
 
@@ -18,7 +18,7 @@ body {
    2. CABEÇALHO PRINCIPAL E BARRA DE NAVEGAÇÃO
    ======================================================== */
 .cabecalho-principal {
-    background: #0f172a;
+    background: #0f172a; /* Cabeçalho escuro de alto contraste */
     border-bottom: 2px solid #1e293b;
     position: sticky;
     top: 0;
@@ -117,17 +117,17 @@ body {
 }
 
 /* ========================================================
-   4. BANNER DE NOVIDADES
+   4. BANNER DE NOVIDADES (NOVA COR HARMONIOSA)
    ======================================================== */
 .banner-novidades {
     max-width: 1100px;
     margin: 25px auto 15px auto;
     padding: 35px 25px;
-    background: linear-gradient(135deg, #4f46e5, #3b82f6);
+    background: linear-gradient(135deg, #1e3a8a, #2563eb); /* Azul marinho profissional para ciano */
     color: #ffffff;
     border-radius: 20px;
     text-align: center;
-    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.25);
 }
 
 .conteudo-banner h2 {
@@ -156,21 +156,21 @@ body {
 }
 
 .btn-categoria {
-    background-color: #1e293b;
-    border: 2px solid #334155;
+    background-color: #ffffff;
+    border: 2px solid #cbd5e1;
     padding: 8px 20px;
     border-radius: 20px;
     font-size: 0.9rem;
     font-weight: 700;
-    color: #cbd5e1;
+    color: #475569;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
     transition: all 0.2s ease;
 }
 
 .btn-categoria:hover {
-    border-color: #38bdf8;
-    color: #ffffff;
+    border-color: #94a3b8;
+    color: #0f172a;
     transform: translateY(-1px);
 }
 
@@ -178,48 +178,9 @@ body {
     background-color: #2563eb;
     color: #ffffff;
     border-color: #2563eb;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
 }
 
-/* ========================================================
-   6. ABAS DE ESTADO (TODOS, EM PROGRESSO, FINALIZADOS)
-   ======================================================== */
-.abas-status {
-    max-width: 1000px;
-    margin: 15px auto 25px auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    padding: 0 20px;
-}
-
-.btn-aba {
-    background-color: #1e293b;
-    border: 2px solid #334155;
-    padding: 8px 18px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: bold;
-    color: #cbd5e1;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transition: all 0.2s ease;
-}
-
-.btn-aba:hover {
-    border-color: #94a3b8;
-    color: #ffffff;
-    transform: translateY(-1px);
-}
-
-.btn-aba.ativa {
-    background-color: #3b82f6;
-    color: #ffffff;
-    border-color: #3b82f6;
-    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
-}
 /* ========================================================
    6. ABAS DE ESTADO (TODOS, EM PROGRESSO, FINALIZADOS)
    ======================================================== */
@@ -255,7 +216,7 @@ body {
     background-color: #0f172a;
     color: #ffffff;
     border-color: #0f172a;
-    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.25);
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
 }
 
 /* ========================================================
@@ -271,26 +232,26 @@ body {
 }
 
 .card-desenho {
-    background-color: #ffffff;
+    background-color: #f8fafc; /* Branco quebrado / cinza suave que não agride a vista */
     border: 1px solid #cbd5e1;
     border-radius: 18px;
     padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card-desenho:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
 }
 
 .tag-categoria {
     align-self: flex-start;
-    background-color: #eff6ff;
-    color: #2563eb;
+    background-color: #e0e7ff;
+    color: #3730a3;
     font-size: 0.75rem;
     font-weight: 800;
     padding: 4px 10px;
@@ -307,30 +268,30 @@ body {
     font-size: 1.15rem;
     font-weight: bold;
     color: #334155;
-    border: 2px dashed #cbd5e1;
+    border: 2px dashed #94a3b8;
     border-radius: 12px;
     margin: 15px 0;
-    background-color: #f8fafc;
+    background-color: #edf2f7; /* Fundo interno da prévia mais fosco */
 }
 
 .container-progresso {
     width: 100%;
     height: 8px;
-    background-color: #e2e8f0;
+    background-color: #cbd5e1;
     border-radius: 10px;
     overflow: hidden;
 }
 
 .barra-progresso {
     height: 100%;
-    background: linear-gradient(90deg, #3b82f6, #10b981);
+    background: linear-gradient(90deg, #2563eb, #10b981);
     transition: width 0.3s ease;
 }
 
 .texto-progresso {
     font-size: 0.8rem;
     font-weight: bold;
-    color: #64748b;
+    color: #475569;
     margin: 6px 0 14px 0;
 }
 
@@ -376,7 +337,7 @@ body {
 
 .btn-voltar {
     text-decoration: none;
-    background-color: #64748b;
+    background-color: #475569;
     color: white;
     padding: 8px 14px;
     border-radius: 20px;
@@ -386,7 +347,7 @@ body {
 }
 
 .btn-voltar:hover {
-    background-color: #475569;
+    background-color: #334155;
 }
 
 .grupo-ferramentas {
@@ -424,7 +385,7 @@ body {
 .trilha-progresso {
     width: 100%;
     height: 10px;
-    background-color: #e2e8f0;
+    background-color: #cbd5e1;
     border-radius: 10px;
     overflow: hidden;
     margin-bottom: 4px;
@@ -440,7 +401,7 @@ body {
 #texto-progresso-ativo {
     font-size: 0.85rem;
     font-weight: bold;
-    color: #475569;
+    color: #334155;
 }
 
 .modal-parabens {
@@ -532,4 +493,3 @@ body {
     border-color: #0f172a;
     transform: scale(1.15);
 }
-
