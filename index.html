@@ -1,1 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- ========================================================
+       1. CABEÇALHO DO DOCUMENTO E METADADOS
+       ======================================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ColorirOnline - Plataforma de Desenhos e Pintura por Números</title>
+    <link rel="stylesheet" href="css/style.css?v=6">
+</head>
+<body>
+
+    <!-- ========================================================
+       2. BARRA DE NAVEGAÇÃO PRINCIPAL (MENU E BUSCA)
+       ======================================================== -->
+    <header class="cabecalho-principal">
+        <div class="container-nav">
+            <a href="index.html" class="logo">
+                <span class="logo-icone">🎨</span>
+                <span class="logo-texto">Colorir<span class="destaque">Online</span></span>
+            </a>
+
+            <!-- CAMPO DE PESQUISA EM TEMPO REAL -->
+            <div class="container-busca">
+                <span class="icone-busca">🔍</span>
+                <input type="text" id="campo-busca" placeholder="Pesquisar desenhos, categorias...">
+            </div>
+
+            <nav class="links-navegacao">
+                <a href="index.html" class="link-nav ativo">Início</a>
+                <a href="#catalogo" class="link-nav">Galeria</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ========================================================
+       3. BANNER DE DESTAQUE E NOVIDADES
+       ======================================================== -->
+    <section class="banner-novidades">
+        <div class="conteudo-banner">
+            <h2>✨ Novos Desenhos Adicionados!</h2>
+            <p>Escolha uma ilustração com números ou solte a criatividade com o pincel livre.</p>
+        </div>
+    </section>
+
+    <!-- ========================================================
+       4. FILTROS POR CATEGORIAS (CENTRALIZADOS)
+       ======================================================== -->
+    <div class="filtros-categoria">
+        <button class="btn-categoria ativo" data-cat="todos">Todos</button>
+        <button class="btn-categoria" data-cat="animais">Animais</button>
+        <button class="btn-categoria" data-cat="infantil">Infantil</button>
+        <button class="btn-categoria" data-cat="mandalas">Mandalas</button>
+    </div>
+
+    <!-- ========================================================
+       5. ABAS DE ESTADO DO UTILIZADOR
+       ======================================================== -->
+    <div class="abas-status">
+        <button class="btn-aba ativa" data-filtro="todos">Todos os Desenhos</button>
+        <button class="btn-aba" data-filtro="progresso">⏳ Em Progresso (<span id="qtd-progresso">0</span>)</button>
+        <button class="btn-aba" data-filtro="finalizados">✅ Finalizados (<span id="qtd-finalizados">0</span>)</button>
+    </div>
+
+    <!-- ========================================================
+       6. GRELHA DE CARTÕES DO CATÁLOGO
+       ======================================================== -->
+    <main class="catalogo-desenhos" id="catalogo">
+        <!-- Cartão 1: Estrela Mágica -->
+        <div class="card-desenho" id="card-estrela" data-id="desenho_1" data-categoria="animais">
+            <div class="tag-categoria">Animais</div>
+            <div class="preview-imagem">⭐ Estrela Mágica</div>
+            <div class="container-progresso">
+                <div class="barra-progresso" id="progresso-card-desenho_1" style="width: 0%;"></div>
+            </div>
+            <span class="texto-progresso" id="texto-card-desenho_1">0% Concluído</span>
+            <a href="pintar.html?id=desenho_1" class="btn-jogar">Colorir Agora</a>
+        </div>
+
+        <!-- Cartão 2: Foguetão Espacial -->
+        <div class="card-desenho" id="card-foguete" data-id="desenho_2" data-categoria="infantil">
+            <div class="tag-categoria">Infantil</div>
+            <div class="preview-imagem">🚀 Foguetão Espacial</div>
+            <div class="container-progresso">
+                <div class="barra-progresso" id="progresso-card-desenho_2" style="width: 0%;"></div>
+            </div>
+            <span class="texto-progresso" id="texto-card-desenho_2">0% Concluído</span>
+            <a href="pintar.html?id=desenho_2" class="btn-jogar">Colorir Agora</a>
+        </div>
+
+        <!-- Cartão 3: Flor Geométrica -->
+        <div class="card-desenho" id="card-flor" data-id="desenho_3" data-categoria="mandalas">
+            <div class="tag-categoria">Mandalas</div>
+            <div class="preview-imagem">🌸 Flor Geométrica</div>
+            <div class="container-progresso">
+                <div class="barra-progresso" id="progresso-card-desenho_3" style="width: 0%;"></div>
+            </div>
+            <span class="texto-progresso" id="texto-card-desenho_3">0% Concluído</span>
+            <a href="pintar.html?id=desenho_3" class="btn-jogar">Colorir Agora</a>
+        </div>
+    </main>
+
+    <!-- ========================================================
+       7. CARREGAMENTO DOS SCRIPTS JAVASCRIPT
+       ======================================================== -->
+    <script src="js/catalogo.js"></script>
+</body>
+</html>
 
