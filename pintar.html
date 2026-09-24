@@ -18,7 +18,19 @@
             <button id="btn-salvar" class="btn-ferramenta">💾 Salvar</button>
         </div>
     </header>
+    
+<!-- INDICADOR DE PROGRESSO DA PINTURA -->
+    <div class="painel-progresso-topo">
+        <div class="trilha-progresso">
+            <div id="barra-progresso-ativa" class="barra-preenchimento"></div>
+        </div>
+        <span id="texto-progresso-ativo">0% Concluído</span>
+    </div>
 
+    <!-- MENSAGEM DE SUCESSO (INVISÍVEL ATÉ ATINGIR 100%) -->
+    <div id="aviso-parabens" class="modal-parabens" style="display: none;">
+        🎉 Parabéns! Concluiu este desenho!
+    </div>
     <!-- ÁREA DO DESENHO -->
     <main class="area-prancheta">
         <div class="prancheta" id="prancheta">
