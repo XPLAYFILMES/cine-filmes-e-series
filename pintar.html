@@ -7,7 +7,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pintar Desenho - ColorirOnline</title>
-    <link rel="stylesheet" href="css/style.css?v=9">
+    <link rel="stylesheet" href="css/style.css?v=11">
+    <!-- Biblioteca leve de confetes para comemoração de 100% -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body class="pagina-pintura">
 
@@ -19,6 +21,7 @@
         <div class="grupo-ferramentas">
             <button id="btn-modo-balde" class="btn-ferramenta ativo">🎨 Modo Números</button>
             <button id="btn-modo-pincel" class="btn-ferramenta">🖌 Pincel Livre</button>
+            <button id="btn-tela-cheia" class="btn-ferramenta">⛶ Tela Cheia</button>
             <button id="btn-limpar" class="btn-ferramenta">🗑 Limpar</button>
             <button id="btn-salvar" class="btn-ferramenta">💾 Salvar</button>
         </div>
@@ -38,13 +41,13 @@
        4. AVISO DE CONCLUSÃO (100%)
        ======================================================== -->
     <div id="aviso-parabens" class="modal-parabens">
-        🎉 Parabéns! Concluiu este desenho!
+        🎉 Parabéns! Você concluiu este desenho!
     </div>
 
     <!-- ========================================================
        5. ÁREA DA PRANCHETA (DESENHO SVG E CANVAS)
        ======================================================== -->
-    <main class="area-prancheta">
+    <main class="area-prancheta" id="container-prancheta">
         <div class="prancheta" id="prancheta">
             <!-- SVG dinâmico injetado via JavaScript -->
             <svg id="desenho-svg" viewBox="0 0 300 300"></svg>
@@ -67,6 +70,6 @@
     <!-- ========================================================
        7. CARREGAMENTO DO SCRIPT DO MOTOR DE PINTURA
        ======================================================== -->
-    <script src="js/app.js"></script>
+    <script src="js/app.js?v=2"></script>
 </body>
 </html>
