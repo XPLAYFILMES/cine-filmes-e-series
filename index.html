@@ -53,36 +53,10 @@
         <button id="btn-limpar" class="btn-ferramenta">🗑️ Limpar</button>
         <button id="btn-salvar" class="btn-ferramenta">💾 Salvar</button>
     </header>
-    <!-- ÁREA CENTRAL DO DESENHO -->
-    <main class="area-prancheta">
-        <div class="prancheta" id="prancheta">
-            <svg id="desenho-svg" viewBox="0 0 300 300">
-                <!-- Parte 1: Polígono central com número 1 -->
-                <polygon class="parte-pintavel" data-numero="1" points="150,25 179,111 269,111 197,165 223,251 150,200 77,251 103,165 31,111 121,111" fill="#ffffff" stroke="#333333" stroke-width="3" />
-                <text x="150" y="145" font-size="18" font-weight="bold" fill="#777777" text-anchor="middle" pointer-events="none">1</text>
-
-                <!-- Parte 2: Círculo esquerdo com número 2 -->
-                <circle class="parte-pintavel" data-numero="2" cx="50" cy="50" r="30" fill="#ffffff" stroke="#333333" stroke-width="3" />
-                <text x="50" y="56" font-size="18" font-weight="bold" fill="#777777" text-anchor="middle" pointer-events="none">2</text>
-
-                <!-- Parte 3: Círculo direito com número 3 -->
-                <circle class="parte-pintavel" data-numero="3" cx="250" cy="50" r="30" fill="#ffffff" stroke="#333333" stroke-width="3" />
-                <text x="250" y="56" font-size="18" font-weight="bold" fill="#777777" text-anchor="middle" pointer-events="none">3</text>
-            </svg>
-
             <!-- Camada transparente para o pincel livre -->
             <canvas id="camada-pincel" width="300" height="300"></canvas>
         </div>
     </main>
-    <!-- PALETA NUMERADA INFERIOR -->
-    <footer class="barra-paleta">
-        <div class="item-cor ativa" data-numero="1" data-hex="#e74c3c" style="background-color: #e74c3c;">1</div>
-        <div class="item-cor" data-numero="2" data-hex="#3498db" style="background-color: #3498db;">2</div>
-        <div class="item-cor" data-numero="3" data-hex="#2ecc71" style="background-color: #2ecc71;">3</div>
-        <div class="item-cor" data-numero="4" data-hex="#f1c40f" style="background-color: #f1c40f;">4</div>
-        <div class="item-cor" data-numero="5" data-hex="#9b59b6" style="background-color: #9b59b6;">5</div>
-    </footer>
-
     <!-- LIGAÇÃO DO SCRIPT JAVASCRIPT -->
     <script src="js/app.js"></script>
 </body>
