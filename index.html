@@ -25,33 +25,61 @@
         </div>
     </section>
     <!-- GRELHA DE DESENHOS / LIVRO -->
+   <!-- ABAS DE ESTADO DO UTILIZADOR -->
+    <div class="abas-status">
+        <button class="btn-aba ativa" data-filtro="todos">Todos</button>
+        <button class="btn-aba" data-filtro="progresso">⏳ Em Progresso (<span id="qtd-progresso">0</span>)</button>
+        <button class="btn-aba" data-filtro="finalizados">✅ Finalizados (<span id="qtd-finalizados">0</span>)</button>
+    </div>
+
+    <!-- ABAS DE ESTADO DO UTILIZADOR -->
+    <div class="abas-status">
+        <button class="btn-aba ativa" data-filtro="todos">Todos</button>
+        <button class="btn-aba" data-filtro="progresso">⏳ Em Progresso (<span id="qtd-progresso">0</span>)</button>
+        <button class="btn-aba" data-filtro="finalizados">✅ Finalizados (<span id="qtd-finalizados">0</span>)</button>
+    </div>
+
+    <!-- GRELHA DE DESENHOS -->
     <main class="catalogo-desenhos">
-        <!-- Cartão 1 -->
-        <div class="card-desenho">
+        <!-- Cartão 1: Estrela Mágica -->
+        <div class="card-desenho" id="card-estrela" data-id="desenho_1" data-categoria="animais">
             <div class="tag-categoria">Animais</div>
             <div class="preview-imagem">⭐ Estrela Mágica</div>
-            <a href="pintar.html" class="btn-jogar">Colorir Agora</a>
+            
+            <!-- Barra de Progresso do Card -->
+            <div class="container-progresso">
+                <div class="barra-progresso" id="progresso-card-desenho_1" style="width: 0%;"></div>
+            </div>
+            <span class="texto-progresso" id="texto-card-desenho_1">0% Concluído</span>
+
+            <a href="pintar.html?id=desenho_1" class="btn-jogar">Colorir Agora</a>
         </div>
 
-        <!-- Cartão 2 -->
-        <div class="card-desenho">
+        <!-- Cartão 2: Foguetão Espacial -->
+        <div class="card-desenho" id="card-foguete" data-id="desenho_2" data-categoria="infantil">
             <div class="tag-categoria">Infantil</div>
             <div class="preview-imagem">🚀 Foguetão Espacial</div>
-            <a href="pintar.html" class="btn-jogar">Colorir Agora</a>
+            
+            <div class="container-progresso">
+                <div class="barra-progresso" id="progresso-card-desenho_2" style="width: 0%;"></div>
+            </div>
+            <span class="texto-progresso" id="texto-card-desenho_2">0% Concluído</span>
+
+            <a href="pintar.html?id=desenho_2" class="btn-jogar">Colorir Agora</a>
         </div>
 
-        <!-- Cartão 3 -->
-        <div class="card-desenho">
+        <!-- Cartão 3: Flor Geométrica -->
+        <div class="card-desenho" id="card-flor" data-id="desenho_3" data-categoria="mandalas">
             <div class="tag-categoria">Mandalas</div>
             <div class="preview-imagem">🌸 Flor Geométrica</div>
-            <a href="pintar.html" class="btn-jogar">Colorir Agora</a>
+            
+            <div class="container-progresso">
+                <div class="barra-progresso" id="progresso-card-desenho_3" style="width: 0%;"></div>
+            </div>
+            <span class="texto-progresso" id="texto-card-desenho_3">0% Concluído</span>
+
+            <a href="pintar.html?id=desenho_3" class="btn-jogar">Colorir Agora</a>
         </div>
     </main>
-            <!-- Camada transparente para o pincel livre -->
-            <canvas id="camada-pincel" width="300" height="300"></canvas>
-        </div>
-    </main>
-    <!-- LIGAÇÃO DO SCRIPT JAVASCRIPT -->
-    <script src="js/app.js"></script>
-</body>
-</html>
+
+    <script src="./js/catalogo.js"></script>
