@@ -157,13 +157,16 @@ if (btnLimpar) {
         }
         localStorage.removeItem(`progresso_${idDesenhoAtual}`);
         
-        // Esconde a mensagem e reseta a barra
+        // Repõe a barra a zero e esconde o aviso
+        const barraAtiva = document.getElementById("barra-progresso-ativa");
+        const textoAtivo = document.getElementById("texto-progresso-ativo");
         const avisoParabens = document.getElementById("aviso-parabens");
+
+        if (barraAtiva) barraAtiva.style.width = "0%";
+        if (textoAtivo) textoAtivo.innerText = "0% Concluído";
         if (avisoParabens) avisoParabens.style.display = "none";
-        salvarProgressoAutomatico();
     });
 }
-
 // 9. BOTÃO GUARDAR IMAGEM
 if (btnSalvar) {
     btnSalvar.addEventListener("click", () => {
