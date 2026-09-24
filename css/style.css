@@ -1,10 +1,138 @@
-body {
-    background-color: #f0f4f8;
-    font-family: sans-serif;
-    text-align: center;
-    padding-top: 50px;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-h1 {
+body {
+    background-color: #f4f7fb;
     color: #333333;
+    min-height: 100vh;
+}
+.barra-navegacao {
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.logo {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #2563eb;
+}
+
+.menu-categorias {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-categoria {
+    border: none;
+    background-color: #e2e8f0;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #475569;
+    transition: 0.2s;
+}
+
+.btn-categoria:hover,
+.btn-categoria.ativo {
+    background-color: #2563eb;
+    color: #ffffff;
+}
+.banner-novidades {
+    background: linear-gradient(135deg, #6366f1, #3b82f6);
+    color: white;
+    text-align: center;
+    padding: 40px 20px;
+    margin: 20px auto;
+    max-width: 1000px;
+    border-radius: 16px;
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.15);
+}
+
+.banner-novidades h2 {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+}
+
+.banner-novidades p {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+.catalogo-desenhos {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+}
+
+.card-desenho {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-desenho:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.tag-categoria {
+    align-self: flex-start;
+    background-color: #dbeafe;
+    color: #1d4ed8;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 10px;
+    text-transform: uppercase;
+}
+
+.preview-imagem {
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #64748b;
+    border: 2px dashed #cbd5e1;
+    border-radius: 8px;
+    width: 100%;
+    margin: 15px 0;
+    background-color: #f8fafc;
+}
+
+.btn-jogar {
+    width: 100%;
+    background-color: #10b981;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-jogar:hover {
+    background-color: #059669;
 }
