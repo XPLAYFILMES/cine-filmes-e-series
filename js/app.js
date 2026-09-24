@@ -10,6 +10,7 @@ const partesSvg = document.querySelectorAll(".parte-pintavel");
 const btnBalde = document.getElementById("btn-modo-balde");
 const btnPincel = document.getElementById("btn-modo-pincel");
 const btnLimpar = document.getElementById("btn-limpar");
+localStorage.removeItem(`progresso_${idDesenhoAtual}`);
 const canvas = document.getElementById("camada-pincel");
 const ctx = canvas ? canvas.getContext("2d") : null;
 
