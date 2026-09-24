@@ -136,6 +136,90 @@ body {
 .btn-jogar:hover {
     background-color: #059669;
 }
+/* CABEÇALHO E NAVEGAÇÃO */
+.cabecalho-principal {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.container-nav {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.logo .destaque {
+    color: #2563eb;
+}
+
+/* CAMPO DE PESQUISA */
+.container-busca {
+    position: relative;
+    flex: 1;
+    max-width: 420px;
+}
+
+.icone-busca {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.9rem;
+    opacity: 0.6;
+}
+
+#campo-busca {
+    width: 100%;
+    padding: 10px 15px 10px 40px;
+    border-radius: 25px;
+    border: 1px solid #cbd5e1;
+    background-color: #f8fafc;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+#campo-busca:focus {
+    background-color: #ffffff;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.links-navegacao {
+    display: flex;
+    gap: 15px;
+}
+
+.link-nav {
+    text-decoration: none;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.link-nav:hover,
+.link-nav.ativo {
+    color: #2563eb;
+}
 /* ESTILOS DA PÁGINA DE PINTURA */
 .pagina-pintura {
     display: flex;
