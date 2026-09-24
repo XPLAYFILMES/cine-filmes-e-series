@@ -7,30 +7,50 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- CABEÇALHO E MENU SUPERIOR -->
-    <header class="barra-navegacao">
-        <div class="logo">🎨 ColorirOnline</div>
-        <nav class="menu-categorias">
-            <button class="btn-categoria ativo">Todos</button>
-            <button class="btn-categoria">Animais</button>
-            <button class="btn-categoria">Mandalas</button>
-            <button class="btn-categoria">Infantil</button>
-        </nav>
+   <!-- BARRA DE NAVEGAÇÃO PROFISSIONAL -->
+    <header class="cabecalho-principal">
+        <div class="container-nav">
+            <a href="index.html" class="logo">
+                <span class="logo-icone">🎨</span>
+                <span class="logo-texto">Colorir<span class="destaque">Online</span></span>
+            </a>
+
+            <!-- CAMPO DE PESQUISA EM TEMPO REAL -->
+            <div class="container-busca">
+                <span class="icone-busca">🔍</span>
+                <input type="text" id="campo-busca" placeholder="Pesquisar desenhos, categorias...">
+            </div>
+
+            <nav class="links-navegacao">
+                <a href="index.html" class="link-nav ativo">Início</a>
+                <a href="#catalogo" class="link-nav">Galeria</a>
+            </nav>
+        </div>
     </header>
+
     <!-- BANNER DE NOVIDADES -->
     <section class="banner-novidades">
-        <div class="texto-novidade">
+        <div class="conteudo-banner">
             <h2>✨ Novos Desenhos Adicionados!</h2>
-            <p>Escolha uma ilustração com números ou pinte com pincel livre.</p>
+            <p>Escolha uma ilustração com números ou solte a criatividade com o pincel livre.</p>
         </div>
     </section>
-   <!-- ABAS DE ESTADO DO UTILIZADOR -->
+
+    <!-- FILTROS POR CATEGORIA -->
+    <div class="filtros-categoria">
+        <button class="btn-categoria ativo" data-cat="todos">Todos</button>
+        <button class="btn-categoria" data-cat="animais">Animais</button>
+        <button class="btn-categoria" data-cat="infantil">Infantil</button>
+        <button class="btn-categoria" data-cat="mandalas">Mandalas</button>
+    </div>
+
+    <!-- ABAS DE ESTADO DO UTILIZADOR -->
     <div class="abas-status">
-        <button class="btn-aba ativa" data-filtro="todos">Todos</button>
+        <button class="btn-aba ativa" data-filtro="todos">Todos os Desenhos</button>
         <button class="btn-aba" data-filtro="progresso">⏳ Em Progresso (<span id="qtd-progresso">0</span>)</button>
         <button class="btn-aba" data-filtro="finalizados">✅ Finalizados (<span id="qtd-finalizados">0</span>)</button>
     </div>
-
+    
     <!-- GRELHA DE DESENHOS -->
     <main class="catalogo-desenhos">
         
