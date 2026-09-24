@@ -33,6 +33,19 @@ function salvarProgressoAutomatico() {
     const totalPartes = partesSvg.length;
     const porcentagem = totalPartes > 0 ? Math.round((partesPintadas / totalPartes) * 100) : 0;
 
+    // Atualiza a barra visual na prancheta
+    const barraAtiva = document.getElementById("barra-progresso-ativa");
+    const textoAtivo = document.getElementById("texto-progresso-ativo");
+    const avisoParabens = document.getElementById("aviso-parabens");
+
+    if (barraAtiva) barraAtiva.style.width = `${porcentagem}%`;
+    if (textoAtivo) textoAtivo.innerText = `${porcentagem}% Concluído`;
+
+    // Mostra o aviso se atingir 100%
+    if (avisoParabens) {
+        avisoParabens.style.display = porcentagem === 100 ? "block" : "none";
+    }
+
     const dados = {
         porcentagem: porcentagem,
         cores: estadoCores
@@ -55,10 +68,9 @@ function restaurarPinturaSalva() {
             console.error("Erro ao carregar progresso salvo:", e);
         }
     }
+    // Atualiza a barra logo ao entrar na página
+    salvarProgressoAutomatico();
 }
-
-// Executar restauração logo ao abrir
-restaurarPinturaSalva();
 
 // 4. SELEÇÃO DE COR NA PALETA
 botoesCor.forEach(botao => {
