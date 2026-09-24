@@ -9,18 +9,10 @@
 }
 
 body {
-   .card-desenho {
-    background-color: #f1f5f9; /* Tom cinza suave sem branco brilhante */
-    border: 2px solid #94a3b8;
-    border-radius: 18px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: #cbd5e1 !important; /* Cinza médio/ardósia, corta todo o excesso de claridade */
+    color: #0f172a;
+    min-height: 100vh;
 }
-
 /* ========================================================
    2. CABEÇALHO PRINCIPAL E BARRA DE NAVEGAÇÃO
    ======================================================== */
