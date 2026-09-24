@@ -91,3 +91,47 @@ if (btnLimpar) {
         }
     });
 }
+// 6. BOTÃO GUARDAR / DESCARREGAR ARTE
+const btnSalvar = document.getElementById("btn-salvar");
+
+if (btnSalvar) {
+    btnSalvar.addEventListener("click", () => {
+        // Criar um elemento canvas temporário para fundir o SVG e a pintura livre
+        const canvasFinal = document.createElement("canvas");
+        canvasFinal.width = 300;
+        canvasFinal.height = 300;
+        const contextoFinal = canvasFinal.getContext("2d");
+
+        // Fundo branco na imagem descarregada
+        contextoFinal.fillStyle = "#ffffff";
+        contextoFinal.fillRect(0, 0, 300, 300);
+
+        // Converter o SVG pintado numa imagem
+        const svgElemento = document.getElementById("desenho-svg");
+        const svgString = new XMLSerializer().serializeToString(svgElemento);
+        const svgBlob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+        const urlSvg = URL.createObjectURL(svgBlob);
+
+        const imgSvg = new Image();
+        imgSvg.onload = () => {
+            // Desenha o SVG colorido
+            contextoFinal.drawImage(imgSvg, 0, 0);
+
+            // Se existirem rabiscos no canvas do pincel, sobrepõe-os
+            if (canvas) {
+                contextoFinal.drawImage(canvas, 0, 0);
+            }
+
+            // Cria o link de descarga automática
+            const linkDownload = document.createElement("a");
+            linkDownload.download = "minha-arte-colorida.png";
+            linkDownload.href = canvasFinal.toDataURL("image/png");
+            linkDownload.click();
+
+            // Libertar memória do objeto URL
+            URL.revokeObjectURL(urlSvg);
+        };
+
+        imgSvg.src = urlSvg;
+    });
+}
