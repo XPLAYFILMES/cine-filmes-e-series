@@ -299,25 +299,47 @@ body {
     color: #ffffff;
     border-color: #0f172a;
 }
-/* CONTAINER DA BARRA DE PROGRESSO NOS CARTÕES */
-.container-progresso {
+/* BARRA DE PROGRESSO NO TOPO */
+.painel-progresso-topo {
     width: 100%;
-    height: 8px;
+    max-width: 320px;
+    margin: 8px auto;
+    text-align: center;
+}
+
+.trilha-progresso {
+    width: 100%;
+    height: 10px;
     background-color: #e2e8f0;
     border-radius: 10px;
     overflow: hidden;
-    margin-top: 10px;
+    margin-bottom: 4px;
 }
 
-.barra-progresso {
+.barra-preenchimento {
+    width: 0%;
     height: 100%;
     background: linear-gradient(90deg, #3b82f6, #10b981);
     transition: width 0.3s ease;
 }
 
-.texto-progresso {
-    font-size: 0.8rem;
+#texto-progresso-ativo {
+    font-size: 0.85rem;
     font-weight: bold;
-    color: #64748b;
-    margin: 6px 0 12px 0;
+    color: #475569;
+}
+
+/* CAIXA DE MENSAGEM DE PARABÉNS */
+.modal-parabens {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 0.95rem;
+    padding: 10px 20px;
+    border-radius: 25px;
+    margin: 10px auto;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
+    text-align: center;
+    max-width: 320px;
+    display: none;
 }
