@@ -1,4 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
+
+    // ========================================================
+    // 1. SELEÇÃO DE ELEMENTOS DO DOM E ESTADO DO CATÁLOGO
+    // ========================================================
     const botoesAba = document.querySelectorAll(".btn-aba");
     const botoesCat = document.querySelectorAll(".btn-categoria");
     const cards = document.querySelectorAll(".card-desenho");
@@ -12,7 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let categoriaAtual = "todos";
     let termoBusca = "";
 
-    // 1. CARREGAR PROGRESSO DE CADA CARTÃO
+    // ========================================================
+    // 2. LEITURA E SINCRONIZAÇÃO DO PROGRESSO SALVO
+    // ========================================================
     cards.forEach(card => {
         const idDesenho = card.getAttribute("data-id");
         const dadosSalvos = localStorage.getItem(`progresso_${idDesenho}`);
@@ -24,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const progresso = JSON.parse(dadosSalvos);
                 porcentagem = progresso.porcentagem || 0;
             } catch (e) {
-                console.error(e);
+                console.error("Erro ao carregar dados do catálogo:", e);
             }
         }
 
@@ -48,7 +54,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (qtdProgresso) qtdProgresso.innerText = totalProgresso;
     if (qtdFinalizados) qtdFinalizados.innerText = totalFinalizados;
 
-    // 2. FUNÇÃO DE FILTRAGEM GLOBAL COMBINADA (STATUS + CATEGORIA + BUSCA)
+    // ========================================================
+    // 3. MOTOR DE FILTRAGEM COMBINADA (STATUS + CATEGORIA + BUSCA)
+    // ========================================================
     function aplicarFiltros() {
         cards.forEach(card => {
             const statusCard = card.getAttribute("data-status");
@@ -70,7 +78,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 3. EVENTOS DAS ABAS DE STATUS
+    // ========================================================
+    // 4. EVENTOS DE CLIQUE NAS ABAS DE ESTADO
+    // ========================================================
     botoesAba.forEach(aba => {
         aba.addEventListener("click", () => {
             botoesAba.forEach(a => a.classList.remove("ativa"));
@@ -80,7 +90,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // 4. EVENTOS DOS FILTROS DE CATEGORIA
+    // ========================================================
+    // 5. EVENTOS DE CLIQUE NOS FILTROS DE CATEGORIA
+    // ========================================================
     botoesCat.forEach(cat => {
         cat.addEventListener("click", () => {
             botoesCat.forEach(c => c.classList.remove("ativo"));
@@ -90,7 +102,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // 5. EVENTO DE PESQUISA EM TEMPO REAL
+    // ========================================================
+    // 6. EVENTO DE DIGITAÇÃO NO CAMPO DE PESQUISA
+    // ========================================================
     if (campoBusca) {
         campoBusca.addEventListener("input", (e) => {
             termoBusca = e.target.value.toLowerCase().trim();
