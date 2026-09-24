@@ -1,13 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
     const botoesAba = document.querySelectorAll(".btn-aba");
+    const botoesCat = document.querySelectorAll(".btn-categoria");
     const cards = document.querySelectorAll(".card-desenho");
+    const campoBusca = document.getElementById("campo-busca");
     const qtdProgresso = document.getElementById("qtd-progresso");
     const qtdFinalizados = document.getElementById("qtd-finalizados");
 
     let totalProgresso = 0;
     let totalFinalizados = 0;
+    let statusAtual = "todos";
+    let categoriaAtual = "todos";
+    let termoBusca = "";
 
-    // 1. LER O PROGRESSO DE CADA DESENHO SALVO NO NAVEGADOR
+    // 1. CARREGAR PROGRESSO DE CADA CARTÃO
     cards.forEach(card => {
         const idDesenho = card.getAttribute("data-id");
         const dadosSalvos = localStorage.getItem(`progresso_${idDesenho}`);
@@ -15,19 +20,20 @@ document.addEventListener("DOMContentLoaded", () => {
         let porcentagem = 0;
 
         if (dadosSalvos) {
-            const progresso = JSON.parse(dadosSalvos);
-            // Porcentagem calculada a partir das partes pintadas
-            porcentagem = progresso.porcentagem || 0;
+            try {
+                const progresso = JSON.parse(dadosSalvos);
+                porcentagem = progresso.porcentagem || 0;
+            } catch (e) {
+                console.error(e);
+            }
         }
 
-        // Atualiza a barra visual e o texto do card
         const barra = card.querySelector(".barra-progresso");
         const texto = card.querySelector(".texto-progresso");
 
         if (barra) barra.style.width = `${porcentagem}%`;
         if (texto) texto.innerText = `${porcentagem}% Concluído`;
 
-        // Classifica o cartão conforme o estado
         if (porcentagem === 100) {
             card.setAttribute("data-status", "finalizados");
             totalFinalizados++;
@@ -39,29 +45,56 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Atualiza os contadores numéricos nas abas
     if (qtdProgresso) qtdProgresso.innerText = totalProgresso;
     if (qtdFinalizados) qtdFinalizados.innerText = totalFinalizados;
 
-    // 2. SISTEMA DE FILTRAGEM DAS ABAS
+    // 2. FUNÇÃO DE FILTRAGEM GLOBAL COMBINADA (STATUS + CATEGORIA + BUSCA)
+    function aplicarFiltros() {
+        cards.forEach(card => {
+            const statusCard = card.getAttribute("data-status");
+            const catCard = card.getAttribute("data-categoria");
+            const tituloCard = card.querySelector(".preview-imagem").innerText.toLowerCase();
+
+            const bateuStatus = (statusAtual === "todos") || 
+                                (statusAtual === "progresso" && statusCard === "progresso") || 
+                                (statusAtual === "finalizados" && statusCard === "finalizados");
+
+            const bateuCategoria = (categoriaAtual === "todos") || (catCard === categoriaAtual);
+            const bateuBusca = tituloCard.includes(termoBusca);
+
+            if (bateuStatus && bateuCategoria && bateuBusca) {
+                card.style.display = "flex";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    }
+
+    // 3. EVENTOS DAS ABAS DE STATUS
     botoesAba.forEach(aba => {
         aba.addEventListener("click", () => {
             botoesAba.forEach(a => a.classList.remove("ativa"));
             aba.classList.add("ativa");
-
-            const filtro = aba.getAttribute("data-filtro");
-
-            cards.forEach(card => {
-                const statusCard = card.getAttribute("data-status");
-
-                if (filtro === "todos") {
-                    card.style.display = "flex";
-                } else if (filtro === "progresso") {
-                    card.style.display = statusCard === "progresso" ? "flex" : "none";
-                } else if (filtro === "finalizados") {
-                    card.style.display = statusCard === "finalizados" ? "flex" : "none";
-                }
-            });
+            statusAtual = aba.getAttribute("data-filtro");
+            aplicarFiltros();
         });
     });
+
+    // 4. EVENTOS DOS FILTROS DE CATEGORIA
+    botoesCat.forEach(cat => {
+        cat.addEventListener("click", () => {
+            botoesCat.forEach(c => c.classList.remove("ativo"));
+            cat.classList.add("ativo");
+            categoriaAtual = cat.getAttribute("data-cat");
+            aplicarFiltros();
+        });
+    });
+
+    // 5. EVENTO DE PESQUISA EM TEMPO REAL
+    if (campoBusca) {
+        campoBusca.addEventListener("input", (e) => {
+            termoBusca = e.target.value.toLowerCase().trim();
+            aplicarFiltros();
+        });
+    }
 });
