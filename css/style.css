@@ -231,14 +231,14 @@ body {
 }
 
 .card-desenho {
-    background-color: #f8fafc; /* Branco quebrado / cinza suave que não agride a vista */
-    border: 1px solid #cbd5e1;
+    background-color: #f1f5f9; /* Tom cinza suave sem branco brilhante */
+    border: 2px solid #94a3b8;
     border-radius: 18px;
     padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
