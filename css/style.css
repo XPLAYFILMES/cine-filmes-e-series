@@ -9,8 +9,8 @@
 }
 
 body {
-    background-color: #dbe2ef !important;
-    color: #0f172a;
+    background-color: #0f172a !important; /* Tom ardósia/grafite escuro para eliminar totalmente o branco de fundo */
+    color: #f8fafc;
     min-height: 100vh;
 }
 
@@ -156,21 +156,21 @@ body {
 }
 
 .btn-categoria {
-    background-color: #ffffff;
-    border: 2px solid #e2e8f0;
+    background-color: #1e293b;
+    border: 2px solid #334155;
     padding: 8px 20px;
     border-radius: 20px;
     font-size: 0.9rem;
     font-weight: 700;
-    color: #64748b;
+    color: #cbd5e1;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     transition: all 0.2s ease;
 }
 
 .btn-categoria:hover {
-    border-color: #94a3b8;
-    color: #0f172a;
+    border-color: #38bdf8;
+    color: #ffffff;
     transform: translateY(-1px);
 }
 
@@ -178,9 +178,48 @@ body {
     background-color: #2563eb;
     color: #ffffff;
     border-color: #2563eb;
-    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
 }
 
+/* ========================================================
+   6. ABAS DE ESTADO (TODOS, EM PROGRESSO, FINALIZADOS)
+   ======================================================== */
+.abas-status {
+    max-width: 1000px;
+    margin: 15px auto 25px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 0 20px;
+}
+
+.btn-aba {
+    background-color: #1e293b;
+    border: 2px solid #334155;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #cbd5e1;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.btn-aba:hover {
+    border-color: #94a3b8;
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.btn-aba.ativa {
+    background-color: #3b82f6;
+    color: #ffffff;
+    border-color: #3b82f6;
+    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+}
 /* ========================================================
    6. ABAS DE ESTADO (TODOS, EM PROGRESSO, FINALIZADOS)
    ======================================================== */
