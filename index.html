@@ -63,27 +63,23 @@
         <button class="btn-aba" data-filtro="finalizados">✅ Finalizados (<span id="qtd-finalizados">0</span>)</button>
     </div>
 
-   <!-- ========================================================
-       6. GRELHA DE CARTÕES DO CATÁLOGO (RENDERIZADOS VIA JS)
+ <!-- ========================================================
+       6. GRELHA DE CARTÕES DO CATÁLOGO
        ======================================================== -->
-    <main class="catalogo-desenhos" id="catalogo">
-        <!-- Os cartões de desenhos serão inseridos dinamicamente aqui -->
-    </main>
+    <main class="catalogo-desenhos" id="catalogo"></main>
 
     <!-- ========================================================
-       7. BARRA DE PAGINAÇÃO (30 ITENS POR PÁGINA)
+       7. BARRA DE PAGINAÇÃO (CENTRALIZADA E ESTILIZADA)
        ======================================================== -->
-    <nav class="container-paginacao" id="container-paginacao" aria-label="Navegação de páginas">
-        <button class="btn-pag" id="btn-pag-anterior" disabled>⬅ Anterior</button>
-        <div class="numeros-paginacao" id="numeros-paginacao">
-            <!-- Botões 1, 2, 3... gerados automaticamente -->
-        </div>
-        <button class="btn-pag" id="btn-pag-proximo">Próximo ➡</button>
-    </nav>
+    <div class="container-paginacao" id="container-paginacao">
+        <button class="btn-pag" id="btn-pag-anterior" disabled>← Anterior</button>
+        <div class="numeros-paginacao" id="numeros-paginacao"></div>
+        <button class="btn-pag" id="btn-pag-proximo">Próximo →</button>
+    </div>
 
     <!-- ========================================================
-       8. CARREGAMENTO DOS SCRIPTS JAVASCRIPT
+       8. CARREGAMENTO DOS SCRIPTS
        ======================================================== -->
-    <script src="js/catalogo.js"></script>
+    <script src="js/catalogo.js?v=2"></script>
 </body>
 </html>
