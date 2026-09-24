@@ -219,63 +219,83 @@ body {
 }
 
 /* ========================================================
-   7. GRELHA E CARTÕES DE DESENHOS (CATÁLOGO)
+   7. GRELHA DE 5 COLUNAS E CARTÕES DE DESENHOS
    ======================================================== */
 .catalogo-desenhos {
-    max-width: 1100px;
-    margin: 0 auto 50px auto;
+    max-width: 1350px;
+    margin: 0 auto 30px auto;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(5, 1fr); /* Exatamente 5 cartões por linha no computador */
+    gap: 18px;
     padding: 0 20px;
 }
 
+/* Ajustes automáticos para ecrãs menores */
+@media (max-width: 1200px) {
+    .catalogo-desenhos {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+@media (max-width: 900px) {
+    .catalogo-desenhos {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media (max-width: 600px) {
+    .catalogo-desenhos {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+}
+
 .card-desenho {
-    background-color: #f1f5f9; /* Tom cinza suave sem branco brilhante */
+    background-color: #f1f5f9;
     border: 2px solid #94a3b8;
-    border-radius: 18px;
-    padding: 20px;
+    border-radius: 16px;
+    padding: 14px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card-desenho:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.18);
 }
 
 .tag-categoria {
     align-self: flex-start;
     background-color: #e0e7ff;
     color: #3730a3;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 800;
-    padding: 4px 10px;
-    border-radius: 12px;
+    padding: 3px 8px;
+    border-radius: 10px;
     text-transform: uppercase;
 }
 
 .preview-imagem {
-    height: 140px;
+    height: 110px;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.15rem;
+    font-size: 0.95rem;
     font-weight: bold;
     color: #334155;
     border: 2px dashed #94a3b8;
-    border-radius: 12px;
-    margin: 15px 0;
-    background-color: #edf2f7; /* Fundo interno da prévia mais fosco */
+    border-radius: 10px;
+    margin: 10px 0;
+    background-color: #edf2f7;
+    text-align: center;
+    padding: 5px;
 }
 
 .container-progresso {
     width: 100%;
-    height: 8px;
+    height: 7px;
     background-color: #cbd5e1;
     border-radius: 10px;
     overflow: hidden;
@@ -288,10 +308,10 @@ body {
 }
 
 .texto-progresso {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: bold;
     color: #475569;
-    margin: 6px 0 14px 0;
+    margin: 4px 0 10px 0;
 }
 
 .btn-jogar {
@@ -300,10 +320,11 @@ body {
     background-color: #10b981;
     color: #ffffff;
     text-align: center;
-    padding: 10px;
-    border-radius: 12px;
+    padding: 8px;
+    border-radius: 10px;
     text-decoration: none;
     font-weight: bold;
+    font-size: 0.85rem;
     transition: background-color 0.2s ease;
 }
 
@@ -311,6 +332,74 @@ body {
     background-color: #059669;
 }
 
+/* ========================================================
+   7.1 BARRA DE PAGINAÇÃO
+   ======================================================== */
+.container-paginacao {
+    max-width: 600px;
+    margin: 20px auto 60px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 0 15px;
+}
+
+.btn-pag {
+    background-color: #ffffff;
+    border: 2px solid #cbd5e1;
+    color: #334155;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-pag:hover:not(:disabled) {
+    background-color: #0f172a;
+    color: #ffffff;
+    border-color: #0f172a;
+}
+
+.btn-pag:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.numeros-paginacao {
+    display: flex;
+    gap: 6px;
+}
+
+.btn-num-pag {
+    background-color: #ffffff;
+    border: 2px solid #cbd5e1;
+    color: #334155;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn-num-pag:hover {
+    border-color: #2563eb;
+    color: #2563eb;
+}
+
+.btn-num-pag.ativo {
+    background-color: #2563eb;
+    border-color: #2563eb;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+}
 /* ========================================================
    8. ESTRUTURA GERAL DA TELA DE PINTURA (PINTAR.HTML)
    ======================================================== */
