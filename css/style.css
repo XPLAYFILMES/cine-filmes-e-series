@@ -171,10 +171,35 @@ body {
 }
 
 /* CAMPO DE PESQUISA */
+.container-nav {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #0f172a;
+    white-space: nowrap;
+}
+
+.logo .destaque {
+    color: #2563eb;
+}
+
 .container-busca {
     position: relative;
     flex: 1;
-    max-width: 420px;
+    max-width: 450px;
 }
 
 .icone-busca {
@@ -183,18 +208,18 @@ body {
     top: 50%;
     transform: translateY(-50%);
     font-size: 0.9rem;
-    opacity: 0.6;
+    opacity: 0.5;
 }
 
 #campo-busca {
     width: 100%;
-    padding: 10px 15px 10px 40px;
+    padding: 10px 16px 10px 42px;
     border-radius: 25px;
     border: 1px solid #cbd5e1;
     background-color: #f8fafc;
     font-size: 0.9rem;
     outline: none;
-    transition: all 0.2s ease;
+    transition: 0.2s ease;
 }
 
 #campo-busca:focus {
@@ -205,7 +230,8 @@ body {
 
 .links-navegacao {
     display: flex;
-    gap: 15px;
+    gap: 16px;
+    white-space: nowrap;
 }
 
 .link-nav {
