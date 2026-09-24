@@ -23,15 +23,59 @@ botoesCor.forEach(botao => {
     });
 });
 
-// 2. MODO BALDE: PINTAR POR NÚMERO
+// Identificador do desenho aberto vindo da URL (ex: ?id=desenho_1)
+const parametrosUrl = new URLSearchParams(window.location.search);
+const idDesenhoAtual = parametrosUrl.get("id") || "desenho_1";
+
+// Função para calcular e gravar o progresso no localStorage
+function salvarProgressoAutomatico() {
+    let partesPintadas = 0;
+    const estadoCores = {};
+
+    partesSvg.forEach((parte, index) => {
+        const cor = parte.getAttribute("fill");
+        if (cor && cor !== "#ffffff") {
+            partesPintadas++;
+            estadoCores[index] = cor;
+        }
+    });
+
+    const totalPartes = partesSvg.length;
+    const porcentagem = Math.round((partesPintadas / totalPartes) * 100);
+
+    const dados = {
+        porcentagem: porcentagem,
+        cores: estadoCores
+    };
+
+    localStorage.setItem(`progresso_${idDesenhoAtual}`, JSON.stringify(dados));
+}
+
+// Função para restaurar o que já foi pintado anteriormente
+function restaurarPinturaSalva() {
+    const dadosSalvos = localStorage.getItem(`progresso_${idDesenhoAtual}`);
+    if (dadosSalvos) {
+        const dados = JSON.parse(dadosSalvos);
+        partesSvg.forEach((parte, index) => {
+            if (dados.cores && dados.cores[index]) {
+                parte.setAttribute("fill", dados.cores[index]);
+            }
+        });
+    }
+}
+
+// Executa restauração ao abrir a página
+restaurarPinturaSalva();
+
+// 2. MODO BALDE ATUALIZADO COM SALVAMENTO
 partesSvg.forEach(parte => {
     parte.addEventListener("click", () => {
         if (modoAtual !== "balde") return;
 
         const numeroParte = parte.getAttribute("data-numero");
-        // Verifica se o número da cor escolhida coincide com o número da peça
         if (numeroParte === numeroSelecionado) {
             parte.setAttribute("fill", corSelecionada);
+            salvarProgressoAutomatico(); // Salva na hora!
         } else {
             alert(`Atenção: Esta área é para o número ${numeroParte}!`);
         }
