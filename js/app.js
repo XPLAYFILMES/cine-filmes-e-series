@@ -24,7 +24,6 @@ function salvarProgressoAutomatico() {
 
     partesSvg.forEach((parte, index) => {
         const cor = parte.getAttribute("fill");
-        // Verifica se a cor existe, não está vazia e não é branco (hex ou rgb)
         if (cor && 
             cor.toLowerCase() !== "#ffffff" && 
             cor.toLowerCase() !== "#fff" && 
@@ -35,25 +34,10 @@ function salvarProgressoAutomatico() {
     });
 
     const totalPartes = partesSvg.length;
-    // Calcula a percentagem arredondada
     const porcentagem = totalPartes > 0 ? Math.round((partesPintadas / totalPartes) * 100) : 0;
 
-    // Atualiza elementos visuais na página
-    const barraAtiva = document.getElementById("barra-progresso-ativa");
-    const textoAtivo = document.getElementById("texto-progresso-ativo");
-    const avisoParabens = document.getElementById("aviso-parabens");
-
-    if (barraAtiva) barraAtiva.style.width = `${porcentagem}%`;
-    if (textoAtivo) textoAtivo.innerText = `${porcentagem}% Concluído`;
-
-    // Exibe a mensagem de parabéns ao atingir todas as partes pintadas
-    if (avisoParabens) {
-        if (partesPintadas === totalPartes && totalPartes > 0) {
-            avisoParabens.style.display = "block";
-        } else {
-            avisoParabens.style.display = "none";
-        }
-    }
+    // Atualiza a interface
+    atualizarBarraVisual(porcentagem, partesPintadas === totalPartes && totalPartes > 0);
 
     const dados = {
         porcentagem: porcentagem,
@@ -62,6 +46,44 @@ function salvarProgressoAutomatico() {
 
     localStorage.setItem(`progresso_${idDesenhoAtual}`, JSON.stringify(dados));
 }
+
+function atualizarBarraVisual(porcentagem, concluido) {
+    const barraAtiva = document.getElementById("barra-progresso-ativa");
+    const textoAtivo = document.getElementById("texto-progresso-ativo");
+    const avisoParabens = document.getElementById("aviso-parabens");
+
+    if (barraAtiva) barraAtiva.style.width = `${porcentagem}%`;
+    if (textoAtivo) textoAtivo.innerText = `${porcentagem}% Concluído`;
+    if (avisoParabens) avisoParabens.style.display = concluido ? "block" : "none";
+}
+
+function restaurarPinturaSalva() {
+    const dadosSalvos = localStorage.getItem(`progresso_${idDesenhoAtual}`);
+    if (!dadosSalvos) return;
+
+    try {
+        const dados = JSON.parse(dadosSalvos);
+        
+        // Aplica as cores salvas diretamente nas partes do SVG
+        if (dados.cores) {
+            Object.keys(dados.cores).forEach(index => {
+                if (partesSvg[index]) {
+                    partesSvg[index].setAttribute("fill", dados.cores[index]);
+                }
+            });
+        }
+
+        // Atualiza a barra visual com os dados recuperados sem sobrescrever
+        const pct = dados.porcentagem || 0;
+        atualizarBarraVisual(pct, pct === 100);
+
+    } catch (e) {
+        console.error("Erro ao restaurar progresso:", e);
+    }
+}
+
+// Executar a restauração logo no início
+restaurarPinturaSalva();
 
 function restaurarPinturaSalva() {
     const dadosSalvos = localStorage.getItem(`progresso_${idDesenhoAtual}`);
