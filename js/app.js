@@ -24,16 +24,21 @@ function salvarProgressoAutomatico() {
 
     partesSvg.forEach((parte, index) => {
         const cor = parte.getAttribute("fill");
-        if (cor && cor.toLowerCase() !== "#ffffff") {
+        // Verifica se a cor existe, não está vazia e não é branco (hex ou rgb)
+        if (cor && 
+            cor.toLowerCase() !== "#ffffff" && 
+            cor.toLowerCase() !== "#fff" && 
+            cor !== "rgb(255, 255, 255)") {
             partesPintadas++;
             estadoCores[index] = cor;
         }
     });
 
     const totalPartes = partesSvg.length;
+    // Calcula a percentagem arredondada
     const porcentagem = totalPartes > 0 ? Math.round((partesPintadas / totalPartes) * 100) : 0;
 
-    // Atualiza a barra visual na prancheta
+    // Atualiza elementos visuais na página
     const barraAtiva = document.getElementById("barra-progresso-ativa");
     const textoAtivo = document.getElementById("texto-progresso-ativo");
     const avisoParabens = document.getElementById("aviso-parabens");
@@ -41,9 +46,13 @@ function salvarProgressoAutomatico() {
     if (barraAtiva) barraAtiva.style.width = `${porcentagem}%`;
     if (textoAtivo) textoAtivo.innerText = `${porcentagem}% Concluído`;
 
-    // Mostra o aviso se atingir 100%
+    // Exibe a mensagem de parabéns ao atingir todas as partes pintadas
     if (avisoParabens) {
-        avisoParabens.style.display = porcentagem === 100 ? "block" : "none";
+        if (partesPintadas === totalPartes && totalPartes > 0) {
+            avisoParabens.style.display = "block";
+        } else {
+            avisoParabens.style.display = "none";
+        }
     }
 
     const dados = {
@@ -147,6 +156,11 @@ if (btnLimpar) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
         localStorage.removeItem(`progresso_${idDesenhoAtual}`);
+        
+        // Esconde a mensagem e reseta a barra
+        const avisoParabens = document.getElementById("aviso-parabens");
+        if (avisoParabens) avisoParabens.style.display = "none";
+        salvarProgressoAutomatico();
     });
 }
 
