@@ -9,16 +9,16 @@
 }
 
 body {
-    background-color: #e5e9f0; /* Tom cinza-ardósia sofisticado, muito mais confortável para a vista */
+    background-color: #dbe2ef !important; /* Tom cinza-azulado fosco com prioridade máxima */
     color: #0f172a;
     min-height: 100vh;
 }
 
 /* ========================================================
-   2. CABEÇALHO PRINCIPAL E BARRA DE NAVEGAÇÃO (CONTRASTE ELEVADO)
+   2. CABEÇALHO PRINCIPAL E BARRA DE NAVEGAÇÃO
    ======================================================== */
 .cabecalho-principal {
-    background: #0f172a; /* Tom azul-escuro / grafite premium para contraste com a página */
+    background: #0f172a;
     border-bottom: 2px solid #1e293b;
     position: sticky;
     top: 0;
@@ -43,12 +43,12 @@ body {
     text-decoration: none;
     font-size: 1.4rem;
     font-weight: 900;
-    color: #ffffff; /* Texto a branco puro para sobressair */
+    color: #ffffff;
     letter-spacing: -0.5px;
 }
 
 .logo .destaque {
-    color: #38bdf8; /* Azul celeste vibrante */
+    color: #38bdf8;
 }
 
 .links-navegacao {
@@ -59,7 +59,7 @@ body {
 
 .link-nav {
     text-decoration: none;
-    color: #cbd5e1; /* Cinzento claro nítido */
+    color: #cbd5e1;
     font-weight: 700;
     font-size: 0.95rem;
     padding: 8px 14px;
@@ -99,9 +99,9 @@ body {
     padding: 11px 18px 11px 44px;
     border-radius: 30px;
     border: 1px solid #334155;
-    background-color: #1e293b; /* Fundo contrastante escuro */
+    background-color: #1e293b;
     font-size: 0.95rem;
-    color: #f8fafc; /* Texto digitado em branco */
+    color: #f8fafc;
     outline: none;
     transition: all 0.2s ease;
 }
@@ -115,6 +115,7 @@ body {
     border-color: #38bdf8;
     box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
 }
+
 /* ========================================================
    4. BANNER DE NOVIDADES
    ======================================================== */
@@ -238,13 +239,13 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); /* Sombra mais nítida */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card-desenho:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
 }
 
 .tag-categoria {
