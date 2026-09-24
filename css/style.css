@@ -1,3 +1,6 @@
+/* ========================================================
+   1. CONFIGURAÇÕES GLOBAIS E RESET
+   ======================================================== */
 * {
     margin: 0;
     padding: 0;
@@ -6,145 +9,21 @@
 }
 
 body {
-    background-color: #f4f7fb;
-    color: #333333;
+    background-color: #f8fafc;
+    color: #1e293b;
     min-height: 100vh;
 }
-.barra-navegacao {
-    background-color: #ffffff;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 30px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    flex-wrap: wrap;
-    gap: 15px;
-}
 
-.logo {
-    font-size: 1.4rem;
-    font-weight: bold;
-    color: #2563eb;
-}
-
-.menu-categorias {
-    display: flex;
-    gap: 10px;
-}
-
-.btn-categoria {
-    border: none;
-    background-color: #e2e8f0;
-    padding: 8px 16px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: 600;
-    color: #475569;
-    transition: 0.2s;
-}
-
-.btn-categoria:hover,
-.btn-categoria.ativo {
-    background-color: #2563eb;
-    color: #ffffff;
-}
-.banner-novidades {
-    background: linear-gradient(135deg, #6366f1, #3b82f6);
-    color: white;
-    text-align: center;
-    padding: 40px 20px;
-    margin: 20px auto;
-    max-width: 1000px;
-    border-radius: 16px;
-    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.15);
-}
-
-.banner-novidades h2 {
-    font-size: 1.8rem;
-    margin-bottom: 8px;
-}
-
-.banner-novidades p {
-    font-size: 1rem;
-    opacity: 0.9;
-}
-.catalogo-desenhos {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 25px;
-}
-
-.card-desenho {
-    background-color: #ffffff;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.card-desenho:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-}
-
-.tag-categoria {
-    align-self: flex-start;
-    background-color: #dbeafe;
-    color: #1d4ed8;
-    font-size: 0.75rem;
-    font-weight: bold;
-    padding: 4px 10px;
-    border-radius: 10px;
-    text-transform: uppercase;
-}
-
-.preview-imagem {
-    height: 140px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #64748b;
-    border: 2px dashed #cbd5e1;
-    border-radius: 8px;
-    width: 100%;
-    margin: 15px 0;
-    background-color: #f8fafc;
-}
-
-.btn-jogar {
-    width: 100%;
-    background-color: #10b981;
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.btn-jogar:hover {
-    background-color: #059669;
-}
-/* CABEÇALHO E NAVEGAÇÃO */
-/* CABEÇALHO COM CONTRASTE PROFISSIONAL */
+/* ========================================================
+   2. CABEÇALHO PRINCIPAL E BARRA DE NAVEGAÇÃO
+   ======================================================== */
 .cabecalho-principal {
     background: #ffffff;
     border-bottom: 2px solid #e2e8f0;
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08); /* Sombra elegante que destaca do fundo */
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
 }
 
 .container-nav {
@@ -172,41 +51,6 @@ body {
     color: #2563eb;
 }
 
-/* CAMPO DE BUSCA REALÇADO */
-.container-busca {
-    position: relative;
-    flex: 1;
-    max-width: 480px;
-}
-
-.icone-busca {
-    position: absolute;
-    left: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1rem;
-    color: #94a3b8;
-}
-
-#campo-busca {
-    width: 100%;
-    padding: 11px 18px 11px 44px;
-    border-radius: 30px;
-    border: 2px solid #e2e8f0;
-    background-color: #f1f5f9; /* Fundo suave para contraste */
-    font-size: 0.95rem;
-    color: #1e293b;
-    outline: none;
-    transition: all 0.2s ease;
-}
-
-#campo-busca:focus {
-    background-color: #ffffff;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
-}
-
-/* LINKS DO MENU */
 .links-navegacao {
     display: flex;
     align-items: center;
@@ -232,12 +76,75 @@ body {
     color: #2563eb;
 }
 
-/* CENTRALIZAÇÃO DAS CATEGORIAS (ABAIXO DO BANNER) */
+/* ========================================================
+   3. CAMPO DE PESQUISA EM TEMPO REAL
+   ======================================================== */
+.container-busca {
+    position: relative;
+    flex: 1;
+    max-width: 480px;
+}
+
+.icone-busca {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    color: #94a3b8;
+}
+
+#campo-busca {
+    width: 100%;
+    padding: 11px 18px 11px 44px;
+    border-radius: 30px;
+    border: 2px solid #e2e8f0;
+    background-color: #f1f5f9;
+    font-size: 0.95rem;
+    color: #1e293b;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+#campo-busca:focus {
+    background-color: #ffffff;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+}
+
+/* ========================================================
+   4. BANNER DE NOVIDADES
+   ======================================================== */
+.banner-novidades {
+    max-width: 1100px;
+    margin: 25px auto 15px auto;
+    padding: 35px 25px;
+    background: linear-gradient(135deg, #4f46e5, #3b82f6);
+    color: #ffffff;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);
+}
+
+.conteudo-banner h2 {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+    font-weight: 800;
+}
+
+.conteudo-banner p {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+/* ========================================================
+   5. FILTROS POR CATEGORIA (ABAIXO DO BANNER)
+   ======================================================== */
 .filtros-categoria {
     max-width: 1000px;
     margin: 20px auto 10px auto;
     display: flex;
-    justify-content: center; /* Centraliza perfeitamente na horizontal */
+    justify-content: center;
     align-items: center;
     flex-wrap: wrap;
     gap: 12px;
@@ -269,7 +176,141 @@ body {
     border-color: #2563eb;
     box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
 }
-/* ESTILOS DA PÁGINA DE PINTURA */
+
+/* ========================================================
+   6. ABAS DE ESTADO (TODOS, EM PROGRESSO, FINALIZADOS)
+   ======================================================== */
+.abas-status {
+    max-width: 1000px;
+    margin: 15px auto 25px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 0 20px;
+}
+
+.btn-aba {
+    background-color: #ffffff;
+    border: 2px solid #cbd5e1;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-aba:hover {
+    border-color: #94a3b8;
+    transform: translateY(-1px);
+}
+
+.btn-aba.ativa {
+    background-color: #0f172a;
+    color: #ffffff;
+    border-color: #0f172a;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.25);
+}
+
+/* ========================================================
+   7. GRELHA E CARTÕES DE DESENHOS (CATÁLOGO)
+   ======================================================== */
+.catalogo-desenhos {
+    max-width: 1100px;
+    margin: 0 auto 50px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 0 20px;
+}
+
+.card-desenho {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-desenho:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.tag-categoria {
+    align-self: flex-start;
+    background-color: #eff6ff;
+    color: #2563eb;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+}
+
+.preview-imagem {
+    height: 140px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    font-weight: bold;
+    color: #334155;
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    margin: 15px 0;
+    background-color: #f8fafc;
+}
+
+.container-progresso {
+    width: 100%;
+    height: 8px;
+    background-color: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.barra-progresso {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #10b981);
+    transition: width 0.3s ease;
+}
+
+.texto-progresso {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #64748b;
+    margin: 6px 0 14px 0;
+}
+
+.btn-jogar {
+    display: block;
+    width: 100%;
+    background-color: #10b981;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.btn-jogar:hover {
+    background-color: #059669;
+}
+
+/* ========================================================
+   8. ESTRUTURA GERAL DA TELA DE PINTURA (PINTAR.HTML)
+   ======================================================== */
 .pagina-pintura {
     display: flex;
     flex-direction: column;
@@ -327,7 +368,55 @@ body {
     border-color: #1d4ed8;
 }
 
-/* ÁREA DA FOLHA / DESENHO */
+/* ========================================================
+   9. INDICADOR DE PROGRESSO E AVISO DA PRANCHETA
+   ======================================================== */
+.painel-progresso-topo {
+    width: 100%;
+    max-width: 320px;
+    margin: 8px auto;
+    text-align: center;
+}
+
+.trilha-progresso {
+    width: 100%;
+    height: 10px;
+    background-color: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+
+.barra-preenchimento {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #10b981);
+    transition: width 0.3s ease;
+}
+
+#texto-progresso-ativo {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #475569;
+}
+
+.modal-parabens {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 0.95rem;
+    padding: 10px 20px;
+    border-radius: 25px;
+    margin: 10px auto;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
+    text-align: center;
+    max-width: 320px;
+    display: none;
+}
+
+/* ========================================================
+   10. PRANCHETA DE DESENHO E PALETA DE CORES
+   ======================================================== */
 .area-prancheta {
     display: flex;
     justify-content: center;
@@ -355,7 +444,7 @@ body {
 }
 
 #camada-pincel {
-    pointer-events: none; /* Deixa o clique passar direto para o SVG */
+    pointer-events: none;
 }
 
 .parte-pintavel {
@@ -367,7 +456,6 @@ body {
     opacity: 0.85;
 }
 
-/* PALETA DE CORES INFERIOR */
 .barra-paleta {
     display: flex;
     gap: 12px;
@@ -400,79 +488,4 @@ body {
 .item-cor.ativa {
     border-color: #0f172a;
     transform: scale(1.15);
-}
-/* ABAS DE STATUS (TODOS, EM PROGRESSO, FINALIZADOS) */
-.abas-status {
-    max-width: 1000px;
-    margin: 15px auto;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    padding: 0 20px;
-}
-
-.btn-aba {
-    background-color: #ffffff;
-    border: 2px solid #cbd5e1;
-    padding: 8px 18px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: bold;
-    color: #475569;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.btn-aba:hover {
-    border-color: #94a3b8;
-}
-
-.btn-aba.ativa {
-    background-color: #0f172a;
-    color: #ffffff;
-    border-color: #0f172a;
-}
-/* BARRA DE PROGRESSO NO TOPO */
-.painel-progresso-topo {
-    width: 100%;
-    max-width: 320px;
-    margin: 8px auto;
-    text-align: center;
-}
-
-.trilha-progresso {
-    width: 100%;
-    height: 10px;
-    background-color: #e2e8f0;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 4px;
-}
-
-.barra-preenchimento {
-    width: 0%;
-    height: 100%;
-    background: linear-gradient(90deg, #3b82f6, #10b981);
-    transition: width 0.3s ease;
-}
-
-#texto-progresso-ativo {
-    font-size: 0.85rem;
-    font-weight: bold;
-    color: #475569;
-}
-
-/* CAIXA DE MENSAGEM DE PARABÉNS */
-.modal-parabens {
-    background: linear-gradient(135deg, #10b981, #059669);
-    color: #ffffff;
-    font-weight: bold;
-    font-size: 0.95rem;
-    padding: 10px 20px;
-    border-radius: 25px;
-    margin: 10px auto;
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
-    text-align: center;
-    max-width: 320px;
-    display: none;
 }
