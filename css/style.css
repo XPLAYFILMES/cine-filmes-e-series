@@ -15,15 +15,15 @@ body {
 }
 
 /* ========================================================
-   2. CABEÇALHO PRINCIPAL E BARRA DE NAVEGAÇÃO
+   2. CABEÇALHO PRINCIPAL E BARRA DE NAVEGAÇÃO (CONTRASTE ELEVADO)
    ======================================================== */
 .cabecalho-principal {
-    background: #ffffff;
-    border-bottom: 2px solid #e2e8f0;
+    background: #0f172a; /* Tom azul-escuro / grafite premium para contraste com a página */
+    border-bottom: 2px solid #1e293b;
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .container-nav {
@@ -43,37 +43,37 @@ body {
     text-decoration: none;
     font-size: 1.4rem;
     font-weight: 900;
-    color: #0f172a;
+    color: #ffffff; /* Texto a branco puro para sobressair */
     letter-spacing: -0.5px;
 }
 
 .logo .destaque {
-    color: #2563eb;
+    color: #38bdf8; /* Azul celeste vibrante */
 }
 
 .links-navegacao {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 16px;
 }
 
 .link-nav {
     text-decoration: none;
-    color: #475569;
+    color: #cbd5e1; /* Cinzento claro nítido */
     font-weight: 700;
     font-size: 0.95rem;
-    padding: 6px 12px;
+    padding: 8px 14px;
     border-radius: 8px;
     transition: all 0.2s ease;
 }
 
 .link-nav:hover {
-    color: #2563eb;
-    background-color: #eff6ff;
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .link-nav.ativo {
-    color: #2563eb;
+    color: #38bdf8;
 }
 
 /* ========================================================
@@ -98,20 +98,23 @@ body {
     width: 100%;
     padding: 11px 18px 11px 44px;
     border-radius: 30px;
-    border: 2px solid #e2e8f0;
-    background-color: #f1f5f9;
+    border: 1px solid #334155;
+    background-color: #1e293b; /* Fundo contrastante escuro */
     font-size: 0.95rem;
-    color: #1e293b;
+    color: #f8fafc; /* Texto digitado em branco */
     outline: none;
     transition: all 0.2s ease;
 }
 
-#campo-busca:focus {
-    background-color: #ffffff;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+#campo-busca::placeholder {
+    color: #94a3b8;
 }
 
+#campo-busca:focus {
+    background-color: #0f172a;
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+}
 /* ========================================================
    4. BANNER DE NOVIDADES
    ======================================================== */
