@@ -9,8 +9,8 @@
 }
 
 body {
-    background-color: #f8fafc;
-    color: #1e293b;
+    background-color: #e5e9f0; /* Tom cinza-ardósia sofisticado, muito mais confortável para a vista */
+    color: #0f172a;
     min-height: 100vh;
 }
 
@@ -232,13 +232,13 @@ body {
 
 .card-desenho {
     background-color: #ffffff;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #cbd5e1;
     border-radius: 18px;
     padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); /* Sombra mais nítida */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
