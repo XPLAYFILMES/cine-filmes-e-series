@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     // ========================================================
-    // 1. BANCO DE DESENHOS SVG E CONFIGURAÇÕES DE CORES
+    // 1. BANCO DE DESENHOS SVG E METADADOS
     // ========================================================
     const catalogoSVG = {
         desenho_1: {
@@ -75,17 +75,15 @@ document.addEventListener("DOMContentLoaded", () => {
             const AudioContextClass = window.AudioContext || window.webkitAudioContext;
             if (AudioContextClass) audioCtx = new AudioContextClass();
         }
-        if (audioCtx && audioCtx.state === "suspended") {
-            audioCtx.resume();
-        }
+        if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
         return audioCtx;
     }
 
-    const desbloquearAudio = () => {
+    const desbloquear = () => {
         obterAudioContext();
-        window.removeEventListener("pointerdown", desbloquearAudio);
+        window.removeEventListener("pointerdown", desbloquear);
     };
-    window.addEventListener("pointerdown", desbloquearAudio);
+    window.addEventListener("pointerdown", desbloquear);
 
     function tocarSomAcerto() {
         try {
@@ -94,14 +92,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const agora = ctxA.currentTime;
             const osc = ctxA.createOscillator();
             const gain = ctxA.createGain();
-
             osc.type = "sine";
             osc.frequency.setValueAtTime(340, agora);
             osc.frequency.exponentialRampToValueAtTime(900, agora + 0.08);
-
             gain.gain.setValueAtTime(0.4, agora);
             gain.gain.exponentialRampToValueAtTime(0.001, agora + 0.1);
-
             osc.connect(gain);
             gain.connect(ctxA.destination);
             osc.start(agora);
@@ -114,23 +109,38 @@ document.addEventListener("DOMContentLoaded", () => {
             const ctxA = obterAudioContext();
             if (!ctxA) return;
             const agora = ctxA.currentTime;
-
             [659.25, 880.00].forEach((freq, idx) => {
                 const osc = ctxA.createOscillator();
                 const gain = ctxA.createGain();
                 const t = agora + (idx * 0.09);
-
                 osc.type = "sine";
                 osc.frequency.setValueAtTime(freq, t);
-
                 gain.gain.setValueAtTime(0.3, t);
                 gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
-
                 osc.connect(gain);
                 gain.connect(ctxA.destination);
                 osc.start(t);
                 osc.stop(t + 0.25);
             });
+        } catch (e) {}
+    }
+
+    function tocarSomDica() {
+        try {
+            const ctxA = obterAudioContext();
+            if (!ctxA) return;
+            const agora = ctxA.currentTime;
+            const osc = ctxA.createOscillator();
+            const gain = ctxA.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(800, agora);
+            osc.frequency.exponentialRampToValueAtTime(1200, agora + 0.15);
+            gain.gain.setValueAtTime(0.25, agora);
+            gain.gain.exponentialRampToValueAtTime(0.001, agora + 0.2);
+            osc.connect(gain);
+            gain.connect(ctxA.destination);
+            osc.start(agora);
+            osc.stop(agora + 0.2);
         } catch (e) {}
     }
 
@@ -141,14 +151,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const agora = ctxA.currentTime;
             const osc = ctxA.createOscillator();
             const gain = ctxA.createGain();
-
             osc.type = "triangle";
             osc.frequency.setValueAtTime(200, agora);
             osc.frequency.linearRampToValueAtTime(140, agora + 0.14);
-
             gain.gain.setValueAtTime(0.2, agora);
             gain.gain.exponentialRampToValueAtTime(0.001, agora + 0.14);
-
             osc.connect(gain);
             gain.connect(ctxA.destination);
             osc.start(agora);
@@ -162,18 +169,14 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!ctxA) return;
             const agora = ctxA.currentTime;
             const notas = [523.25, 659.25, 783.99, 1046.50, 1318.51];
-
             notas.forEach((freq, idx) => {
                 const osc = ctxA.createOscillator();
                 const gain = ctxA.createGain();
                 const tempo = agora + (idx * 0.11);
-
                 osc.type = "sine";
                 osc.frequency.setValueAtTime(freq, tempo);
-
                 gain.gain.setValueAtTime(0.25, tempo);
                 gain.gain.exponentialRampToValueAtTime(0.001, tempo + 0.35);
-
                 osc.connect(gain);
                 gain.connect(ctxA.destination);
                 osc.start(tempo);
@@ -184,20 +187,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function dispararConfetes() {
         if (typeof confetti === "function") {
-            confetti({
-                particleCount: 120,
-                spread: 80,
-                origin: { y: 0.6 }
-            });
+            confetti({ particleCount: 150, spread: 85, origin: { y: 0.55 } });
         }
     }
 
     // ========================================================
-    // 3. INJEÇÃO DO DESENHO ESCOLHIDO PELA URL
+    // 3. INJEÇÃO DO DESENHO PELA URL
     // ========================================================
     const parametrosUrl = new URLSearchParams(window.location.search);
     const idDesenhoAtual = parametrosUrl.get("id") || "desenho_1";
     const desenhoDados = catalogoSVG[idDesenhoAtual] || catalogoSVG["desenho_1"];
+
+    // Guarda o último desenho acessado para o banner "Continuar Pintando"
+    localStorage.setItem("ultimo_desenho_aberto", idDesenhoAtual);
 
     const svgElemento = document.getElementById("desenho-svg");
     if (svgElemento) {
@@ -206,15 +208,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================================
-    // 4. CONFIGURAÇÃO VISUAL DA PALETA PARA O DESENHO ATUAL
+    // 4. CONFIGURAÇÃO DA PALETA DINÂMICA
     // ========================================================
     const botoesCor = document.querySelectorAll(".item-cor");
-    const numerosPermitidos = desenhoDados.cores.map(c => c.numero);
-
     botoesCor.forEach(botao => {
         const num = botao.getAttribute("data-numero");
         const corObj = desenhoDados.cores.find(c => c.numero === num);
-
         if (corObj) {
             botao.style.display = "flex";
             botao.style.backgroundColor = corObj.hex;
@@ -229,35 +228,154 @@ document.addEventListener("DOMContentLoaded", () => {
                 botao.appendChild(badge);
             }
         } else {
-            // Oculta cores que este desenho não utiliza
             botao.style.display = "none";
         }
     });
 
     // ========================================================
-    // 5. ELEMENTOS DO DOM E ESTADOS INICIAIS
+    // 5. ELEMENTOS DO DOM, ESTADOS E HISTÓRICO DE DESFAZER
     // ========================================================
     let corSelecionada = desenhoDados.cores[0]?.hex || "#e74c3c";
     let numeroSelecionado = desenhoDados.cores[0]?.numero || "1";
     let modoAtual = "balde";
     let pintando = false;
     let jaEstavaConcluidoInicialmente = false;
+    const historicoAcoes = []; // Pilha para a função Desfazer (Undo)
 
     const partesSvg = document.querySelectorAll(".parte-pintavel");
     const btnBalde = document.getElementById("btn-modo-balde");
     const btnPincel = document.getElementById("btn-modo-pincel");
+    const btnDesfazer = document.getElementById("btn-desfazer");
+    const btnDica = document.getElementById("btn-dica");
+    const btnZoomIn = document.getElementById("btn-zoom-in");
+    const btnZoomOut = document.getElementById("btn-zoom-out");
     const btnTelaCheia = document.getElementById("btn-tela-cheia");
     const btnLimpar = document.getElementById("btn-limpar");
     const btnSalvar = document.getElementById("btn-salvar");
+    const btnTema = document.getElementById("btn-tema-pintar");
+
+    const pranchetaWrapper = document.getElementById("prancheta-wrapper");
+    const containerPan = document.getElementById("container-pan");
     const canvas = document.getElementById("camada-pincel");
     const ctx = canvas ? canvas.getContext("2d") : null;
 
     const barraAtiva = document.getElementById("barra-progresso-ativa");
     const textoAtivo = document.getElementById("texto-progresso-ativo");
-    const avisoParabens = document.getElementById("aviso-parabens");
+    const modalConclusao = document.getElementById("modal-conclusao");
+    const imgModalPreview = document.getElementById("img-modal-preview");
+    const btnModalPng = document.getElementById("btn-modal-png");
+    const btnModalImprimir = document.getElementById("btn-modal-imprimir");
+    const btnModalFechar = document.getElementById("btn-modal-fechar");
 
     // ========================================================
-    // 6. GESTÃO DE CORES CONCLUÍDAS E SELEÇÃO AUTOMÁTICA
+    // 6. ZOOM E PANORÂMICA (ARRASTAR PRANCHETA)
+    // ========================================================
+    let escalaZoom = 1;
+    let panX = 0, panY = 0;
+    let arrastandoPrancheta = false;
+    let inicioPanX = 0, inicioPanY = 0;
+
+    function atualizarTransformacaoPrancheta() {
+        if (pranchetaWrapper) {
+            pranchetaWrapper.style.transform = `translate(${panX}px, ${panY}px) scale(${escalaZoom})`;
+        }
+    }
+
+    if (btnZoomIn) {
+        btnZoomIn.addEventListener("click", () => {
+            if (escalaZoom < 2.5) {
+                escalaZoom += 0.25;
+                atualizarTransformacaoPrancheta();
+            }
+        });
+    }
+
+    if (btnZoomOut) {
+        btnZoomOut.addEventListener("click", () => {
+            if (escalaZoom > 0.8) {
+                escalaZoom -= 0.25;
+                if (escalaZoom === 1) { panX = 0; panY = 0; }
+                atualizarTransformacaoPrancheta();
+            }
+        });
+    }
+
+    if (containerPan) {
+        containerPan.addEventListener("mousedown", (e) => {
+            if (e.target.classList.contains("parte-pintavel") || modoAtual === "pincel") return;
+            arrastandoPrancheta = true;
+            inicioPanX = e.clientX - panX;
+            inicioPanY = e.clientY - panY;
+        });
+
+        window.addEventListener("mousemove", (e) => {
+            if (!arrastandoPrancheta) return;
+            panX = e.clientX - inicioPanX;
+            panY = e.clientY - inicioPanY;
+            atualizarTransformacaoPrancheta();
+        });
+
+        window.addEventListener("mouseup", () => {
+            arrastandoPrancheta = false;
+        });
+    }
+
+    // ========================================================
+    // 7. LÂMPADA DE DICA MÁGICA (ENCONTRAR PEÇA PENDENTE)
+    // ========================================================
+    if (btnDica) {
+        btnDica.addEventListener("click", () => {
+            obterAudioContext();
+            let pecaEncontrada = null;
+
+            // Busca a primeira peça pendente do número ativo
+            partesSvg.forEach(parte => {
+                if (pecaEncontrada) return;
+                const num = parte.getAttribute("data-numero");
+                const cor = parte.getAttribute("fill");
+                const pintado = (cor && cor.toLowerCase() !== "#ffffff" && cor.toLowerCase() !== "#fff" && cor !== "rgb(255, 255, 255)");
+                if (!pintado && num === numeroSelecionado) {
+                    pecaEncontrada = parte;
+                }
+            });
+
+            if (pecaEncontrada) {
+                tocarSomDica();
+                pecaEncontrada.classList.add("destaque-dica");
+                setTimeout(() => {
+                    pecaEncontrada.classList.remove("destaque-dica");
+                }, 2400);
+            }
+        });
+    }
+
+    // ========================================================
+    // 8. FUNÇÃO DESFAZER (UNDO)
+    // ========================================================
+    function salvarEstadoCanvasParaUndo() {
+        if (!canvas) return;
+        historicoAcoes.push({
+            tipo: "pincel",
+            dados: ctx.getImageData(0, 0, canvas.width, canvas.height)
+        });
+    }
+
+    if (btnDesfazer) {
+        btnDesfazer.addEventListener("click", () => {
+            if (historicoAcoes.length === 0) return;
+            const ultimaAcao = historicoAcoes.pop();
+
+            if (ultimaAcao.tipo === "balde") {
+                ultimaAcao.elemento.setAttribute("fill", ultimaAcao.corAnterior);
+                salvarProgressoAutomatico();
+            } else if (ultimaAcao.tipo === "pincel" && ctx) {
+                ctx.putImageData(ultimaAcao.dados, 0, 0);
+            }
+        });
+    }
+
+    // ========================================================
+    // 9. GESTÃO DE CORES, CONTADORES E AUTO-SELEÇÃO
     // ========================================================
     function atualizarStatusDasCores(tocarSom = true) {
         const contagemTotal = {};
@@ -269,35 +387,26 @@ document.addEventListener("DOMContentLoaded", () => {
             const pintado = (cor && cor.toLowerCase() !== "#ffffff" && cor.toLowerCase() !== "#fff" && cor !== "rgb(255, 255, 255)");
 
             contagemTotal[num] = (contagemTotal[num] || 0) + 1;
-            if (pintado) {
-                contagemConcluidas[num] = (contagemConcluidas[num] || 0) + 1;
-            }
+            if (pintado) contagemConcluidas[num] = (contagemConcluidas[num] || 0) + 1;
         });
 
         let corAtualFinalizada = false;
 
         botoesCor.forEach(botao => {
             if (botao.style.display === "none") return;
-
             const num = botao.getAttribute("data-numero");
             const total = contagemTotal[num] || 0;
             const prontas = contagemConcluidas[num] || 0;
             const restantes = total - prontas;
 
             const badge = botao.querySelector(".badge-contador");
-            if (badge) {
-                badge.innerText = restantes;
-            }
+            if (badge) badge.innerText = restantes;
 
             if (restantes <= 0 && total > 0) {
                 botao.classList.add("concluida");
-                botao.setAttribute("title", `Número ${num} concluído!`);
-                if (num === numeroSelecionado) {
-                    corAtualFinalizada = true;
-                }
+                if (num === numeroSelecionado) corAtualFinalizada = true;
             } else {
                 botao.classList.remove("concluida");
-                botao.removeAttribute("title");
             }
         });
 
@@ -322,15 +431,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ========================================================
-    // 7. DESTAQUE PULSANTE (GLOW) NAS ÁREAS PENDENTES
-    // ========================================================
     function destacarAreasPendentes() {
         partesSvg.forEach(parte => {
             const num = parte.getAttribute("data-numero");
             const cor = parte.getAttribute("fill");
             const pintado = (cor && cor.toLowerCase() !== "#ffffff" && cor.toLowerCase() !== "#fff" && cor !== "rgb(255, 255, 255)");
-
             if (!pintado && num === numeroSelecionado && modoAtual === "balde") {
                 parte.classList.add("parte-pendente-ativa");
             } else {
@@ -340,29 +445,29 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================================
-    // 8. ATUALIZAR BARRA DE PROGRESSO E COMEMORAÇÃO
+    // 10. ATUALIZAR BARRA E MODAL DE CONCLUSÃO 100%
     // ========================================================
+    function abrirModalVitoria() {
+        gerarDataURLFinal((dataUrl) => {
+            if (imgModalPreview) imgModalPreview.src = dataUrl;
+            if (modalConclusao) modalConclusao.style.display = "flex";
+        });
+    }
+
     function atualizarBarraVisual(porcentagem, concluido, emitirComemoracao = true) {
         if (barraAtiva) barraAtiva.style.width = `${porcentagem}%`;
         if (textoAtivo) textoAtivo.innerText = `${porcentagem}% Concluído`;
 
-        if (concluido && !emitirComemoracao) {
-            if (avisoParabens) avisoParabens.style.display = "none";
-            return;
-        }
-
         if (concluido && emitirComemoracao && !jaEstavaConcluidoInicialmente) {
             jaEstavaConcluidoInicialmente = true;
-            if (avisoParabens) avisoParabens.style.display = "block";
             tocarSomVitoria();
             dispararConfetes();
-        } else if (!concluido) {
-            if (avisoParabens) avisoParabens.style.display = "none";
+            setTimeout(abrirModalVitoria, 800);
         }
     }
 
     // ========================================================
-    // 9. SALVAR PROGRESSO AUTOMÁTICO NO NAVEGADOR
+    // 11. SALVAMENTO AUTOMÁTICO E RESTAURAÇÃO
     // ========================================================
     function salvarProgressoAutomatico() {
         let partesPintadas = 0;
@@ -389,9 +494,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }));
     }
 
-    // ========================================================
-    // 10. RESTAURAR PINTURA SALVA (SEM REPETIR COMEMORAÇÃO)
-    // ========================================================
     function restaurarPinturaSalva() {
         const dadosSalvos = localStorage.getItem(`progresso_${idDesenhoAtual}`);
         if (!dadosSalvos) {
@@ -404,22 +506,14 @@ document.addEventListener("DOMContentLoaded", () => {
             if (dados.cores) {
                 Object.keys(dados.cores).forEach(index => {
                     const idx = parseInt(index, 10);
-                    if (partesSvg[idx]) {
-                        partesSvg[idx].setAttribute("fill", dados.cores[idx]);
-                    }
+                    if (partesSvg[idx]) partesSvg[idx].setAttribute("fill", dados.cores[idx]);
                 });
             }
             const pct = dados.porcentagem || 0;
             const foiConcluido = (pct === 100);
-
-            if (foiConcluido) {
-                jaEstavaConcluidoInicialmente = true;
-            }
-
+            if (foiConcluido) jaEstavaConcluidoInicialmente = true;
             atualizarBarraVisual(pct, foiConcluido, false);
-        } catch (e) {
-            console.error("Erro ao restaurar:", e);
-        }
+        } catch (e) {}
 
         atualizarStatusDasCores(false);
     }
@@ -427,29 +521,23 @@ document.addEventListener("DOMContentLoaded", () => {
     restaurarPinturaSalva();
 
     // ========================================================
-    // 11. EVENTOS DA PALETA DE CORES
+    // 12. EVENTOS DA PALETA E CLIQUE DE PINTURA
     // ========================================================
     botoesCor.forEach(botao => {
         botao.addEventListener("click", () => {
             obterAudioContext();
-
             if (botao.classList.contains("concluida")) {
                 tocarSomErro();
                 return;
             }
-
             botoesCor.forEach(b => b.classList.remove("ativa"));
             botao.classList.add("ativa");
             corSelecionada = botao.getAttribute("data-hex");
             numeroSelecionado = botao.getAttribute("data-numero");
-
             destacarAreasPendentes();
         });
     });
 
-    // ========================================================
-    // 12. PINTURA POR NÚMEROS (MODO BALDE)
-    // ========================================================
     partesSvg.forEach(parte => {
         parte.addEventListener("click", () => {
             if (modoAtual !== "balde") return;
@@ -457,6 +545,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const numeroParte = parte.getAttribute("data-numero");
             if (numeroParte === numeroSelecionado) {
+                const corAntiga = parte.getAttribute("fill");
+                historicoAcoes.push({
+                    tipo: "balde",
+                    elemento: parte,
+                    corAnterior: corAntiga
+                });
+
                 parte.setAttribute("fill", corSelecionada);
                 tocarSomAcerto();
                 salvarProgressoAutomatico();
@@ -474,7 +569,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ========================================================
-    // 13. ALTERNÂNCIA DE FERRAMENTAS E TELA CHEIA
+    // 13. ALTERNÂNCIA DE FERRAMENTAS E TEMA
     // ========================================================
     if (btnBalde && btnPincel) {
         btnBalde.addEventListener("click", () => {
@@ -497,41 +592,32 @@ document.addEventListener("DOMContentLoaded", () => {
     if (btnTelaCheia) {
         btnTelaCheia.addEventListener("click", () => {
             obterAudioContext();
-
-            const estaCheia = document.fullscreenElement || 
-                              document.webkitFullscreenElement || 
-                              document.mozFullScreenElement || 
-                              document.msFullscreenElement;
-
-            if (!estaCheia) {
-                const elem = document.documentElement;
-                if (elem.requestFullscreen) elem.requestFullscreen().catch(() => {});
-                else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
-                else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
-                btnTelaCheia.innerText = "⛶ Sair Tela";
-            } else {
-                if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
-                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-                else if (document.msExitFullscreen) document.msExitFullscreen();
-                btnTelaCheia.innerText = "⛶ Tela Cheia";
-            }
-        });
-
-        document.addEventListener("fullscreenchange", () => {
             if (!document.fullscreenElement) {
-                btnTelaCheia.innerText = "⛶ Tela Cheia";
+                document.documentElement.requestFullscreen().catch(() => {});
+                btnTelaCheia.innerText = "⛶ Sair";
+            } else {
+                document.exitFullscreen().catch(() => {});
+                btnTelaCheia.innerText = "⛶ Tela";
             }
         });
     }
 
+    if (btnTema) {
+        btnTema.addEventListener("click", () => {
+            document.body.classList.toggle("dark-mode");
+            btnTema.innerText = document.body.classList.contains("dark-mode") ? "☀️" : "🌙";
+        });
+    }
+
     // ========================================================
-    // 14. PINCEL LIVRE NO CANVAS (TOUCH + MOUSE)
+    // 14. PINCEL LIVRE COM SUPORTE A UNDO
     // ========================================================
     if (canvas && ctx) {
         canvas.style.pointerEvents = "none";
 
         canvas.addEventListener("mousedown", (e) => {
             if (modoAtual !== "pincel") return;
+            salvarEstadoCanvasParaUndo();
             pintando = true;
             ctx.beginPath();
             ctx.moveTo(e.offsetX, e.offsetY);
@@ -546,40 +632,84 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.stroke();
         });
 
-        window.addEventListener("mouseup", () => {
-            pintando = false;
-        });
-
-        canvas.addEventListener("touchstart", (e) => {
-            if (modoAtual !== "pincel") return;
-            const touch = e.touches[0];
-            const rect = canvas.getBoundingClientRect();
-            pintando = true;
-            ctx.beginPath();
-            ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
-            e.preventDefault();
-        });
-
-        canvas.addEventListener("touchmove", (e) => {
-            if (!pintando || modoAtual !== "pincel") return;
-            const touch = e.touches[0];
-            const rect = canvas.getBoundingClientRect();
-            ctx.lineWidth = 6;
-            ctx.lineCap = "round";
-            ctx.strokeStyle = corSelecionada;
-            ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
-            ctx.stroke();
-            e.preventDefault();
-        });
-
-        window.addEventListener("touchend", () => {
-            pintando = false;
-        });
+        window.addEventListener("mouseup", () => { pintando = false; });
     }
 
     // ========================================================
-    // 15. LIMPAR E SALVAR PNG
+    // 15. EXPORTAÇÃO, IMPRESSÃO A4 E BOTÃO LIMPAR
     // ========================================================
+    function gerarDataURLFinal(callback) {
+        const canvasFinal = document.createElement("canvas");
+        canvasFinal.width = 600;
+        canvasFinal.height = 600;
+        const ctxFinal = canvasFinal.getContext("2d");
+
+        ctxFinal.fillStyle = "#ffffff";
+        ctxFinal.fillRect(0, 0, 600, 600);
+
+        const svgString = new XMLSerializer().serializeToString(svgElemento);
+        const svgBlob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+        const urlSvg = URL.createObjectURL(svgBlob);
+
+        const imgSvg = new Image();
+        imgSvg.onload = () => {
+            ctxFinal.drawImage(imgSvg, 0, 0, 600, 600);
+            if (canvas) ctxFinal.drawImage(canvas, 0, 0, 600, 600);
+            callback(canvasFinal.toDataURL("image/png"));
+            URL.revokeObjectURL(urlSvg);
+        };
+        imgSvg.src = urlSvg;
+    }
+
+    if (btnSalvar) {
+        btnSalvar.addEventListener("click", () => {
+            gerarDataURLFinal((dataUrl) => {
+                const linkDownload = document.createElement("a");
+                linkDownload.download = `${idDesenhoAtual}-colorido.png`;
+                linkDownload.href = dataUrl;
+                linkDownload.click();
+            });
+        });
+    }
+
+    if (btnModalPng) {
+        btnModalPng.addEventListener("click", () => {
+            if (btnSalvar) btnSalvar.click();
+        });
+    }
+
+    if (btnModalImprimir) {
+        btnModalImprimir.addEventListener("click", () => {
+            gerarDataURLFinal((dataUrl) => {
+                const janelaImpressao = window.open("", "_blank");
+                janelaImpressao.document.write(`
+                    <html>
+                    <head>
+                        <title>Imprimir Arte A4 - ColorirOnline</title>
+                        <style>
+                            @page { size: A4; margin: 20mm; }
+                            body { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; font-family: sans-serif; }
+                            img { max-width: 90%; max-height: 80vh; border: 2px solid #333; border-radius: 8px; }
+                            h2 { margin-bottom: 15px; color: #1e293b; }
+                        </style>
+                    </head>
+                    <body onload="window.print(); window.close();">
+                        <h2>Obra: ${desenhoDados.titulo}</h2>
+                        <img src="${dataUrl}">
+                    </body>
+                    </html>
+                `);
+                janelaImpressao.document.close();
+            });
+        });
+    }
+
+    if (btnModalFechar && modalConclusao) {
+        btnModalFechar.addEventListener("click", () => {
+            modalConclusao.style.display = "none";
+        });
+    }
+
     if (btnLimpar) {
         btnLimpar.addEventListener("click", () => {
             partesSvg.forEach(parte => parte.setAttribute("fill", "#ffffff"));
@@ -588,36 +718,6 @@ document.addEventListener("DOMContentLoaded", () => {
             jaEstavaConcluidoInicialmente = false;
             atualizarBarraVisual(0, false, false);
             atualizarStatusDasCores(false);
-        });
-    }
-
-    if (btnSalvar) {
-        btnSalvar.addEventListener("click", () => {
-            const canvasFinal = document.createElement("canvas");
-            canvasFinal.width = 300;
-            canvasFinal.height = 300;
-            const contextoFinal = canvasFinal.getContext("2d");
-
-            contextoFinal.fillStyle = "#ffffff";
-            contextoFinal.fillRect(0, 0, 300, 300);
-
-            const svgString = new XMLSerializer().serializeToString(svgElemento);
-            const svgBlob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
-            const urlSvg = URL.createObjectURL(svgBlob);
-
-            const imgSvg = new Image();
-            imgSvg.onload = () => {
-                contextoFinal.drawImage(imgSvg, 0, 0);
-                if (canvas) contextoFinal.drawImage(canvas, 0, 0);
-
-                const linkDownload = document.createElement("a");
-                linkDownload.download = `${idDesenhoAtual}-colorido.png`;
-                linkDownload.href = canvasFinal.toDataURL("image/png");
-                linkDownload.click();
-
-                URL.revokeObjectURL(urlSvg);
-            };
-            imgSvg.src = urlSvg;
         });
     }
 });
