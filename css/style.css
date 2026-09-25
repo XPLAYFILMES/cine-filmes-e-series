@@ -581,4 +581,52 @@ body {
     border-color: #0f172a;
     transform: scale(1.15);
 }
+/* EFEITO DE COR CONCLUÍDA / INDISPONÍVEL NA PALETA */
+.item-cor.concluida {
+    opacity: 0.35;
+    cursor: not-allowed !important;
+    transform: scale(0.85) !important;
+    box-shadow: none !important;
+    position: relative;
+    border-color: #94a3b8 !important;
+}
 
+.item-cor.concluida::after {
+    content: "✔";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.1rem;
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* BADGE COM QUANTIDADE RESTANTE NA PALETA */
+.item-cor .badge-qtd {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background-color: #0f172a;
+    color: #ffffff;
+    font-size: 0.65rem;
+    font-weight: 800;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ffffff;
+}
+
+/* DESTAQUE PULSANTE NAS ÁREAS PENDENTES DO NÚMERO ATIVO */
+@keyframes pulsarArea {
+    0% { stroke: #2563eb; stroke-width: 4; }
+    50% { stroke: #38bdf8; stroke-width: 6; }
+    100% { stroke: #2563eb; stroke-width: 4; }
+}
+
+.parte-pendente-ativa {
+    animation: pulsarArea 1.4s infinite ease-in-out;
+}
