@@ -1,16 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     // ========================================================
-    // 1. BANCO DE DESENHOS SVG E DEFINIÇÃO EXCLUSIVA DE CORES
+    // 1. BANCO DE DESENHOS SVG E CONFIGURAÇÕES DE CORES
     // ========================================================
     const catalogoSVG = {
         desenho_1: {
             titulo: "Estrela Mágica",
             viewBox: "0 0 300 300",
             cores: [
-                { numero: "1", hex: "#e74c3c" }, // Vermelho
-                { numero: "2", hex: "#3498db" }, // Azul
-                { numero: "3", hex: "#f1c40f" }  // Amarelo
+                { numero: "1", hex: "#e74c3c" },
+                { numero: "2", hex: "#3498db" },
+                { numero: "3", hex: "#f1c40f" }
             ],
             svg: `
                 <polygon class="parte-pintavel" data-numero="1" points="150,25 179,111 269,111 197,165 224,251 150,200 76,251 103,165 31,111 121,111" fill="#ffffff" stroke="#333333" stroke-width="4" stroke-linejoin="round" />
@@ -25,10 +25,10 @@ document.addEventListener("DOMContentLoaded", () => {
             titulo: "Foguetão Espacial",
             viewBox: "0 0 300 300",
             cores: [
-                { numero: "1", hex: "#e74c3c" }, // Vermelho
-                { numero: "2", hex: "#3498db" }, // Azul
-                { numero: "3", hex: "#9b59b6" }, // Roxo
-                { numero: "4", hex: "#f1c40f" }  // Amarelo / Fogo
+                { numero: "1", hex: "#e74c3c" },
+                { numero: "2", hex: "#3498db" },
+                { numero: "3", hex: "#9b59b6" },
+                { numero: "4", hex: "#f1c40f" }
             ],
             svg: `
                 <path class="parte-pintavel" data-numero="1" d="M150,30 C180,90 190,180 190,210 L110,210 C110,180 120,90 150,30 Z" fill="#ffffff" stroke="#333333" stroke-width="4" stroke-linejoin="round"/>
@@ -47,8 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
             titulo: "Flor Geométrica",
             viewBox: "0 0 300 300",
             cores: [
-                { numero: "1", hex: "#e74c3c" }, // Pétalas
-                { numero: "2", hex: "#f1c40f" }  // Miolo
+                { numero: "1", hex: "#e74c3c" },
+                { numero: "2", hex: "#f1c40f" }
             ],
             svg: `
                 <ellipse class="parte-pintavel" data-numero="1" cx="150" cy="90" rx="30" ry="45" fill="#ffffff" stroke="#333333" stroke-width="4"/>
@@ -128,7 +128,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 osc.connect(gain);
                 gain.connect(ctxA.destination);
-
                 osc.start(t);
                 osc.stop(t + 0.25);
             });
@@ -152,7 +151,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             osc.connect(gain);
             gain.connect(ctxA.destination);
-
             osc.start(agora);
             osc.stop(agora + 0.14);
         } catch (e) {}
@@ -178,7 +176,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 osc.connect(gain);
                 gain.connect(ctxA.destination);
-
                 osc.start(tempo);
                 osc.stop(tempo + 0.35);
             });
@@ -209,27 +206,33 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================================
-    // 4. CRIAÇÃO DINÂMICA DA PALETA COM AS CORES EXATAS
+    // 4. CONFIGURAÇÃO VISUAL DA PALETA PARA O DESENHO ATUAL
     // ========================================================
-    const barraPaleta = document.getElementById("barra-paleta");
-    if (barraPaleta && desenhoDados.cores) {
-        barraPaleta.innerHTML = "";
-        desenhoDados.cores.forEach((cor, idx) => {
-            const item = document.createElement("div");
-            item.className = `item-cor ${idx === 0 ? "ativa" : ""}`;
-            item.setAttribute("data-numero", cor.numero);
-            item.setAttribute("data-hex", cor.hex);
-            item.style.backgroundColor = cor.hex;
-            item.innerText = cor.numero;
+    const botoesCor = document.querySelectorAll(".item-cor");
+    const numerosPermitidos = desenhoDados.cores.map(c => c.numero);
 
-            const badge = document.createElement("span");
-            badge.className = "badge-contador";
-            badge.innerText = "0";
-            item.appendChild(badge);
+    botoesCor.forEach(botao => {
+        const num = botao.getAttribute("data-numero");
+        const corObj = desenhoDados.cores.find(c => c.numero === num);
 
-            barraPaleta.appendChild(item);
-        });
-    }
+        if (corObj) {
+            botao.style.display = "flex";
+            botao.style.backgroundColor = corObj.hex;
+            botao.setAttribute("data-hex", corObj.hex);
+            botao.innerText = corObj.numero;
+
+            let badge = botao.querySelector(".badge-contador");
+            if (!badge) {
+                badge = document.createElement("span");
+                badge.className = "badge-contador";
+                badge.innerText = "0";
+                botao.appendChild(badge);
+            }
+        } else {
+            // Oculta cores que este desenho não utiliza
+            botao.style.display = "none";
+        }
+    });
 
     // ========================================================
     // 5. ELEMENTOS DO DOM E ESTADOS INICIAIS
@@ -238,9 +241,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let numeroSelecionado = desenhoDados.cores[0]?.numero || "1";
     let modoAtual = "balde";
     let pintando = false;
-    let jaEstavaConcluidoInicialmente = false; // Impede notificação repetida ao recarregar
+    let jaEstavaConcluidoInicialmente = false;
 
-    const botoesCor = document.querySelectorAll(".item-cor");
     const partesSvg = document.querySelectorAll(".parte-pintavel");
     const btnBalde = document.getElementById("btn-modo-balde");
     const btnPincel = document.getElementById("btn-modo-pincel");
@@ -275,6 +277,8 @@ document.addEventListener("DOMContentLoaded", () => {
         let corAtualFinalizada = false;
 
         botoesCor.forEach(botao => {
+            if (botao.style.display === "none") return;
+
             const num = botao.getAttribute("data-numero");
             const total = contagemTotal[num] || 0;
             const prontas = contagemConcluidas[num] || 0;
@@ -308,7 +312,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function selecionarProximaCorDisponivel() {
         let selecionou = false;
         botoesCor.forEach(botao => {
-            if (!selecionou && !botao.classList.contains("concluida")) {
+            if (!selecionou && botao.style.display !== "none" && !botao.classList.contains("concluida")) {
                 botoesCor.forEach(b => b.classList.remove("ativa"));
                 botao.classList.add("ativa");
                 corSelecionada = botao.getAttribute("data-hex");
@@ -342,7 +346,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (barraAtiva) barraAtiva.style.width = `${porcentagem}%`;
         if (textoAtivo) textoAtivo.innerText = `${porcentagem}% Concluído`;
 
-        // Se o desenho já estava concluído de uma visita anterior, não reabre a mensagem nem toca sons
         if (concluido && !emitirComemoracao) {
             if (avisoParabens) avisoParabens.style.display = "none";
             return;
@@ -410,10 +413,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const foiConcluido = (pct === 100);
 
             if (foiConcluido) {
-                jaEstavaConcluidoInicialmente = true; // Marca como já finalizado
+                jaEstavaConcluidoInicialmente = true;
             }
 
-            atualizarBarraVisual(pct, foiConcluido, false); // false = silencia a comemoração
+            atualizarBarraVisual(pct, foiConcluido, false);
         } catch (e) {
             console.error("Erro ao restaurar:", e);
         }
