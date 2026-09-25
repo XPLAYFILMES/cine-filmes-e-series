@@ -95,7 +95,7 @@ body.dark-mode {
 }
 
 /* ========================================================
-   3. CAMPO DE PESQUISA PADRÃO UNIVERSAL (TODAS AS PÁGINAS)
+   3. CAMPO DE PESQUISA EM TEMPO REAL (PADRÃO SEGUNDA IMAGEM)
    ======================================================== */
 .container-busca {
     position: relative;
@@ -113,22 +113,30 @@ body.dark-mode {
     pointer-events: none;
 }
 
+/* Aplica para qualquer input dentro da busca em todas as páginas */
+.container-busca input,
+#campo-busca,
 .campo-busca-padrao {
     width: 100%;
     padding: 11px 18px 11px 44px;
     border-radius: 30px;
     border: 1px solid #334155;
-    background-color: #1e293b;
+    background-color: #1e293b; /* Fundo escuro fosco */
     font-size: 0.95rem;
-    color: #f8fafc;
+    color: #f8fafc; /* Texto digitado claro */
     outline: none;
+    box-sizing: border-box;
     transition: all 0.2s ease;
 }
 
+.container-busca input::placeholder,
+#campo-busca::placeholder,
 .campo-busca-padrao::placeholder {
     color: #94a3b8;
 }
 
+.container-busca input:focus,
+#campo-busca:focus,
 .campo-busca-padrao:focus {
     background-color: #0f172a;
     border-color: #38bdf8;
