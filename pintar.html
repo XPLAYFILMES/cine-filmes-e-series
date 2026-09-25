@@ -7,8 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pintar Desenho - ColorirOnline</title>
-    <link rel="stylesheet" href="css/style.css?v=15">
-    <!-- Biblioteca externa para animação de confetes ao atingir 100% -->
+    <link rel="stylesheet" href="css/style.css?v=16">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body class="pagina-pintura">
@@ -55,15 +54,19 @@
     </main>
 
     <!-- ========================================================
-       6. PALETA DE CORES NUMERADA (RENDERIZADA DINAMICAMENTE)
+       6. PALETA DE CORES NUMERADA (RODAPÉ)
        ======================================================== -->
     <footer class="barra-paleta" id="barra-paleta">
-        <!-- As cores serão inseridas aqui dinamicamente pelo JavaScript -->
+        <div class="item-cor ativa" data-numero="1" data-hex="#e74c3c" style="background-color: #e74c3c;">1</div>
+        <div class="item-cor" data-numero="2" data-hex="#3498db" style="background-color: #3498db;">2</div>
+        <div class="item-cor" data-numero="3" data-hex="#f1c40f" style="background-color: #f1c40f;">3</div>
+        <div class="item-cor" data-numero="4" data-hex="#2ecc71" style="background-color: #2ecc71;">4</div>
+        <div class="item-cor" data-numero="5" data-hex="#9b59b6" style="background-color: #9b59b6;">5</div>
     </footer>
 
     <!-- ========================================================
        7. CARREGAMENTO DO SCRIPT DO MOTOR DE PINTURA
        ======================================================== -->
-    <script src="js/app.js?v=7"></script>
+    <script src="js/app.js?v=8"></script>
 </body>
 </html>
