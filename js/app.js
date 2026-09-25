@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // ========================================================
-    // 2. SISTEMA DE ÁUDIO WEB (COM DESBLOQUEIO DE AUTOPLAY)
+    // 2. SISTEMA DE ÁUDIO WEB OTIMIZADO E CALIBRADO
     // ========================================================
     let audioCtx = null;
 
@@ -68,92 +68,117 @@ document.addEventListener("DOMContentLoaded", () => {
         return audioCtx;
     }
 
-    // Desbloquear áudio logo no primeiro clique do usuário em qualquer lugar
-    function desbloquearAudioInicial() {
+    // Desbloqueia áudio no primeiro toque/clique
+    const desbloquear = () => {
         obterAudioContext();
-        window.removeEventListener("click", desbloquearAudioInicial);
-        window.removeEventListener("touchstart", desbloquearAudioInicial);
-    }
-    window.addEventListener("click", desbloquearAudioInicial);
-    window.addEventListener("touchstart", desbloquearAudioInicial);
+        window.removeEventListener("pointerdown", desbloquear);
+    };
+    window.addEventListener("pointerdown", desbloquear);
 
-    // Efeito: Acerto de número (Gota de tinta pop)
+    // Efeito: Bolha / Gota d'Água (Pop suave e agradável)
     function tocarSomAcerto() {
         try {
             const ctxA = obterAudioContext();
             if (!ctxA) return;
+            const agora = ctxA.currentTime;
+
+            // Oscilador principal com subida rápida tipo bolha
             const osc = ctxA.createOscillator();
             const gain = ctxA.createGain();
 
             osc.type = "sine";
-            const agora = ctxA.currentTime;
-            osc.frequency.setValueAtTime(450, agora);
-            osc.frequency.exponentialRampToValueAtTime(800, agora + 0.1);
+            osc.frequency.setValueAtTime(320, agora);
+            osc.frequency.exponentialRampToValueAtTime(880, agora + 0.08);
 
             gain.gain.setValueAtTime(0.4, agora);
-            gain.gain.exponentialRampToValueAtTime(0.001, agora + 0.12);
+            gain.gain.exponentialRampToValueAtTime(0.001, agora + 0.1);
 
             osc.connect(gain);
             gain.connect(ctxA.destination);
+
             osc.start(agora);
-            osc.stop(agora + 0.12);
-        } catch (e) {
-            console.warn("Erro ao tocar som de acerto:", e);
-        }
+            osc.stop(agora + 0.1);
+        } catch (e) {}
     }
 
-    // Efeito: Erro de número (Aviso sutil)
+    // Efeito: Cor Concluída (Campainha harmônica suave)
+    function tocarSomCorFinalizada() {
+        try {
+            const ctxA = obterAudioContext();
+            if (!ctxA) return;
+            const agora = ctxA.currentTime;
+
+            [659.25, 880.00].forEach((freq, idx) => {
+                const osc = ctxA.createOscillator();
+                const gain = ctxA.createGain();
+                const t = agora + (idx * 0.09);
+
+                osc.type = "sine";
+                osc.frequency.setValueAtTime(freq, t);
+
+                gain.gain.setValueAtTime(0.3, t);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+
+                osc.connect(gain);
+                gain.connect(ctxA.destination);
+
+                osc.start(t);
+                osc.stop(t + 0.25);
+            });
+        } catch (e) {}
+    }
+
+    // Efeito: Aviso de erro sutil
     function tocarSomErro() {
         try {
             const ctxA = obterAudioContext();
             if (!ctxA) return;
+            const agora = ctxA.currentTime;
+
             const osc = ctxA.createOscillator();
             const gain = ctxA.createGain();
 
-            osc.type = "sawtooth";
-            const agora = ctxA.currentTime;
-            osc.frequency.setValueAtTime(180, agora);
-            osc.frequency.linearRampToValueAtTime(130, agora + 0.15);
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(200, agora);
+            osc.frequency.linearRampToValueAtTime(140, agora + 0.14);
 
             gain.gain.setValueAtTime(0.2, agora);
-            gain.gain.exponentialRampToValueAtTime(0.001, agora + 0.15);
+            gain.gain.exponentialRampToValueAtTime(0.001, agora + 0.14);
 
             osc.connect(gain);
             gain.connect(ctxA.destination);
+
             osc.start(agora);
-            osc.stop(agora + 0.15);
-        } catch (e) {
-            console.warn("Erro ao tocar som de erro:", e);
-        }
+            osc.stop(agora + 0.14);
+        } catch (e) {}
     }
 
-    // Efeito: Fanfarra de Conclusão 100%
+    // Efeito: Vitória 100% (Arpejo festivo)
     function tocarSomVitoria() {
         try {
             const ctxA = obterAudioContext();
             if (!ctxA) return;
             const agora = ctxA.currentTime;
-            const escala = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+            const notas = [523.25, 659.25, 783.99, 1046.50, 1318.51];
 
-            escala.forEach((freq, idx) => {
+            notas.forEach((freq, idx) => {
                 const osc = ctxA.createOscillator();
                 const gain = ctxA.createGain();
-                const tempo = agora + (idx * 0.12);
+                const tempo = agora + (idx * 0.11);
 
                 osc.type = "sine";
                 osc.frequency.setValueAtTime(freq, tempo);
 
                 gain.gain.setValueAtTime(0.25, tempo);
-                gain.gain.exponentialRampToValueAtTime(0.001, tempo + 0.28);
+                gain.gain.exponentialRampToValueAtTime(0.001, tempo + 0.35);
 
                 osc.connect(gain);
                 gain.connect(ctxA.destination);
+
                 osc.start(tempo);
-                osc.stop(tempo + 0.28);
+                osc.stop(tempo + 0.35);
             });
-        } catch (e) {
-            console.warn("Erro ao tocar vitória:", e);
-        }
+        } catch (e) {}
     }
 
     function dispararConfetes() {
@@ -180,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================================
-    // 4. ELEMENTOS E ESTADO
+    // 4. ELEMENTOS E ESTADO DO JOGO
     // ========================================================
     let corSelecionada = "#e74c3c";
     let numeroSelecionado = "1";
@@ -203,7 +228,83 @@ document.addEventListener("DOMContentLoaded", () => {
     const avisoParabens = document.getElementById("aviso-parabens");
 
     // ========================================================
-    // 5. ATUALIZAR BARRA E SUCESSO
+    // 5. GESTÃO DE CORES CONCLUÍDAS E INDISPONÍVEIS
+    // ========================================================
+    function atualizarStatusDasCores() {
+        const contagemPorNumero = {};
+        const concluidasPorNumero = {};
+
+        // Mapear todas as partes
+        partesSvg.forEach(parte => {
+            const num = parte.getAttribute("data-numero");
+            const cor = parte.getAttribute("fill");
+            const estaPintado = (cor && cor.toLowerCase() !== "#ffffff" && cor.toLowerCase() !== "#fff" && cor !== "rgb(255, 255, 255)");
+
+            contagemPorNumero[num] = (contagemPorNumero[num] || 0) + 1;
+            if (estaPintado) {
+                concluidasPorNumero[num] = (concluidasPorNumero[num] || 0) + 1;
+            }
+        });
+
+        let corAtualFoiConcluida = false;
+
+        botoesCor.forEach(botao => {
+            const num = botao.getAttribute("data-numero");
+            const total = contagemPorNumero[num] || 0;
+            const prontas = concluidasPorNumero[num] || 0;
+            const estaTotalmenteConcluida = (total > 0 && prontas === total);
+
+            if (estaTotalmenteConcluida) {
+                botao.classList.add("concluida");
+                botao.setAttribute("title", `Número ${num} totalmente concluído!`);
+                if (num === numeroSelecionado) {
+                    corAtualFoiConcluida = true;
+                }
+            } else {
+                botao.classList.remove("concluida");
+                botao.removeAttribute("title");
+            }
+        });
+
+        // Se a cor atual acabou de ser concluída, seleciona automaticamente a próxima livre
+        if (corAtualFoiConcluida) {
+            tocarSomCorFinalizada();
+            selecionarProximaCorDisponivel();
+        }
+
+        atualizarDestaqueAreasPendentes();
+    }
+
+    function selecionarProximaCorDisponivel() {
+        let encontrou = false;
+        botoesCor.forEach(botao => {
+            if (!encontrou && !botao.classList.contains("concluida")) {
+                botoesCor.forEach(b => b.classList.remove("ativa"));
+                botao.classList.add("ativa");
+                corSelecionada = botao.getAttribute("data-hex");
+                numeroSelecionado = botao.getAttribute("data-numero");
+                encontrou = true;
+            }
+        });
+    }
+
+    // Destaca as áreas pendentes do número selecionado
+    function atualizarDestaqueAreasPendentes() {
+        partesSvg.forEach(parte => {
+            const num = parte.getAttribute("data-numero");
+            const cor = parte.getAttribute("fill");
+            const estaPintado = (cor && cor.toLowerCase() !== "#ffffff" && cor.toLowerCase() !== "#fff" && cor !== "rgb(255, 255, 255)");
+
+            if (!estaPintado && num === numeroSelecionado && modoAtual === "balde") {
+                parte.classList.add("parte-pendente-ativa");
+            } else {
+                parte.classList.remove("parte-pendente-ativa");
+            }
+        });
+    }
+
+    // ========================================================
+    // 6. ATUALIZAR BARRA E SUCESSO GERAL
     // ========================================================
     function atualizarBarraVisual(porcentagem, concluido) {
         if (barraAtiva) barraAtiva.style.width = `${porcentagem}%`;
@@ -218,7 +319,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================================
-    // 6. SALVAR PROGRESSO AUTOMÁTICO
+    // 7. SALVAR PROGRESSO AUTOMÁTICO
     // ========================================================
     function salvarProgressoAutomatico() {
         let partesPintadas = 0;
@@ -237,6 +338,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const concluido = (partesPintadas === totalPartes && totalPartes > 0);
 
         atualizarBarraVisual(porcentagem, concluido);
+        atualizarStatusDasCores();
 
         localStorage.setItem(`progresso_${idDesenhoAtual}`, JSON.stringify({
             porcentagem: porcentagem,
@@ -245,11 +347,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================================
-    // 7. RESTAURAR PINTURA SALVA
+    // 8. RESTAURAR PINTURA SALVA
     // ========================================================
     function restaurarPinturaSalva() {
         const dadosSalvos = localStorage.getItem(`progresso_${idDesenhoAtual}`);
-        if (!dadosSalvos) return;
+        if (!dadosSalvos) {
+            atualizarStatusDasCores();
+            return;
+        }
 
         try {
             const dados = JSON.parse(dadosSalvos);
@@ -267,25 +372,36 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (e) {
             console.error("Erro ao restaurar pintura:", e);
         }
+
+        atualizarStatusDasCores();
     }
 
     restaurarPinturaSalva();
 
     // ========================================================
-    // 8. PALETA DE CORES
+    // 9. PALETA DE CORES (IGNORA CLIQUE NAS CONCLUÍDAS)
     // ========================================================
     botoesCor.forEach(botao => {
         botao.addEventListener("click", () => {
-            obterAudioContext(); // Garante o áudio ativo
+            obterAudioContext();
+
+            // Se já foi concluída, não deixa selecionar
+            if (botao.classList.contains("concluida")) {
+                tocarSomErro();
+                return;
+            }
+
             botoesCor.forEach(b => b.classList.remove("ativa"));
             botao.classList.add("ativa");
             corSelecionada = botao.getAttribute("data-hex");
             numeroSelecionado = botao.getAttribute("data-numero");
+
+            atualizarDestaqueAreasPendentes();
         });
     });
 
     // ========================================================
-    // 9. CLIQUE NAS PARTES DO DESENHO (PINTURA POR NÚMERO)
+    // 10. CLIQUE NAS PARTES DO DESENHO (PINTURA POR NÚMEROS)
     // ========================================================
     partesSvg.forEach(parte => {
         parte.addEventListener("click", () => {
@@ -299,19 +415,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 salvarProgressoAutomatico();
             } else {
                 tocarSomErro();
-                // Efeito visual sutil de erro (pisca borda vermelha) sem interromper a tela com alert
                 parte.style.stroke = "#ef4444";
                 parte.style.strokeWidth = "6";
                 setTimeout(() => {
                     parte.style.stroke = "#333333";
                     parte.style.strokeWidth = "4";
-                }, 350);
+                }, 300);
             }
         });
     });
 
     // ========================================================
-    // 10. MODOS E BOTÃO DE TELA CHEIA (CROSS-BROWSER)
+    // 11. ALTERNÂNCIA DE FERRAMENTAS E TELA CHEIA
     // ========================================================
     if (btnBalde && btnPincel) {
         btnBalde.addEventListener("click", () => {
@@ -319,6 +434,7 @@ document.addEventListener("DOMContentLoaded", () => {
             btnBalde.classList.add("ativo");
             btnPincel.classList.remove("ativo");
             if (canvas) canvas.style.pointerEvents = "none";
+            atualizarDestaqueAreasPendentes();
         });
 
         btnPincel.addEventListener("click", () => {
@@ -326,10 +442,10 @@ document.addEventListener("DOMContentLoaded", () => {
             btnPincel.classList.add("ativo");
             btnBalde.classList.remove("ativo");
             if (canvas) canvas.style.pointerEvents = "auto";
+            partesSvg.forEach(p => p.classList.remove("parte-pendente-ativa"));
         });
     }
 
-    // Tela Cheia universal com suporte a webkit/iPhone/Android/Desktop
     if (btnTelaCheia) {
         btnTelaCheia.addEventListener("click", () => {
             obterAudioContext();
@@ -341,27 +457,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!estaCheia) {
                 const elem = document.documentElement;
-                if (elem.requestFullscreen) {
-                    elem.requestFullscreen().catch(err => console.log(err));
-                } else if (elem.webkitRequestFullscreen) {
-                    elem.webkitRequestFullscreen();
-                } else if (elem.msRequestFullscreen) {
-                    elem.msRequestFullscreen();
-                }
+                if (elem.requestFullscreen) elem.requestFullscreen().catch(() => {});
+                else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+                else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
                 btnTelaCheia.innerText = "⛶ Sair Tela";
             } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen().catch(err => console.log(err));
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen();
-                }
+                if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                else if (document.msExitFullscreen) document.msExitFullscreen();
                 btnTelaCheia.innerText = "⛶ Tela Cheia";
             }
         });
 
-        // Atualizar o texto do botão se o usuário sair pelo teclado (ESC)
         document.addEventListener("fullscreenchange", () => {
             if (!document.fullscreenElement) {
                 btnTelaCheia.innerText = "⛶ Tela Cheia";
@@ -370,7 +477,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================================
-    // 11. PINCEL LIVRE NO CANVAS
+    // 12. PINCEL LIVRE NO CANVAS COM TOUCH MOBILE
     // ========================================================
     if (canvas && ctx) {
         canvas.style.pointerEvents = "none";
@@ -395,7 +502,6 @@ document.addEventListener("DOMContentLoaded", () => {
             pintando = false;
         });
 
-        // Suporte para toque no celular (Touch events)
         canvas.addEventListener("touchstart", (e) => {
             if (modoAtual !== "pincel") return;
             const touch = e.touches[0];
@@ -424,7 +530,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================================
-    // 12. BOTÃO LIMPAR E BOTÃO SALVAR PNG
+    // 13. BOTÃO LIMPAR E BOTÃO SALVAR PNG
     // ========================================================
     if (btnLimpar) {
         btnLimpar.addEventListener("click", () => {
@@ -433,6 +539,7 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.removeItem(`progresso_${idDesenhoAtual}`);
             jaDisparouVitoria = false;
             atualizarBarraVisual(0, false);
+            atualizarStatusDasCores();
         });
     }
 
@@ -466,4 +573,3 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
-
