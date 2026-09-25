@@ -6,80 +6,81 @@
        ======================================================== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ColorirOnline - Plataforma de Desenhos e Pintura por Números</title>
-    <link rel="stylesheet" href="css/style.css?v=10">
+    <title>ColorirOnline - Pintura por Números</title>
+    <link rel="stylesheet" href="css/style.css?v=20">
 </head>
 <body>
 
     <!-- ========================================================
-       2. BARRA DE NAVEGAÇÃO PRINCIPAL (MENU E BUSCA)
+       2. CABEÇALHO PRINCIPAL E BARRA DE NAVEGAÇÃO
        ======================================================== -->
     <header class="cabecalho-principal">
         <div class="container-nav">
             <a href="index.html" class="logo">
-                <span class="logo-icone">🎨</span>
-                <span class="logo-texto">Colorir<span class="destaque">Online</span></span>
+                🎨 Colorir<span class="destaque">Online</span>
             </a>
-
-            <!-- CAMPO DE PESQUISA EM TEMPO REAL -->
             <div class="container-busca">
                 <span class="icone-busca">🔍</span>
                 <input type="text" id="campo-busca" placeholder="Pesquisar desenhos, categorias...">
             </div>
-
             <nav class="links-navegacao">
                 <a href="index.html" class="link-nav ativo">Início</a>
-                <a href="#catalogo" class="link-nav">Galeria</a>
+                <button id="btn-tema-global" class="btn-tema">🌙</button>
             </nav>
         </div>
     </header>
 
     <!-- ========================================================
-       3. BANNER DE DESTAQUE E NOVIDADES
+       3. BANNER HERO DE BOAS-VINDAS
        ======================================================== -->
     <section class="banner-novidades">
         <div class="conteudo-banner">
             <h2>✨ Novos Desenhos Adicionados!</h2>
-            <p>Escolha uma ilustração com números ou solte a criatividade com o pincel livre.</p>
+            <p>Escolha uma ilustração, siga os números e solte sua criatividade.</p>
         </div>
     </section>
 
     <!-- ========================================================
-       4. FILTROS POR CATEGORIAS (CENTRALIZADOS)
+       4. ATALHO: CONTINUAR PINTANDO (INJETADO SE HOUVER PROGRESSO)
        ======================================================== -->
-    <div class="filtros-categoria">
+    <div id="container-continuar"></div>
+
+    <!-- ========================================================
+       5. FILTROS POR CATEGORIA
+       ======================================================== -->
+    <section class="filtros-categoria">
         <button class="btn-categoria ativo" data-cat="todos">Todos</button>
         <button class="btn-categoria" data-cat="animais">Animais</button>
         <button class="btn-categoria" data-cat="infantil">Infantil</button>
         <button class="btn-categoria" data-cat="mandalas">Mandalas</button>
-    </div>
+    </section>
 
     <!-- ========================================================
-       5. ABAS DE ESTADO DO UTILIZADOR
+       6. ABAS DE STATUS DE CONCLUSÃO
        ======================================================== -->
-    <div class="abas-status">
+    <section class="abas-status">
         <button class="btn-aba ativa" data-filtro="todos">Todos os Desenhos</button>
         <button class="btn-aba" data-filtro="progresso">⏳ Em Progresso (<span id="qtd-progresso">0</span>)</button>
         <button class="btn-aba" data-filtro="finalizados">✅ Finalizados (<span id="qtd-finalizados">0</span>)</button>
-    </div>
+    </section>
 
- <!-- ========================================================
-       6. GRELHA DE CARTÕES DO CATÁLOGO
+    <!-- ========================================================
+       7. GRELHA DE 5 COLUNAS (COM MINISVGS COLORIDOS)
        ======================================================== -->
     <main class="catalogo-desenhos" id="catalogo"></main>
 
     <!-- ========================================================
-       7. BARRA DE PAGINAÇÃO (CENTRALIZADA E ESTILIZADA)
+       8. BARRA DE PAGINAÇÃO (30 ITENS POR PÁGINA)
        ======================================================== -->
-    <div class="container-paginacao" id="container-paginacao">
+    <nav class="container-paginacao" id="container-paginacao">
         <button class="btn-pag" id="btn-pag-anterior" disabled>← Anterior</button>
         <div class="numeros-paginacao" id="numeros-paginacao"></div>
         <button class="btn-pag" id="btn-pag-proximo">Próximo →</button>
-    </div>
+    </nav>
 
     <!-- ========================================================
-       8. CARREGAMENTO DOS SCRIPTS
+       9. CARREGAMENTO DOS SCRIPTS
        ======================================================== -->
-    <script src="js/catalogo.js?v=2"></script>
+    <script src="js/catalogo.js?v=20"></script>
 </body>
 </html>
