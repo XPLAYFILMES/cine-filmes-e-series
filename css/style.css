@@ -95,40 +95,41 @@ body.dark-mode {
 }
 
 /* ========================================================
-   3. CAMPO DE PESQUISA EM TEMPO REAL
+   3. CAMPO DE PESQUISA PADRÃO UNIVERSAL (TODAS AS PÁGINAS)
    ======================================================== */
 .container-busca {
     position: relative;
     flex: 1;
-    max-width: 440px;
+    max-width: 480px;
 }
 
 .icone-busca {
     position: absolute;
-    left: 14px;
+    left: 16px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: #94a3b8;
+    pointer-events: none;
 }
 
-#campo-busca {
+.campo-busca-padrao {
     width: 100%;
-    padding: 10px 16px 10px 40px;
+    padding: 11px 18px 11px 44px;
     border-radius: 30px;
     border: 1px solid #334155;
     background-color: #1e293b;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     color: #f8fafc;
     outline: none;
     transition: all 0.2s ease;
 }
 
-#campo-busca::placeholder {
+.campo-busca-padrao::placeholder {
     color: #94a3b8;
 }
 
-#campo-busca:focus {
+.campo-busca-padrao:focus {
     background-color: #0f172a;
     border-color: #38bdf8;
     box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
@@ -764,6 +765,57 @@ body.dark-mode .item-cor.ativa:not(.concluida) {
     font-size: 1.2rem;
     color: #ffffff;
     font-weight: 900;
+}
+/* ========================================================
+   11. MODAIS DE ENVIO DE ATIVIDADE E FORMULÁRIO DO ALUNO
+   ======================================================== */
+.modal-envio-tarefa {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.caixa-modal-envio {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 24px;
+    max-width: 460px;
+    width: 90%;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .caixa-modal-envio {
+    background: #1e293b;
+    color: #f8fafc;
+}
+
+.campo-formulario-aluno {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    margin: 8px 0 16px 0;
+    font-size: 0.95rem;
+    outline: none;
+    background: #f8fafc;
+}
+
+body.dark-mode .campo-formulario-aluno {
+    background: #0f172a;
+    border-color: #334155;
+    color: #f8fafc;
+}
+
+.campo-formulario-aluno:focus {
+    border-color: #2563eb;
 }
 
 /* ========================================================
