@@ -1,275 +1,495 @@
-document.addEventListener("DOMContentLoaded", () => {
+/* ========================================================
+   1. CONFIGURAÇÕES GLOBAIS E RESET
+   ======================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-    // ========================================================
-    // 1. BANCO DE DESENHOS SVG DINÂMICOS
-    // ========================================================
-    const catalogoSVG = {
-        desenho_1: {
-            titulo: "Estrela Mágica",
-            viewBox: "0 0 300 300",
-            svg: `
-                <polygon class="parte-pintavel" data-numero="1" points="150,25 179,111 269,111 197,165 224,251 150,200 76,251 103,165 31,111 121,111" fill="#ffffff" stroke="#333333" stroke-width="4" stroke-linejoin="round" />
-                <circle class="parte-pintavel" data-numero="2" cx="70" cy="70" r="30" fill="#ffffff" stroke="#333333" stroke-width="4" />
-                <circle class="parte-pintavel" data-numero="3" cx="230" cy="70" r="30" fill="#ffffff" stroke="#333333" stroke-width="4" />
-                <text x="150" y="155" font-family="Arial" font-size="20" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">1</text>
-                <text x="70" y="77" font-family="Arial" font-size="18" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">2</text>
-                <text x="230" y="77" font-family="Arial" font-size="18" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">3</text>
-            `
-        },
-        desenho_2: {
-            titulo: "Foguetão Espacial",
-            viewBox: "0 0 300 300",
-            svg: `
-                <!-- Corpo Principal do Foguete -->
-                <path class="parte-pintavel" data-numero="1" d="M150,30 C180,90 190,180 190,210 L110,210 C110,180 120,90 150,30 Z" fill="#ffffff" stroke="#333333" stroke-width="4" stroke-linejoin="round"/>
-                <!-- Asa Esquerda -->
-                <path class="parte-pintavel" data-numero="2" d="M110,160 L60,210 L110,210 Z" fill="#ffffff" stroke="#333333" stroke-width="4" stroke-linejoin="round"/>
-                <!-- Asa Direita -->
-                <path class="parte-pintavel" data-numero="2" d="M190,160 L240,210 L190,210 Z" fill="#ffffff" stroke="#333333" stroke-width="4" stroke-linejoin="round"/>
-                <!-- Janela / Escotilha -->
-                <circle class="parte-pintavel" data-numero="3" cx="150" cy="120" r="22" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-                <!-- Fogo / Propulsão -->
-                <polygon class="parte-pintavel" data-numero="4" points="130,215 150,270 170,215" fill="#ffffff" stroke="#333333" stroke-width="4" stroke-linejoin="round"/>
-                <text x="150" y="175" font-family="Arial" font-size="20" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">1</text>
-                <text x="90" y="200" font-family="Arial" font-size="16" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">2</text>
-                <text x="210" y="200" font-family="Arial" font-size="16" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">2</text>
-                <text x="150" y="127" font-family="Arial" font-size="18" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">3</text>
-                <text x="150" y="245" font-family="Arial" font-size="16" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">4</text>
-            `
-        },
-        desenho_3: {
-            titulo: "Flor Geométrica",
-            viewBox: "0 0 300 300",
-            svg: `
-                <!-- Pétala Cima -->
-                <ellipse class="parte-pintavel" data-numero="1" cx="150" cy="90" rx="30" ry="45" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-                <!-- Pétala Baixo -->
-                <ellipse class="parte-pintavel" data-numero="1" cx="150" cy="210" rx="30" ry="45" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-                <!-- Pétala Esquerda -->
-                <ellipse class="parte-pintavel" data-numero="1" cx="90" cy="150" rx="45" ry="30" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-                <!-- Pétala Direita -->
-                <ellipse class="parte-pintavel" data-numero="1" cx="210" cy="150" rx="45" ry="30" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-                <!-- Miolo Central -->
-                <circle class="parte-pintavel" data-numero="2" cx="150" cy="150" r="32" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-                <text x="150" y="95" font-family="Arial" font-size="18" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">1</text>
-                <text x="150" y="215" font-family="Arial" font-size="18" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">1</text>
-                <text x="90" y="155" font-family="Arial" font-size="18" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">1</text>
-                <text x="210" y="155" font-family="Arial" font-size="18" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">1</text>
-                <text x="150" y="157" font-family="Arial" font-size="20" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">2</text>
-            `
-        }
-    };
+body {
+    background-color: #dbe2ef !important;
+    color: #0f172a;
+    min-height: 100vh;
+}
 
-    // ========================================================
-    // 2. INJEÇÃO DO DESENHO ESCOLHIDO PELA URL
-    // ========================================================
-    const parametrosUrl = new URLSearchParams(window.location.search);
-    const idDesenhoAtual = parametrosUrl.get("id") || "desenho_1";
-    const desenhoDados = catalogoSVG[idDesenhoAtual] || catalogoSVG["desenho_1"];
+/* ========================================================
+   2. CABEÇALHO PRINCIPAL E BARRA DE NAVEGAÇÃO
+   ======================================================== */
+.cabecalho-principal {
+    background: #0f172a;
+    border-bottom: 2px solid #1e293b;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
 
-    const svgElemento = document.getElementById("desenho-svg");
-    if (svgElemento) {
-        svgElemento.setAttribute("viewBox", desenhoDados.viewBox);
-        svgElemento.innerHTML = desenhoDados.svg;
-    }
+.container-nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
 
-    // ========================================================
-    // 3. ESTADOS E SELEÇÃO DE ELEMENTOS DA PRANCHETA
-    // ========================================================
-    let corSelecionada = "#e74c3c";
-    let numeroSelecionado = "1";
-    let modoAtual = "balde";
-    let pintando = false;
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+}
 
-    const botoesCor = document.querySelectorAll(".item-cor");
-    const partesSvg = document.querySelectorAll(".parte-pintavel");
-    const btnBalde = document.getElementById("btn-modo-balde");
-    const btnPincel = document.getElementById("btn-modo-pincel");
-    const btnLimpar = document.getElementById("btn-limpar");
-    const btnSalvar = document.getElementById("btn-salvar");
-    const canvas = document.getElementById("camada-pincel");
-    const ctx = canvas ? canvas.getContext("2d") : null;
+.logo .destaque {
+    color: #38bdf8;
+}
 
-    const barraAtiva = document.getElementById("barra-progresso-ativa");
-    const textoAtivo = document.getElementById("texto-progresso-ativo");
-    const avisoParabens = document.getElementById("aviso-parabens");
+.links-navegacao {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
 
-    // ========================================================
-    // 4. ATUALIZAÇÃO VISUAL DA BARRA E NOTIFICAÇÃO
-    // ========================================================
-    function atualizarBarraVisual(porcentagem, concluido) {
-        if (barraAtiva) barraAtiva.style.width = `${porcentagem}%`;
-        if (textoAtivo) textoAtivo.innerText = `${porcentagem}% Concluído`;
-        if (avisoParabens) avisoParabens.style.display = concluido ? "block" : "none";
-    }
+.link-nav {
+    text-decoration: none;
+    color: #cbd5e1;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 8px 14px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
 
-    // ========================================================
-    // 5. SALVAMENTO AUTOMÁTICO NO NAVEGADOR
-    // ========================================================
-    function salvarProgressoAutomatico() {
-        let partesPintadas = 0;
-        const estadoCores = {};
+.link-nav:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
 
-        partesSvg.forEach((parte, index) => {
-            const cor = parte.getAttribute("fill");
-            if (cor && cor.toLowerCase() !== "#ffffff" && cor.toLowerCase() !== "#fff" && cor !== "rgb(255, 255, 255)") {
-                partesPintadas++;
-                estadoCores[index] = cor;
-            }
-        });
+.link-nav.ativo {
+    color: #38bdf8;
+}
 
-        const totalPartes = partesSvg.length;
-        const porcentagem = totalPartes > 0 ? Math.round((partesPintadas / totalPartes) * 100) : 0;
-        const concluido = (partesPintadas === totalPartes && totalPartes > 0);
+/* ========================================================
+   3. CAMPO DE PESQUISA EM TEMPO REAL
+   ======================================================== */
+.container-busca {
+    position: relative;
+    flex: 1;
+    max-width: 480px;
+}
 
-        atualizarBarraVisual(porcentagem, concluido);
+.icone-busca {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    color: #94a3b8;
+}
 
-        localStorage.setItem(`progresso_${idDesenhoAtual}`, JSON.stringify({
-            porcentagem: porcentagem,
-            cores: estadoCores
-        }));
-    }
+#campo-busca {
+    width: 100%;
+    padding: 11px 18px 11px 44px;
+    border-radius: 30px;
+    border: 1px solid #334155;
+    background-color: #1e293b;
+    font-size: 0.95rem;
+    color: #f8fafc;
+    outline: none;
+    transition: all 0.2s ease;
+}
 
-    // ========================================================
-    // 6. RESTAURAÇÃO DE PINTURA ANTERIOR
-    // ========================================================
-    function restaurarPinturaSalva() {
-        const dadosSalvos = localStorage.getItem(`progresso_${idDesenhoAtual}`);
-        if (!dadosSalvos) return;
+#campo-busca::placeholder {
+    color: #94a3b8;
+}
 
-        try {
-            const dados = JSON.parse(dadosSalvos);
-            if (dados.cores) {
-                Object.keys(dados.cores).forEach(index => {
-                    const idx = parseInt(index, 10);
-                    if (partesSvg[idx]) {
-                        partesSvg[idx].setAttribute("fill", dados.cores[idx]);
-                    }
-                });
-            }
-            const pct = dados.porcentagem || 0;
-            atualizarBarraVisual(pct, pct === 100);
-        } catch (e) {
-            console.error("Erro ao restaurar progresso:", e);
-        }
-    }
+#campo-busca:focus {
+    background-color: #0f172a;
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+}
 
-    restaurarPinturaSalva();
+/* ========================================================
+   4. BANNER DE NOVIDADES
+   ======================================================== */
+.banner-novidades {
+    max-width: 1100px;
+    margin: 25px auto 15px auto;
+    padding: 35px 25px;
+    background: linear-gradient(135deg, #4f46e5, #3b82f6);
+    color: #ffffff;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);
+}
 
-    // ========================================================
-    // 7. SELEÇÃO DE CORES DA PALETA
-    // ========================================================
-    botoesCor.forEach(botao => {
-        botao.addEventListener("click", () => {
-            botoesCor.forEach(b => b.classList.remove("ativa"));
-            botao.classList.add("ativa");
-            corSelecionada = botao.getAttribute("data-hex");
-            numeroSelecionado = botao.getAttribute("data-numero");
-        });
-    });
+.conteudo-banner h2 {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+    font-weight: 800;
+}
 
-    // ========================================================
-    // 8. PINTURA POR NÚMEROS (MODO BALDE)
-    // ========================================================
-    partesSvg.forEach(parte => {
-        parte.addEventListener("click", () => {
-            if (modoAtual !== "balde") return;
+.conteudo-banner p {
+    font-size: 1rem;
+    opacity: 0.9;
+}
 
-            const numeroParte = parte.getAttribute("data-numero");
-            if (numeroParte === numeroSelecionado) {
-                parte.setAttribute("fill", corSelecionada);
-                salvarProgressoAutomatico();
-            } else {
-                alert(`Atenção: Esta área é para a cor de número ${numeroParte}!`);
-            }
-        });
-    });
+/* ========================================================
+   5. FILTROS POR CATEGORIA (ABAIXO DO BANNER)
+   ======================================================== */
+.filtros-categoria {
+    max-width: 1000px;
+    margin: 20px auto 10px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 0 20px;
+}
 
-    // ========================================================
-    // 9. ALTERNÂNCIA DE FERRAMENTAS (BALDE / PINCEL)
-    // ========================================================
-    if (btnBalde && btnPincel) {
-        btnBalde.addEventListener("click", () => {
-            modoAtual = "balde";
-            btnBalde.classList.add("ativo");
-            btnPincel.classList.remove("ativo");
-            if (canvas) canvas.style.pointerEvents = "none";
-        });
+.btn-categoria {
+    background-color: #ffffff;
+    border: 2px solid #e2e8f0;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #64748b;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+    transition: all 0.2s ease;
+}
 
-        btnPincel.addEventListener("click", () => {
-            modoAtual = "pincel";
-            btnPincel.classList.add("ativo");
-            btnBalde.classList.remove("ativo");
-            if (canvas) canvas.style.pointerEvents = "auto";
-        });
-    }
+.btn-categoria:hover {
+    border-color: #94a3b8;
+    color: #0f172a;
+    transform: translateY(-1px);
+}
 
-    // ========================================================
-    // 10. PINCEL LIVRE NO CANVAS
-    // ========================================================
-    if (canvas && ctx) {
-        canvas.style.pointerEvents = "none";
+.btn-categoria.ativo {
+    background-color: #2563eb;
+    color: #ffffff;
+    border-color: #2563eb;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+}
 
-        canvas.addEventListener("mousedown", (e) => {
-            if (modoAtual !== "pincel") return;
-            pintando = true;
-            ctx.beginPath();
-            ctx.moveTo(e.offsetX, e.offsetY);
-        });
+/* ========================================================
+   6. ABAS DE ESTADO (TODOS, EM PROGRESSO, FINALIZADOS)
+   ======================================================== */
+.abas-status {
+    max-width: 1000px;
+    margin: 15px auto 25px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 0 20px;
+}
 
-        canvas.addEventListener("mousemove", (e) => {
-            if (!pintando || modoAtual !== "pincel") return;
-            ctx.lineWidth = 6;
-            ctx.lineCap = "round";
-            ctx.strokeStyle = corSelecionada;
-            ctx.lineTo(e.offsetX, e.offsetY);
-            ctx.stroke();
-        });
+.btn-aba {
+    background-color: #ffffff;
+    border: 2px solid #cbd5e1;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
 
-        window.addEventListener("mouseup", () => {
-            pintando = false;
-        });
-    }
+.btn-aba:hover {
+    border-color: #94a3b8;
+    transform: translateY(-1px);
+}
 
-    // ========================================================
-    // 11. BOTÃO LIMPAR E BOTÃO SALVAR PNG
-    // ========================================================
-    if (btnLimpar) {
-        btnLimpar.addEventListener("click", () => {
-            partesSvg.forEach(parte => parte.setAttribute("fill", "#ffffff"));
-            if (ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
-            localStorage.removeItem(`progresso_${idDesenhoAtual}`);
-            atualizarBarraVisual(0, false);
-        });
-    }
+.btn-aba.ativa {
+    background-color: #0f172a;
+    color: #ffffff;
+    border-color: #0f172a;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.25);
+}
 
-    if (btnSalvar) {
-        btnSalvar.addEventListener("click", () => {
-            const canvasFinal = document.createElement("canvas");
-            canvasFinal.width = 300;
-            canvasFinal.height = 300;
-            const contextoFinal = canvasFinal.getContext("2d");
+/* ========================================================
+   7. GRELHA E CARTÕES DE DESENHOS (CATÁLOGO)
+   ======================================================== */
+.catalogo-desenhos {
+    max-width: 1100px;
+    margin: 0 auto 50px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 0 20px;
+}
 
-            contextoFinal.fillStyle = "#ffffff";
-            contextoFinal.fillRect(0, 0, 300, 300);
+.card-desenho {
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 18px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
-            const svgString = new XMLSerializer().serializeToString(svgElemento);
-            const svgBlob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
-            const urlSvg = URL.createObjectURL(svgBlob);
+.card-desenho:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
 
-            const imgSvg = new Image();
-            imgSvg.onload = () => {
-                contextoFinal.drawImage(imgSvg, 0, 0);
-                if (canvas) contextoFinal.drawImage(canvas, 0, 0);
+.tag-categoria {
+    align-self: flex-start;
+    background-color: #eff6ff;
+    color: #2563eb;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+}
 
-                const linkDownload = document.createElement("a");
-                linkDownload.download = `${idDesenhoAtual}-colorido.png`;
-                linkDownload.href = canvasFinal.toDataURL("image/png");
-                linkDownload.click();
+.preview-imagem {
+    height: 140px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    font-weight: bold;
+    color: #334155;
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    margin: 15px 0;
+    background-color: #f8fafc;
+}
 
-                URL.revokeObjectURL(urlSvg);
-            };
-            imgSvg.src = urlSvg;
-        });
-    }
-});
+.container-progresso {
+    width: 100%;
+    height: 8px;
+    background-color: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.barra-progresso {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #10b981);
+    transition: width 0.3s ease;
+}
+
+.texto-progresso {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #64748b;
+    margin: 6px 0 14px 0;
+}
+
+.btn-jogar {
+    display: block;
+    width: 100%;
+    background-color: #10b981;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.btn-jogar:hover {
+    background-color: #059669;
+}
+
+/* ========================================================
+   8. ESTRUTURA GERAL DA TELA DE PINTURA (PINTAR.HTML)
+   ======================================================== */
+.pagina-pintura {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100vh;
+    padding: 15px;
+    user-select: none;
+}
+
+.barra-ferramentas {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.btn-voltar {
+    text-decoration: none;
+    background-color: #64748b;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.btn-voltar:hover {
+    background-color: #475569;
+}
+
+.grupo-ferramentas {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-ferramenta {
+    background-color: #ffffff;
+    border: 2px solid #cbd5e1;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-ferramenta.ativo {
+    background-color: #2563eb;
+    color: white;
+    border-color: #1d4ed8;
+}
+
+/* ========================================================
+   9. INDICADOR DE PROGRESSO E AVISO DA PRANCHETA
+   ======================================================== */
+.painel-progresso-topo {
+    width: 100%;
+    max-width: 320px;
+    margin: 8px auto;
+    text-align: center;
+}
+
+.trilha-progresso {
+    width: 100%;
+    height: 10px;
+    background-color: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+
+.barra-preenchimento {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #10b981);
+    transition: width 0.3s ease;
+}
+
+#texto-progresso-ativo {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #475569;
+}
+
+.modal-parabens {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 0.95rem;
+    padding: 10px 20px;
+    border-radius: 25px;
+    margin: 10px auto;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
+    text-align: center;
+    max-width: 320px;
+    display: none;
+}
+
+/* ========================================================
+   10. PRANCHETA DE DESENHO E PALETA DE CORES
+   ======================================================== */
+.area-prancheta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+}
+
+.prancheta {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.prancheta svg,
+.prancheta canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#camada-pincel {
+    pointer-events: none;
+}
+
+.parte-pintavel {
+    cursor: pointer;
+    transition: fill 0.2s ease;
+}
+
+.parte-pintavel:hover {
+    opacity: 0.85;
+}
+
+.barra-paleta {
+    display: flex;
+    gap: 12px;
+    padding: 10px 18px;
+    background: #ffffff;
+    border-radius: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.item-cor {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    border: 3px solid transparent;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.item-cor:hover {
+    transform: scale(1.1);
+}
+
+.item-cor.ativa {
+    border-color: #0f172a;
+    transform: scale(1.15);
+}
