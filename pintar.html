@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pintar Desenho - ColorirOnline</title>
-    <link rel="stylesheet" href="css/style.css?v=16">
+    <link rel="stylesheet" href="css/style.css?v=20">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body class="pagina-pintura">
@@ -16,13 +16,18 @@
        2. BARRA DE FERRAMENTAS SUPERIOR
        ======================================================== -->
     <header class="barra-ferramentas">
-        <a href="index.html" class="btn-voltar">⬅ Voltar ao Catálogo</a>
+        <a href="index.html" class="btn-voltar">⬅ Catálogo</a>
         <div class="grupo-ferramentas">
-            <button id="btn-modo-balde" class="btn-ferramenta ativo">🎨 Modo Números</button>
-            <button id="btn-modo-pincel" class="btn-ferramenta">🖌 Pincel Livre</button>
-            <button id="btn-tela-cheia" class="btn-ferramenta">⛶ Tela Cheia</button>
+            <button id="btn-modo-balde" class="btn-ferramenta ativo">🎨 Números</button>
+            <button id="btn-modo-pincel" class="btn-ferramenta">🖌 Pincel</button>
+            <button id="btn-desfazer" class="btn-ferramenta">↩ Desfazer</button>
+            <button id="btn-dica" class="btn-ferramenta btn-dica">💡 Dica</button>
+            <button id="btn-zoom-in" class="btn-ferramenta">🔍 +</button>
+            <button id="btn-zoom-out" class="btn-ferramenta">🔍 -</button>
+            <button id="btn-tela-cheia" class="btn-ferramenta">⛶ Tela</button>
             <button id="btn-limpar" class="btn-ferramenta">🗑 Limpar</button>
             <button id="btn-salvar" class="btn-ferramenta">💾 Salvar</button>
+            <button id="btn-tema-pintar" class="btn-ferramenta">🌙</button>
         </div>
     </header>
 
@@ -37,24 +42,19 @@
     </div>
 
     <!-- ========================================================
-       4. AVISO DE CONCLUSÃO (100%)
+       4. ÁREA DA PRANCHETA (COM ENVELOPE DE ZOOM E PAN)
        ======================================================== -->
-    <div id="aviso-parabens" class="modal-parabens">
-        🎉 Parabéns! Você concluiu este desenho!
-    </div>
-
-    <!-- ========================================================
-       5. ÁREA DA PRANCHETA (DESENHO SVG E CANVAS)
-       ======================================================== -->
-    <main class="area-prancheta" id="container-prancheta">
-        <div class="prancheta" id="prancheta">
-            <svg id="desenho-svg" viewBox="0 0 300 300"></svg>
-            <canvas id="camada-pincel" width="320" height="320"></canvas>
+    <main class="area-prancheta" id="container-pan">
+        <div class="prancheta-wrapper" id="prancheta-wrapper">
+            <div class="prancheta" id="prancheta">
+                <svg id="desenho-svg" viewBox="0 0 300 300"></svg>
+                <canvas id="camada-pincel" width="330" height="330"></canvas>
+            </div>
         </div>
     </main>
 
     <!-- ========================================================
-       6. PALETA DE CORES NUMERADA (RODAPÉ)
+       5. PALETA DE CORES NUMERADA (RODAPÉ)
        ======================================================== -->
     <footer class="barra-paleta" id="barra-paleta">
         <div class="item-cor ativa" data-numero="1" data-hex="#e74c3c" style="background-color: #e74c3c;">1</div>
@@ -65,8 +65,26 @@
     </footer>
 
     <!-- ========================================================
-       7. CARREGAMENTO DO SCRIPT DO MOTOR DE PINTURA
+       6. MODAL COMEMORATIVO DE 100% (POPUP COM DOWNLOAD E A4)
        ======================================================== -->
-    <script src="js/app.js?v=8"></script>
+    <div id="modal-conclusao" class="modal-overlay" style="display: none;">
+        <div class="modal-card">
+            <h2>🎉 Obra Concluída!</h2>
+            <p>Você completou todos os números com perfeição!</p>
+            <div class="preview-final-modal">
+                <img id="img-modal-preview" alt="Prévia Concluída" src="">
+            </div>
+            <div class="grupo-acoes-modal">
+                <button id="btn-modal-png" class="btn-modal-acao btn-acao-png">📥 Baixar Imagem HD</button>
+                <button id="btn-modal-imprimir" class="btn-modal-acao btn-acao-imprimir">🖨 Imprimir em Folha A4</button>
+                <button id="btn-modal-fechar" class="btn-modal-acao btn-acao-fechar">Fechar e Admirar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================
+       7. CARREGAMENTO DOS SCRIPTS
+       ======================================================== -->
+    <script src="js/app.js?v=20"></script>
 </body>
 </html>
