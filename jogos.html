@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- ========================================================
+       1. CABEÇALHO DO DOCUMENTO E METADADOS
+       ======================================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogos para Todas as Idades - ColorirOnline</title>
+    <link rel="stylesheet" href="css/style.css?v=30">
+</head>
+<body>
+
+    <!-- ========================================================
+       2. CABEÇALHO PRINCIPAL E BARRA DE NAVEGAÇÃO
+       ======================================================== -->
+    <header class="cabecalho-principal">
+        <div class="container-nav">
+            <a href="index.html" class="logo">
+                🎨 Colorir<span class="destaque">Online</span>
+            </a>
+            <div class="container-busca">
+                <span class="icone-busca">🔍</span>
+                <input type="text" id="campo-busca-jogos" placeholder="Pesquisar jogo...">
+            </div>
+            <nav class="links-navegacao">
+                <a href="index.html" class="link-nav">🎨 Colorir</a>
+                <a href="jogos.html" class="link-nav ativo">🧩 Jogos</a>
+                <a href="atividades.html" class="link-nav">📚 Atividades Escolares</a>
+                <button id="btn-tema-jogos" class="btn-tema">🌙</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ========================================================
+       3. BANNER DE JOGOS
+       ======================================================== -->
+    <section class="banner-novidades" style="background: linear-gradient(135deg, #7c3aed, #a855f7);">
+        <div class="conteudo-banner">
+            <h2>🧩 Jogos e Desafios para Todas as Idades</h2>
+            <p>Exercite a memória, o raciocínio e a concentração com Caça-Palavras, Jogo da Memória e Quebra-Cabeças!</p>
+        </div>
+    </section>
+
+    <!-- ========================================================
+       4. FILTRO POR TIPO DE JOGO
+       ======================================================== -->
+    <section class="filtros-categoria" id="filtros-tipo-jogo">
+        <button class="btn-categoria ativo" data-tipo="todos">Todos os Jogos</button>
+        <button class="btn-categoria" data-tipo="caca-palavras">🔤 Caça-Palavras</button>
+        <button class="btn-categoria" data-tipo="memoria">🧠 Jogo da Memória</button>
+        <button class="btn-categoria" data-tipo="quebra-cabeca">🧩 Quebra-Cabeça</button>
+        <button class="btn-categoria" data-tipo="raciocinio">💡 Raciocínio & Lógica</button>
+    </section>
+
+    <!-- ========================================================
+       5. FILTRO POR FAIXA ETÁRIA / DIFICULDADE
+       ======================================================== -->
+    <section class="abas-status" id="filtros-idade-jogo">
+        <button class="btn-aba ativa" data-publico="todos">Todas as Idades</button>
+        <button class="btn-aba" data-publico="infantil">Infantil (Fácil)</button>
+        <button class="btn-aba" data-publico="geral">Geral / Família</button>
+        <button class="btn-aba" data-publico="adultos">Adultos & Terceira Idade (Estimulação Cognitiva)</button>
+    </section>
+
+    <!-- ========================================================
+       6. GRELHA DE JOGOS
+       ======================================================== -->
+    <main class="catalogo-desenhos" id="catalogo-jogos"></main>
+
+    <!-- ========================================================
+       7. CARREGAMENTO DOS SCRIPTS
+       ======================================================== -->
+    <script src="js/jogos.js?v=1"></script>
+</body>
+</html>
