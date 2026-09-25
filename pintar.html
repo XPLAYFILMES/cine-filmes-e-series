@@ -7,8 +7,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pintar Desenho - ColorirOnline</title>
-    <link rel="stylesheet" href="css/style.css?v=12">
-    <!-- Biblioteca leve de confetes para comemoração de 100% -->
+    <link rel="stylesheet" href="css/style.css?v=14">
+    <!-- Biblioteca externa para animação de confetes ao atingir 100% -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body class="pagina-pintura">
@@ -49,9 +49,7 @@
        ======================================================== -->
     <main class="area-prancheta" id="container-prancheta">
         <div class="prancheta" id="prancheta">
-            <!-- SVG dinâmico injetado via JavaScript -->
             <svg id="desenho-svg" viewBox="0 0 300 300"></svg>
-            <!-- Camada transparente para o pincel livre -->
             <canvas id="camada-pincel" width="320" height="320"></canvas>
         </div>
     </main>
@@ -70,6 +68,6 @@
     <!-- ========================================================
        7. CARREGAMENTO DO SCRIPT DO MOTOR DE PINTURA
        ======================================================== -->
-    <script src="js/app.js?v=4"></script>
+    <script src="js/app.js?v=6"></script>
 </body>
 </html>
