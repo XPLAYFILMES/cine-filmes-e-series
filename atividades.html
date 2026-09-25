@@ -6,8 +6,9 @@
        ======================================================== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atividades Escolares - ColorirOnline</title>
-    <link rel="stylesheet" href="css/style.css?v=30">
+    <title>Atividades Escolares Online - ColorirOnline</title>
+    <link rel="stylesheet" href="css/style.css?v=35">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
 
@@ -21,12 +22,13 @@
             </a>
             <div class="container-busca">
                 <span class="icone-busca">🔍</span>
-                <input type="text" id="campo-busca-atividades" placeholder="Pesquisar atividade, matéria...">
+                <input type="text" id="campo-busca" class="campo-busca-padrao" placeholder="Pesquisar atividades, disciplinas...">
             </div>
             <nav class="links-navegacao">
                 <a href="index.html" class="link-nav">🎨 Colorir</a>
                 <a href="jogos.html" class="link-nav">🧩 Jogos</a>
-                <a href="atividades.html" class="link-nav ativo">📚 Atividades Escolares</a>
+                <a href="atividades.html" class="link-nav ativo">📚 Atividades</a>
+                <a href="admin.html" class="link-nav" style="color: #38bdf8;">⚙️ Painel Admin</a>
                 <button id="btn-tema-atividades" class="btn-tema">🌙</button>
             </nav>
         </div>
@@ -37,13 +39,13 @@
        ======================================================== -->
     <section class="banner-novidades" style="background: linear-gradient(135deg, #059669, #10b981);">
         <div class="conteudo-banner">
-            <h2>📚 Espaço Pedagógico e Escolar</h2>
-            <p>Exercícios educativos organizados por ano escolar e matérias. Pratique online ou imprima em folha A4!</p>
+            <h2>📚 Atividades Escolares Online</h2>
+            <p>Resolva as tarefas diretamente no navegador. Ao finalizar, envie para o professor corrigir e atribuir sua nota!</p>
         </div>
     </section>
 
     <!-- ========================================================
-       4. FILTRO POR ANO ESCOLAR / SÉRIE
+       4. FILTRO POR SÉRIE / ANO ESCOLAR
        ======================================================== -->
     <section class="filtros-categoria" id="filtros-series">
         <button class="btn-categoria ativo" data-serie="todas">Todas as Séries</button>
@@ -55,24 +57,49 @@
     </section>
 
     <!-- ========================================================
-       5. FILTRO POR DISCIPLINA / MATÉRIA
+       5. FILTRO POR DISCIPLINA
        ======================================================== -->
     <section class="abas-status" id="filtros-materias">
         <button class="btn-aba ativa" data-materia="todas">Todas as Matérias</button>
-        <button class="btn-aba" data-materia="portugues">📖 Português & Alfabeto</button>
-        <button class="btn-aba" data-materia="matematica">🔢 Matemática & Números</button>
-        <button class="btn-aba" data-materia="ciencias">🌱 Ciências & Natureza</button>
-        <button class="btn-aba" data-materia="coordenacao">✏️ Coordenação Motora</button>
+        <button class="btn-aba" data-materia="portugues">📖 Língua Portuguesa</button>
+        <button class="btn-aba" data-materia="matematica">🔢 Matemática</button>
+        <button class="btn-aba" data-materia="ciencias">🌱 Ciências Naturais</button>
     </section>
 
     <!-- ========================================================
-       6. GRELHA DE CARTÕES DE ATIVIDADES
+       6. GRELHA DE ATIVIDADES CADASTRADAS (RENDERIZADAS VIA JS)
        ======================================================== -->
     <main class="catalogo-desenhos" id="catalogo-atividades"></main>
 
     <!-- ========================================================
-       7. CARREGAMENTO DOS SCRIPTS
+       7. MODAL DE RESOLUÇÃO ONLINE E REGISTRO DO ALUNO
        ======================================================== -->
-    <script src="js/atividades.js?v=1"></script>
+    <div id="modal-fazer-atividade" class="modal-envio-tarefa">
+        <div class="caixa-modal-envio">
+            <h2 id="modal-titulo-ativ" style="color: #059669; font-size: 1.3rem; margin-bottom: 8px;">Realizar Atividade</h2>
+            <p id="modal-enunciado-ativ" style="font-size: 0.9rem; color: #475569; margin-bottom: 14px;"></p>
+            
+            <label style="font-weight: bold; font-size: 0.85rem;">Sua Resposta / Resolução:</label>
+            <textarea id="resposta-aluno" class="campo-formulario-aluno" rows="4" placeholder="Escreva a resposta da atividade aqui..."></textarea>
+
+            <label style="font-weight: bold; font-size: 0.85rem;">Nome Completo do Aluno:</label>
+            <input type="text" id="nome-aluno" class="campo-formulario-aluno" placeholder="Ex: Lucas Gabriel Silveira">
+
+            <label style="font-weight: bold; font-size: 0.85rem;">Turma / Escola:</label>
+            <input type="text" id="turma-aluno" class="campo-formulario-aluno" placeholder="Ex: 2º Ano B - Escola Municipal">
+
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button id="btn-enviar-tarefa" class="btn-jogar" style="background-color: #059669; flex: 2; border: none; cursor: pointer;">
+                    🚀 Enviar para Correção do Professor
+                </button>
+                <button id="btn-fechar-modal-ativ" class="btn-pag" style="flex: 1;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================
+       8. CARREGAMENTO DOS SCRIPTS
+       ======================================================== -->
+    <script src="js/atividades.js?v=35"></script>
 </body>
 </html>
