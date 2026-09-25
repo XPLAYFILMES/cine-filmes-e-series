@@ -51,16 +51,14 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // ========================================================
-    // 2. SISTEMA DE ÁUDIO WEB OTIMIZADO E CALIBRADO
+    // 2. SISTEMA DE ÁUDIO WEB OTIMIZADO E SONS SINTETIZADOS
     // ========================================================
     let audioCtx = null;
 
     function obterAudioContext() {
         if (!audioCtx) {
             const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-            if (AudioContextClass) {
-                audioCtx = new AudioContextClass();
-            }
+            if (AudioContextClass) audioCtx = new AudioContextClass();
         }
         if (audioCtx && audioCtx.state === "suspended") {
             audioCtx.resume();
@@ -68,40 +66,34 @@ document.addEventListener("DOMContentLoaded", () => {
         return audioCtx;
     }
 
-    // Desbloqueia áudio no primeiro toque/clique
-    const desbloquear = () => {
+    const desbloquearAudio = () => {
         obterAudioContext();
-        window.removeEventListener("pointerdown", desbloquear);
+        window.removeEventListener("pointerdown", desbloquearAudio);
     };
-    window.addEventListener("pointerdown", desbloquear);
+    window.addEventListener("pointerdown", desbloquearAudio);
 
-    // Efeito: Bolha / Gota d'Água (Pop suave e agradável)
     function tocarSomAcerto() {
         try {
             const ctxA = obterAudioContext();
             if (!ctxA) return;
             const agora = ctxA.currentTime;
-
-            // Oscilador principal com subida rápida tipo bolha
             const osc = ctxA.createOscillator();
             const gain = ctxA.createGain();
 
             osc.type = "sine";
-            osc.frequency.setValueAtTime(320, agora);
-            osc.frequency.exponentialRampToValueAtTime(880, agora + 0.08);
+            osc.frequency.setValueAtTime(340, agora);
+            osc.frequency.exponentialRampToValueAtTime(900, agora + 0.08);
 
             gain.gain.setValueAtTime(0.4, agora);
             gain.gain.exponentialRampToValueAtTime(0.001, agora + 0.1);
 
             osc.connect(gain);
             gain.connect(ctxA.destination);
-
             osc.start(agora);
             osc.stop(agora + 0.1);
         } catch (e) {}
     }
 
-    // Efeito: Cor Concluída (Campainha harmônica suave)
     function tocarSomCorFinalizada() {
         try {
             const ctxA = obterAudioContext();
@@ -121,20 +113,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 osc.connect(gain);
                 gain.connect(ctxA.destination);
-
                 osc.start(t);
                 osc.stop(t + 0.25);
             });
         } catch (e) {}
     }
 
-    // Efeito: Aviso de erro sutil
     function tocarSomErro() {
         try {
             const ctxA = obterAudioContext();
             if (!ctxA) return;
             const agora = ctxA.currentTime;
-
             const osc = ctxA.createOscillator();
             const gain = ctxA.createGain();
 
@@ -147,13 +136,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             osc.connect(gain);
             gain.connect(ctxA.destination);
-
             osc.start(agora);
             osc.stop(agora + 0.14);
         } catch (e) {}
     }
 
-    // Efeito: Vitória 100% (Arpejo festivo)
     function tocarSomVitoria() {
         try {
             const ctxA = obterAudioContext();
@@ -174,7 +161,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 osc.connect(gain);
                 gain.connect(ctxA.destination);
-
                 osc.start(tempo);
                 osc.stop(tempo + 0.35);
             });
@@ -192,7 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================================
-    // 3. INJEÇÃO DO DESENHO PELA URL
+    // 3. INJEÇÃO DO DESENHO ESCOLHIDO PELA URL
     // ========================================================
     const parametrosUrl = new URLSearchParams(window.location.search);
     const idDesenhoAtual = parametrosUrl.get("id") || "desenho_1";
@@ -205,7 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================================
-    // 4. ELEMENTOS E ESTADO DO JOGO
+    // 4. ELEMENTOS DO DOM E ESTADOS INICIAIS
     // ========================================================
     let corSelecionada = "#e74c3c";
     let numeroSelecionado = "1";
@@ -228,37 +214,62 @@ document.addEventListener("DOMContentLoaded", () => {
     const avisoParabens = document.getElementById("aviso-parabens");
 
     // ========================================================
-    // 5. GESTÃO DE CORES CONCLUÍDAS E INDISPONÍVEIS
+    // 5. INSERÇÃO DOS BADGES CONTADORES NA PALETA
+    // ========================================================
+    botoesCor.forEach(botao => {
+        let badge = botao.querySelector(".badge-contador");
+        if (!badge) {
+            badge = document.createElement("span");
+            badge.className = "badge-contador";
+            badge.innerText = "0";
+            botao.appendChild(badge);
+        }
+    });
+
+    // ========================================================
+    // 6. GESTÃO DE CORES CONCLUÍDAS E SELEÇÃO AUTOMÁTICA
     // ========================================================
     function atualizarStatusDasCores() {
-        const contagemPorNumero = {};
-        const concluidasPorNumero = {};
+        const contagemTotal = {};
+        const contagemConcluidas = {};
 
-        // Mapear todas as partes
         partesSvg.forEach(parte => {
             const num = parte.getAttribute("data-numero");
             const cor = parte.getAttribute("fill");
-            const estaPintado = (cor && cor.toLowerCase() !== "#ffffff" && cor.toLowerCase() !== "#fff" && cor !== "rgb(255, 255, 255)");
+            const pintado = (cor && cor.toLowerCase() !== "#ffffff" && cor.toLowerCase() !== "#fff" && cor !== "rgb(255, 255, 255)");
 
-            contagemPorNumero[num] = (contagemPorNumero[num] || 0) + 1;
-            if (estaPintado) {
-                concluidasPorNumero[num] = (concluidasPorNumero[num] || 0) + 1;
+            contagemTotal[num] = (contagemTotal[num] || 0) + 1;
+            if (pintado) {
+                contagemConcluidas[num] = (contagemConcluidas[num] || 0) + 1;
             }
         });
 
-        let corAtualFoiConcluida = false;
+        let corAtualFinalizada = false;
 
         botoesCor.forEach(botao => {
             const num = botao.getAttribute("data-numero");
-            const total = contagemPorNumero[num] || 0;
-            const prontas = concluidasPorNumero[num] || 0;
-            const estaTotalmenteConcluida = (total > 0 && prontas === total);
+            const total = contagemTotal[num] || 0;
+            const prontas = contagemConcluidas[num] || 0;
+            const restantes = total - prontas;
 
-            if (estaTotalmenteConcluida) {
+            const badge = botao.querySelector(".badge-contador");
+
+            if (total === 0) {
+                botao.style.display = "none";
+                return;
+            }
+
+            botao.style.display = "flex";
+
+            if (badge) {
+                badge.innerText = restantes;
+            }
+
+            if (restantes <= 0) {
                 botao.classList.add("concluida");
-                botao.setAttribute("title", `Número ${num} totalmente concluído!`);
+                botao.setAttribute("title", `Número ${num} concluído!`);
                 if (num === numeroSelecionado) {
-                    corAtualFoiConcluida = true;
+                    corAtualFinalizada = true;
                 }
             } else {
                 botao.classList.remove("concluida");
@@ -266,36 +277,37 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // Se a cor atual acabou de ser concluída, seleciona automaticamente a próxima livre
-        if (corAtualFoiConcluida) {
+        if (corAtualFinalizada) {
             tocarSomCorFinalizada();
             selecionarProximaCorDisponivel();
         }
 
-        atualizarDestaqueAreasPendentes();
+        destacarAreasPendentes();
     }
 
     function selecionarProximaCorDisponivel() {
-        let encontrou = false;
+        let selecionou = false;
         botoesCor.forEach(botao => {
-            if (!encontrou && !botao.classList.contains("concluida")) {
+            if (!selecionou && !botao.classList.contains("concluida") && botao.style.display !== "none") {
                 botoesCor.forEach(b => b.classList.remove("ativa"));
                 botao.classList.add("ativa");
                 corSelecionada = botao.getAttribute("data-hex");
                 numeroSelecionado = botao.getAttribute("data-numero");
-                encontrou = true;
+                selecionou = true;
             }
         });
     }
 
-    // Destaca as áreas pendentes do número selecionado
-    function atualizarDestaqueAreasPendentes() {
+    // ========================================================
+    // 7. DESTAQUE PULSANTE (GLOW) NAS ÁREAS PENDENTES
+    // ========================================================
+    function destacarAreasPendentes() {
         partesSvg.forEach(parte => {
             const num = parte.getAttribute("data-numero");
             const cor = parte.getAttribute("fill");
-            const estaPintado = (cor && cor.toLowerCase() !== "#ffffff" && cor.toLowerCase() !== "#fff" && cor !== "rgb(255, 255, 255)");
+            const pintado = (cor && cor.toLowerCase() !== "#ffffff" && cor.toLowerCase() !== "#fff" && cor !== "rgb(255, 255, 255)");
 
-            if (!estaPintado && num === numeroSelecionado && modoAtual === "balde") {
+            if (!pintado && num === numeroSelecionado && modoAtual === "balde") {
                 parte.classList.add("parte-pendente-ativa");
             } else {
                 parte.classList.remove("parte-pendente-ativa");
@@ -304,7 +316,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================================
-    // 6. ATUALIZAR BARRA E SUCESSO GERAL
+    // 8. ATUALIZAR BARRA DE PROGRESSO E VITÓRIA GERAL
     // ========================================================
     function atualizarBarraVisual(porcentagem, concluido) {
         if (barraAtiva) barraAtiva.style.width = `${porcentagem}%`;
@@ -319,7 +331,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================================
-    // 7. SALVAR PROGRESSO AUTOMÁTICO
+    // 9. SALVAR PROGRESSO AUTOMÁTICO NO NAVEGADOR
     // ========================================================
     function salvarProgressoAutomatico() {
         let partesPintadas = 0;
@@ -347,7 +359,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================================
-    // 8. RESTAURAR PINTURA SALVA
+    // 10. RESTAURAR PINTURA SALVA ANTERIORMENTE
     // ========================================================
     function restaurarPinturaSalva() {
         const dadosSalvos = localStorage.getItem(`progresso_${idDesenhoAtual}`);
@@ -379,13 +391,12 @@ document.addEventListener("DOMContentLoaded", () => {
     restaurarPinturaSalva();
 
     // ========================================================
-    // 9. PALETA DE CORES (IGNORA CLIQUE NAS CONCLUÍDAS)
+    // 11. EVENTOS DA PALETA DE CORES
     // ========================================================
     botoesCor.forEach(botao => {
         botao.addEventListener("click", () => {
             obterAudioContext();
 
-            // Se já foi concluída, não deixa selecionar
             if (botao.classList.contains("concluida")) {
                 tocarSomErro();
                 return;
@@ -396,12 +407,12 @@ document.addEventListener("DOMContentLoaded", () => {
             corSelecionada = botao.getAttribute("data-hex");
             numeroSelecionado = botao.getAttribute("data-numero");
 
-            atualizarDestaqueAreasPendentes();
+            destacarAreasPendentes();
         });
     });
 
     // ========================================================
-    // 10. CLIQUE NAS PARTES DO DESENHO (PINTURA POR NÚMEROS)
+    // 12. PINTURA POR NÚMEROS (MODO BALDE)
     // ========================================================
     partesSvg.forEach(parte => {
         parte.addEventListener("click", () => {
@@ -420,13 +431,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 setTimeout(() => {
                     parte.style.stroke = "#333333";
                     parte.style.strokeWidth = "4";
+                    destacarAreasPendentes();
                 }, 300);
             }
         });
     });
 
     // ========================================================
-    // 11. ALTERNÂNCIA DE FERRAMENTAS E TELA CHEIA
+    // 13. ALTERNÂNCIA DE FERRAMENTAS E TELA CHEIA
     // ========================================================
     if (btnBalde && btnPincel) {
         btnBalde.addEventListener("click", () => {
@@ -434,7 +446,7 @@ document.addEventListener("DOMContentLoaded", () => {
             btnBalde.classList.add("ativo");
             btnPincel.classList.remove("ativo");
             if (canvas) canvas.style.pointerEvents = "none";
-            atualizarDestaqueAreasPendentes();
+            destacarAreasPendentes();
         });
 
         btnPincel.addEventListener("click", () => {
@@ -477,7 +489,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================================
-    // 12. PINCEL LIVRE NO CANVAS COM TOUCH MOBILE
+    // 14. PINCEL LIVRE NO CANVAS (TOUCH + MOUSE)
     // ========================================================
     if (canvas && ctx) {
         canvas.style.pointerEvents = "none";
@@ -530,7 +542,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================================
-    // 13. BOTÃO LIMPAR E BOTÃO SALVAR PNG
+    // 15. LIMPAR E SALVAR PNG
     // ========================================================
     if (btnLimpar) {
         btnLimpar.addEventListener("click", () => {
