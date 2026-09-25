@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- ========================================================
+       1. CABEÇALHO DO DOCUMENTO E METADADOS
+       ======================================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividades Escolares - ColorirOnline</title>
+    <link rel="stylesheet" href="css/style.css?v=30">
+</head>
+<body>
+
+    <!-- ========================================================
+       2. CABEÇALHO PRINCIPAL E BARRA DE NAVEGAÇÃO
+       ======================================================== -->
+    <header class="cabecalho-principal">
+        <div class="container-nav">
+            <a href="index.html" class="logo">
+                🎨 Colorir<span class="destaque">Online</span>
+            </a>
+            <div class="container-busca">
+                <span class="icone-busca">🔍</span>
+                <input type="text" id="campo-busca-atividades" placeholder="Pesquisar atividade, matéria...">
+            </div>
+            <nav class="links-navegacao">
+                <a href="index.html" class="link-nav">🎨 Colorir</a>
+                <a href="jogos.html" class="link-nav">🧩 Jogos</a>
+                <a href="atividades.html" class="link-nav ativo">📚 Atividades Escolares</a>
+                <button id="btn-tema-atividades" class="btn-tema">🌙</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ========================================================
+       3. BANNER PEDAGÓGICO
+       ======================================================== -->
+    <section class="banner-novidades" style="background: linear-gradient(135deg, #059669, #10b981);">
+        <div class="conteudo-banner">
+            <h2>📚 Espaço Pedagógico e Escolar</h2>
+            <p>Exercícios educativos organizados por ano escolar e matérias. Pratique online ou imprima em folha A4!</p>
+        </div>
+    </section>
+
+    <!-- ========================================================
+       4. FILTRO POR ANO ESCOLAR / SÉRIE
+       ======================================================== -->
+    <section class="filtros-categoria" id="filtros-series">
+        <button class="btn-categoria ativo" data-serie="todas">Todas as Séries</button>
+        <button class="btn-categoria" data-serie="infantil">Educação Infantil (3-5 anos)</button>
+        <button class="btn-categoria" data-serie="1ano">1º Ano (6-7 anos)</button>
+        <button class="btn-categoria" data-serie="2ano">2º Ano (7-8 anos)</button>
+        <button class="btn-categoria" data-serie="3ano">3º Ano (8-9 anos)</button>
+        <button class="btn-categoria" data-serie="4e5ano">4º e 5º Ano (9-11 anos)</button>
+    </section>
+
+    <!-- ========================================================
+       5. FILTRO POR DISCIPLINA / MATÉRIA
+       ======================================================== -->
+    <section class="abas-status" id="filtros-materias">
+        <button class="btn-aba ativa" data-materia="todas">Todas as Matérias</button>
+        <button class="btn-aba" data-materia="portugues">📖 Português & Alfabeto</button>
+        <button class="btn-aba" data-materia="matematica">🔢 Matemática & Números</button>
+        <button class="btn-aba" data-materia="ciencias">🌱 Ciências & Natureza</button>
+        <button class="btn-aba" data-materia="coordenacao">✏️ Coordenação Motora</button>
+    </section>
+
+    <!-- ========================================================
+       6. GRELHA DE CARTÕES DE ATIVIDADES
+       ======================================================== -->
+    <main class="catalogo-desenhos" id="catalogo-atividades"></main>
+
+    <!-- ========================================================
+       7. CARREGAMENTO DOS SCRIPTS
+       ======================================================== -->
+    <script src="js/atividades.js?v=1"></script>
+</body>
+</html>
