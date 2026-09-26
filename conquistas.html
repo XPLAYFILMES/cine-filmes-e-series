@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- ========================================================
+       1. CABEÇALHO DO DOCUMENTO E METADADOS
+       ======================================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salão de Conquistas e Troféus - ColorirOnline</title>
+    <link rel="stylesheet" href="css/style.css?v=110">
+</head>
+<body>
+
+    <!-- ========================================================
+       2. CABEÇALHO PRINCIPAL E BARRA DE NAVEGAÇÃO
+       ======================================================== -->
+    <header class="cabecalho-principal">
+        <div class="container-nav">
+            <a href="index.html" class="logo">
+                🎨 Colorir<span class="destaque">Online</span>
+            </a>
+            <div class="container-busca">
+                <span class="icone-busca">🔍</span>
+                <input type="text" id="campo-busca" placeholder="Pesquisar troféus...">
+            </div>
+            <nav class="links-navegacao">
+                <a href="index.html" class="link-nav">🎨 Colorir</a>
+                <a href="jogos.html" class="link-nav">🧩 Jogos</a>
+                <a href="atividades.html" class="link-nav">📚 Atividades</a>
+                <a href="conquistas.html" class="link-nav ativo">🏆 Conquistas</a>
+                <a href="imprimir.html" class="link-nav">🖨 Imprimir A4</a>
+                <button id="btn-tema-global" class="btn-tema">🌙</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ========================================================
+       3. BANNER PADRONIZADO (AMARELO DOURADO)
+       ======================================================== -->
+    <section class="banner-novidades" style="width: 100% !important; background: #d97706 !important; background: linear-gradient(90deg, #b45309, #d97706, #f59e0b) !important; padding: 22px 0 !important; margin: 0 0 20px 0 !important; display: block !important;">
+        <div class="conteudo-banner" style="max-width: 1350px; margin: 0 auto; padding: 0 24px; text-align: left;">
+            <h2 style="font-size: 1.8rem; font-weight: 800; color: #ffffff !important; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
+                🏆 Salão de Conquistas e Medalhas
+            </h2>
+            <p style="font-size: 0.95rem; color: #fef3c7 !important; margin: 0; opacity: 0.95;">
+                Pinte desenhos, complete jogos e envie tarefas escolares para desbloquear seus troféus!
+            </p>
+        </div>
+    </section>
+
+    <!-- ========================================================
+       4. GRADE DE TROFÉUS DESBLOQUEÁVEIS
+       ======================================================== -->
+    <main class="grade-trofeus">
+        <div class="card-trofeu">
+            <div class="icone-trofeu">🎨</div>
+            <h3>Primeiro Pincel</h3>
+            <p style="font-size: 0.85rem; color: #64748b; margin-top: 6px;">Concluiu seu primeiro desenho com 100% de precisão.</p>
+            <span style="display: inline-block; margin-top: 10px; font-weight: bold; color: #10b981;">Desbloqueado! ✔</span>
+        </div>
+
+        <div class="card-trofeu">
+            <div class="icone-trofeu">🧠</div>
+            <h3>Detetive de Palavras</h3>
+            <p style="font-size: 0.85rem; color: #64748b; margin-top: 6px;">Encontrou todas as palavras em um Caça-Palavras.</p>
+            <span style="display: inline-block; margin-top: 10px; font-weight: bold; color: #10b981;">Desbloqueado! ✔</span>
+        </div>
+
+        <div class="card-trofeu">
+            <div class="icone-trofeu">⭐</div>
+            <h3>Nota 10 Estelar</h3>
+            <p style="font-size: 0.85rem; color: #64748b; margin-top: 6px;">Tirou nota máxima em uma atividade escolar corrigida.</p>
+            <span style="display: inline-block; margin-top: 10px; font-weight: bold; color: #d97706;">Em Progresso...</span>
+        </div>
+
+        <div class="card-trofeu bloqueado">
+            <div class="icone-trofeu">👑</div>
+            <h3>Mestre da Galeria</h3>
+            <p style="font-size: 0.85rem; color: #64748b; margin-top: 6px;">Completou mais de 10 desenhos na biblioteca de artes.</p>
+            <span style="display: inline-block; margin-top: 10px; font-weight: bold; color: #94a3b8;">🔒 Bloqueado</span>
+        </div>
+    </main>
+
+    <script src="js/database.js"></script>
+</body>
+</html>
