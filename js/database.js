@@ -254,3 +254,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     renderizar();
 });
+/* ========================================================
+   SINCRONIZAÇÃO AUTOMÁTICA DO MENU SUPERIOR ATIVO
+   ======================================================== */
+document.addEventListener("DOMContentLoaded", () => {
+    const caminhoAtual = window.location.pathname.split("/").pop() || "index.html";
+    const linksMenu = document.querySelectorAll(".links-navegacao .link-nav");
+
+    linksMenu.forEach(link => {
+        link.classList.remove("ativo");
+        const destino = link.getAttribute("href");
+        
+        if (
+            (caminhoAtual === "" && destino === "index.html") ||
+            (caminhoAtual === "index.html" && destino === "index.html") ||
+            (caminhoAtual === destino)
+        ) {
+            link.classList.add("ativo");
+        }
+    });
+});
