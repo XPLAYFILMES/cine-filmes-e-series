@@ -81,13 +81,30 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnPesquisarMeuBoletim = document.getElementById("btn-pesquisar-meu-boletim");
     const containerListaBoletim = document.getElementById("container-lista-meu-boletim");
 
-    // ========================================================
-    // 3. TEMA NOTURNO
-    // ========================================================
+   /* ========================================================
+       3. CONTROLE DE MODO ESCURO / CLARO (LÓGICA CORRIGIDA)
+       ======================================================== */
+    // Verifica se já estava salvo no navegador como escuro
+    const temaSalvo = localStorage.getItem("tema_colorir_online");
+    if (temaSalvo === "dark") {
+        document.body.classList.add("dark-mode");
+        if (btnTema) btnTema.innerText = "☀️";
+    } else {
+        document.body.classList.remove("dark-mode");
+        if (btnTema) btnTema.innerText = "🌙";
+    }
+
     if (btnTema) {
         btnTema.addEventListener("click", () => {
-            document.body.classList.toggle("dark-mode");
-            btnTema.innerText = document.body.classList.contains("dark-mode") ? "☀️" : "🌙";
+            const estaEscuro = document.body.classList.toggle("dark-mode");
+            
+            if (estaEscuro) {
+                btnTema.innerText = "☀️"; // Ícone de sol para voltar ao modo claro
+                localStorage.setItem("tema_colorir_online", "dark");
+            } else {
+                btnTema.innerText = "🌙"; // Ícone de lua para voltar ao modo escuro
+                localStorage.setItem("tema_colorir_online", "light");
+            }
         });
     }
 
