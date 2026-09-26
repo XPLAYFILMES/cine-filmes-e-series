@@ -143,48 +143,48 @@ body.dark-mode {
 .banner-faixa-universal {
     width: 100% !important;
     max-width: 100% !important;
-    margin: 0 0 20px 0 !important;
-    padding: 22px 0 !important; /* Altura e espaçamento padrão para todas */
+    margin: 0 0 25px 0 !important; /* Espaçamento idêntico antes dos filtros */
+    padding: 24px 0 !important;   /* Altura idêntica à da Imagem 1 */
     color: #ffffff !important;
     border-radius: 0 !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12) !important;
     display: block !important;
     box-sizing: border-box !important;
 }
 
 /* Cor Azul (Desenhos / Início) */
 .banner-cor-azul {
-    background-color: #2563eb !important;
     background: linear-gradient(90deg, #1d4ed8, #2563eb, #3b82f6) !important;
 }
 
 /* Cor Roxa (Jogos) */
 .banner-cor-roxo {
-    background-color: #7c3aed !important;
     background: linear-gradient(90deg, #6d28d9, #7c3aed, #a855f7) !important;
 }
 
-/* Cor Verde (Atividades Escolares) */
+/* Cor Verde (Atividades Escolares - Mantém a cor da Imagem 2) */
 .banner-cor-verde {
-    background-color: #059669 !important;
     background: linear-gradient(90deg, #047857, #059669, #10b981) !important;
 }
 
+/* Alinhamento Universal dos Textos do Banner */
 .conteudo-banner-padrao {
     max-width: 1350px !important;
     margin: 0 auto !important;
     padding: 0 24px !important;
     text-align: left !important;
+    box-sizing: border-box !important;
 }
 
 .conteudo-banner-padrao h2 {
     font-size: 1.8rem !important;
     font-weight: 800 !important;
-    margin-bottom: 4px !important;
+    margin: 0 0 6px 0 !important;
     color: #ffffff !important;
     display: flex !important;
     align-items: center !important;
-    gap: 8px !important;
+    gap: 10px !important;
+    letter-spacing: -0.5px !important;
 }
 
 .conteudo-banner-padrao p {
@@ -195,25 +195,26 @@ body.dark-mode {
 }
 
 /* ========================================================
-   5. FILTROS POR CATEGORIA (ABAIXO DO BANNER)
+   5. FILTROS POR CATEGORIA (TOTALMENTE ALINHADOS NO CINZA)
    ======================================================== */
 .filtros-categoria {
-    max-width: 1000px;
-    margin: 18px auto 10px auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 0 15px;
+    max-width: 1350px !important;
+    margin: 0 auto 14px auto !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    padding: 0 20px !important;
+    box-sizing: border-box !important;
 }
 
 .btn-categoria {
     background-color: #ffffff;
     border: 2px solid #cbd5e1;
-    padding: 7px 18px;
+    padding: 8px 18px;
     border-radius: 20px;
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     font-weight: 700;
     color: #475569;
     cursor: pointer;
@@ -221,15 +222,10 @@ body.dark-mode {
     transition: all 0.2s ease;
 }
 
-body.dark-mode .btn-categoria {
-    background-color: #1e293b;
-    border-color: #334155;
-    color: #cbd5e1;
-}
-
 .btn-categoria:hover {
     border-color: #94a3b8;
     color: #0f172a;
+    transform: translateY(-1px);
 }
 
 .btn-categoria.ativo {
@@ -239,47 +235,41 @@ body.dark-mode .btn-categoria {
 }
 
 /* ========================================================
-   6. ABAS DE ESTADO (TODOS, EM PROGRESSO, FINALIZADOS)
+   6. ABAS DE STATUS / MATÉRIAS (ALINHAMENTO CENTRALIZADO)
    ======================================================== */
 .abas-status {
-    max-width: 1000px;
-    margin: 12px auto 20px auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 0 15px;
+    max-width: 1350px !important;
+    margin: 0 auto 28px auto !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    padding: 0 20px !important;
+    box-sizing: border-box !important;
 }
 
 .btn-aba {
     background-color: #ffffff;
     border: 2px solid #cbd5e1;
-    padding: 7px 16px;
+    padding: 8px 18px;
     border-radius: 20px;
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     font-weight: bold;
     color: #475569;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
-body.dark-mode .btn-aba {
-    background-color: #1e293b;
-    border-color: #334155;
-    color: #cbd5e1;
+.btn-aba:hover {
+    border-color: #94a3b8;
+    transform: translateY(-1px);
 }
 
 .btn-aba.ativa {
     background-color: #0f172a;
     color: #ffffff;
     border-color: #0f172a;
-}
-
-body.dark-mode .btn-aba.ativa {
-    background-color: #38bdf8;
-    color: #0f172a;
-    border-color: #38bdf8;
 }
 
 /* ========================================================
