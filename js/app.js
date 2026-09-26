@@ -98,8 +98,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let historicoAcoes = [];
     let partesDoDesenho = [];
 
-    /* ========================================================
-       BLOCO 2: MONTAGEM DO DESENHO E DOS NÚMEROS DENTRO DAS PARTES
+   /* ========================================================
+       BLOCO 2: MONTAGEM DO DESENHO E RESTAURAÇÃO DAS CORES SALVAS
        ======================================================== */
     function carregarDesenhoNaPrancheta() {
         if (!svgPrancheta) return;
@@ -108,17 +108,34 @@ document.addEventListener("DOMContentLoaded", () => {
         svgPrancheta.setAttribute("viewBox", desenhoAtual.viewBox || "0 0 350 420");
         svgPrancheta.innerHTML = desenhoAtual.svg || svgJoaninhaReal;
 
+        // Recupera o progresso salvo anteriormente (porcentagem e cores das partes)
+        const salvo = localStorage.getItem(`progresso_${desenhoAtual.id}`);
+        let coresSalvas = {};
+        if (salvo) {
+            try {
+                const dados = JSON.parse(salvo);
+                coresSalvas = dados.cores || {};
+            } catch(e) {}
+        }
+
         const formas = svgPrancheta.querySelectorAll(".parte-pintavel");
         
         formas.forEach((forma, index) => {
             if (!forma.getAttribute("data-numero")) {
                 forma.setAttribute("data-numero", (index % 7) + 1);
             }
-            if (!forma.getAttribute("fill") || forma.getAttribute("fill") === "none") {
-                forma.setAttribute("fill", "#ffffff");
+
+            // Se essa parte já foi pintada anteriormente, restaura a cor real!
+            if (coresSalvas[index]) {
+                forma.setAttribute("fill", coresSalvas[index]);
+                forma.setAttribute("data-pintado", "true");
+            } else {
+                if (!forma.getAttribute("fill") || forma.getAttribute("fill") === "none") {
+                    forma.setAttribute("fill", "#ffffff");
+                }
             }
 
-            // Injeta o número centralizado dentro da própria parte anatômica (Igual Imagem 3)
+            // Injeta o número na parte apenas se ela ainda NÃO foi pintada
             try {
                 const b = forma.getBBox();
                 if (b.width > 8 && b.height > 8) {
@@ -126,6 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
                     txt.setAttribute("class", "label-numero");
                     txt.setAttribute("data-numero", num);
+                    txt.setAttribute("data-index", index);
                     txt.setAttribute("x", b.x + b.width / 2);
                     txt.setAttribute("y", b.y + b.height / 2 + 5);
                     txt.setAttribute("font-size", b.width > 30 ? "15" : "11");
@@ -134,6 +152,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     txt.setAttribute("text-anchor", "middle");
                     txt.setAttribute("pointer-events", "none");
                     txt.textContent = num;
+
+                    // Se já estiver pintado, esconde o número
+                    if (coresSalvas[index]) {
+                        txt.style.display = "none";
+                    }
+
                     svgPrancheta.appendChild(txt);
                 }
             } catch(e) {}
@@ -141,7 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         partesDoDesenho = Array.from(svgPrancheta.querySelectorAll(".parte-pintavel"));
     }
-
+   
     /* ========================================================
        BLOCO 3: PALETA DINÂMICA COM CONTADOR DE PARTES RESTANTES
        ======================================================== */
@@ -237,7 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     /* ========================================================
-       BLOCO 5: PROGRESSO E CONCLUSÃO (MODAL A4 / PNG)
+       BLOCO 5: PROGRESSO, GRAVAÇÃO COMPLETA E CONCLUSÃO (A4/PNG)
        ======================================================== */
     function atualizarProgresso() {
         const total = partesDoDesenho.length;
@@ -247,30 +271,29 @@ document.addEventListener("DOMContentLoaded", () => {
         if (barraProgresso) barraProgresso.style.width = `${porcentagem}%`;
         if (textoProgresso) textoProgresso.innerText = `${porcentagem}% Concluído`;
 
-        localStorage.setItem(`progresso_${desenhoAtual.id}`, JSON.stringify({ porcentagem }));
+        // Coleta exatamente a cor de cada parte pintada para salvar
+        const mapaCores = {};
+        partesDoDesenho.forEach((p, idx) => {
+            if (p.getAttribute("data-pintado") === "true") {
+                mapaCores[idx] = p.getAttribute("fill");
+            }
+        });
+
+        // Grava no localStorage a porcentagem + as cores exatas de cada parte
+        localStorage.setItem(`progresso_${desenhoAtual.id}`, JSON.stringify({
+            porcentagem: porcentagem,
+            cores: mapaCores
+        }));
 
         montarPaletaDinamica();
 
+        // Se completou 100%, comemora com confetes e abre o modal
         if (porcentagem === 100) {
             if (typeof confetti === "function") {
-                confetti({ particleCount: 160, spread: 80, origin: { y: 0.6 } });
+                confetti({ particleCount: 160, spread: 85, origin: { y: 0.6 } });
             }
             abrirModalConclusao();
         }
-    }
-
-    function abrirModalConclusao() {
-        const modal = document.getElementById("modal-conclusao");
-        const imgPreview = document.getElementById("img-modal-preview");
-        if (!modal) return;
-
-        const svgData = new XMLSerializer().serializeToString(svgPrancheta);
-        const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
-        const URLObj = window.URL || window.webkitURL || window;
-        const blobURL = URLObj.createObjectURL(svgBlob);
-
-        if (imgPreview) imgPreview.src = blobURL;
-        modal.style.display = "flex";
     }
 
     /* ========================================================
