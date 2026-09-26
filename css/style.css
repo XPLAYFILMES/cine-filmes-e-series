@@ -144,41 +144,37 @@ body.dark-mode {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 0 20px 0 !important;
-    padding: 20px 0 !important;
-    background: linear-gradient(90deg, #1d4ed8, #2563eb, #3b82f6) !important; /* Faixa Azul Royal */
+    padding: 22px 0 !important;
+    background-color: #2563eb !important; /* Cor base garantida */
+    background: linear-gradient(90deg, #1d4ed8, #2563eb, #3b82f6) !important; /* Faixa Azul */
     color: #ffffff !important;
-    border-radius: 0 !important; /* Sem cantos arredondados externos para colar nas bordas */
+    border-radius: 0 !important;
     box-shadow: 0 4px 15px rgba(29, 78, 216, 0.3) !important;
     display: block !important;
 }
 
-body.dark-mode .banner-novidades {
-    background: linear-gradient(90deg, #1e3a8a, #1d4ed8, #2563eb) !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
-}
-
 .conteudo-banner {
-    max-width: 1350px;
-    margin: 0 auto;
-    padding: 0 24px;
-    text-align: left !important; /* Alinhado à esquerda como na imagem de referência */
+    max-width: 1350px !important;
+    margin: 0 auto !important;
+    padding: 0 24px !important;
+    text-align: left !important;
 }
 
 .conteudo-banner h2 {
-    font-size: 1.8rem;
-    font-weight: 800;
-    margin-bottom: 4px;
+    font-size: 1.8rem !important;
+    font-weight: 800 !important;
+    margin-bottom: 4px !important;
     color: #ffffff !important;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
 }
 
 .conteudo-banner p {
-    font-size: 0.95rem;
+    font-size: 0.95rem !important;
     color: #f1f5f9 !important;
-    opacity: 0.95;
-    margin: 0;
+    opacity: 0.95 !important;
+    margin: 0 !important;
 }
 
 /* ========================================================
