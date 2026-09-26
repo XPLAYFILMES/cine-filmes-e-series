@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atividades Escolares Online - ColorirOnline</title>
-    <link rel="stylesheet" href="css/style.css?v=95">
+    <link rel="stylesheet" href="css/style.css?v=105">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
@@ -33,22 +33,28 @@
         </div>
     </header>
 
-   <!-- ========================================================
-       3. BANNER PEDAGÓGICO (FAIXA VERDE - TAMANHO PADRÃO)
+    <!-- ========================================================
+       3. BANNER PEDAGÓGICO (FAIXA VERDE PADRÃO)
        ======================================================== -->
     <section class="banner-novidades" style="width: 100% !important; background: #059669 !important; background: linear-gradient(90deg, #047857, #059669, #10b981) !important; padding: 22px 0 !important; margin: 0 0 20px 0 !important; display: block !important;">
-        <div class="conteudo-banner" style="max-width: 1350px; margin: 0 auto; padding: 0 24px; text-align: left;">
-            <h2 style="font-size: 1.8rem; font-weight: 800; color: #ffffff !important; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
-                📚 Atividades Escolares Online
-            </h2>
-            <p style="font-size: 0.95rem; color: #f1f5f9 !important; margin: 0; opacity: 0.95;">
-                Resolva as tarefas diretamente no navegador. Ao finalizar, envie para o professor corrigir e atribuir sua nota!
-            </p>
+        <div class="conteudo-banner" style="max-width: 1350px; margin: 0 auto; padding: 0 24px; text-align: left; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div>
+                <h2 style="font-size: 1.8rem; font-weight: 800; color: #ffffff !important; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
+                    📚 Atividades Escolares Online
+                </h2>
+                <p style="font-size: 0.95rem; color: #f1f5f9 !important; margin: 0; opacity: 0.95;">
+                    Resolva as tarefas diretamente no navegador. Ao finalizar, envie para o professor corrigir e atribuir sua nota!
+                </p>
+            </div>
+            <!-- Botão de Consulta Individual do Aluno -->
+            <button id="btn-abrir-boletim" style="background-color: #ffffff; color: #065f46; border: none; padding: 10px 20px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: 0.2s;">
+                📋 Minhas Notas / Resultados
+            </button>
         </div>
     </section>
 
     <!-- ========================================================
-       4. FILTRO POR ANO ESCOLAR / SÉRIE (ORGANIZADOS NO FUNDO CINZA)
+       4. FILTRO POR ANO ESCOLAR / SÉRIE (NO FUNDO CINZA)
        ======================================================== -->
     <section class="filtros-categoria" id="filtros-series">
         <button class="btn-categoria ativo" data-serie="todas">Todas as Séries</button>
@@ -101,8 +107,34 @@
     </div>
 
     <!-- ========================================================
-       8. CARREGAMENTO DOS SCRIPTS
+       8. MODAL DE CONSULTA INDIVIDUAL DE NOTAS (BOLETIM DO ALUNO)
        ======================================================== -->
-    <script src="js/atividades.js?v=95"></script>
+    <div id="modal-boletim-aluno" class="modal-envio-tarefa">
+        <div class="caixa-modal-envio" style="max-width: 580px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h2 style="color: #059669; font-size: 1.4rem; margin: 0;">📋 Minhas Avaliações</h2>
+                <button id="btn-fechar-boletim" style="background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #64748b;">✕</button>
+            </div>
+            <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 15px;">
+                Abaixo estão listadas apenas as suas atividades enviadas e as notas atribuídas pelo professor:
+            </p>
+
+            <!-- Campo para buscar por outro nome/código se desejar -->
+            <div style="display: flex; gap: 8px; margin-bottom: 15px;">
+                <input type="text" id="input-buscar-meu-nome" class="campo-formulario-aluno" style="margin: 0;" placeholder="Digite seu nome cadastrado...">
+                <button id="btn-pesquisar-meu-boletim" class="btn-pag" style="white-space: nowrap; padding: 0 14px;">Buscar</button>
+            </div>
+
+            <!-- Lista de Atividades do Aluno com Notas -->
+            <div id="container-lista-meu-boletim" style="max-height: 320px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+                <!-- Resultados inseridos dinamicamente pelo JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================
+       9. CARREGAMENTO DOS SCRIPTS
+       ======================================================== -->
+    <script src="js/atividades.js?v=105"></script>
 </body>
 </html>
