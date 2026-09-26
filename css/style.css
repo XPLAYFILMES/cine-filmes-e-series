@@ -290,11 +290,17 @@ body.dark-mode {
 }
 
 /* ========================================================
-   7. CATÁLOGO DE CARDS EM GRADE (PADRÃO: EXATAMENTE 5 POR LINHA)
+   7. CATÁLOGO DE CARDS EM GRADE
    ======================================================== */
-.catalogo-desenhos,
-.grade-cadernos,
-#catalogo-jogos,
+.catalogo-desenhos {
+    max-width: 1350px;
+    margin: 0 auto 40px auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
 #catalogo-atividades {
     max-width: 1350px !important;
     margin: 0 auto 35px auto !important;
