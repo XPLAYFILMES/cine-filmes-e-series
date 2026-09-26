@@ -744,6 +744,89 @@
                 </div>
             </section>
 
+            <!-- ====================================================
+                   BLOCO 7: GESTÃO DE DESENHOS COM MAPEADOR VISUAL REAL
+                   ==================================================== -->
+                <div class="painel-box">
+                    <h3>Cadastrar Novo Desenho e Mapear Números</h3>
+                    <div class="form-grid">
+                        <div class="form-grupo">
+                            <label>Nome do Desenho:</label>
+                            <input type="text" id="desenho-titulo" class="input-admin" placeholder="Ex: Joaninha na Flor">
+                        </div>
+                        <div class="form-grupo">
+                            <label>Categoria:</label>
+                            <select id="desenho-categoria" class="input-admin">
+                                <option value="animais">Animais</option>
+                                <option value="infantil">Infantil</option>
+                                <option value="mandalas">Mandalas</option>
+                            </select>
+                        </div>
+                        <div class="form-grupo">
+                            <label>Complexidade:</label>
+                            <select id="desenho-complexidade" class="input-admin">
+                                <option value="Fácil">Fácil</option>
+                                <option value="Médio">Médio</option>
+                                <option value="Difícil">Difícil</option>
+                            </select>
+                        </div>
+                        <div class="form-grupo">
+                            <label>Origem da Imagem:</label>
+                            <select id="desenho-tipo-envio" class="input-admin" onchange="alternarCamposEnvio()">
+                                <option value="upload">📁 Upload do Computador / Celular</option>
+                                <option value="url">🔗 Link Direto da Imagem (URL)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-grupo" id="box-envio-upload" style="margin-bottom: 16px;">
+                        <label>Selecione o arquivo da Imagem (PNG ou JPG):</label>
+                        <input type="file" id="desenho-arquivo" class="input-admin" accept="image/*" onchange="processarUploadArquivo(event)">
+                    </div>
+
+                    <div class="form-grupo" id="box-envio-url" style="margin-bottom: 16px; display: none;">
+                        <label>Cole a URL da Imagem:</label>
+                        <input type="url" id="desenho-url" class="input-admin" placeholder="https://..." oninput="atualizarPreviewUrl()">
+                    </div>
+
+                    <!-- ÁREA DO MAPEADOR INTERATIVO -->
+                    <div style="background: #070d1e; border: 2px dashed #38bdf8; border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+                            <div>
+                                <strong style="color: #38bdf8;">🎯 Marcador de Números na Imagem Real</strong>
+                                <p style="font-size: 0.8rem; color: #94a3b8; margin: 0;">Selecione o número abaixo e clique diretamente em cima de cada região da imagem para registrar os pontos de pintura.</p>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <label style="font-size: 0.85rem; font-weight: bold;">Número Ativo:</label>
+                                <select id="marcador-numero-ativo" class="input-admin" style="padding: 5px 12px; width: 80px;">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                </select>
+                                <button type="button" onclick="limparPontosMarcados()" class="btn-acao-tabela btn-excluir" style="padding: 8px 12px;">Desfazer Pontos</button>
+                            </div>
+                        </div>
+
+                        <!-- Canvas onde a imagem é carregada e clicada -->
+                        <div id="container-mapeador-admin" style="position: relative; width: 100%; max-width: 420px; margin: 0 auto; background: #ffffff; border-radius: 8px; overflow: hidden; display: none;">
+                            <img id="img-mapeador-preview" src="" alt="Desenho" style="width: 100%; display: block; user-select: none;" onclick="marcarPontoNaImagem(event)">
+                            <div id="camada-pontos-admin" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></div>
+                        </div>
+                        <div id="aviso-sem-imagem" style="text-align: center; padding: 25px; color: #64748b; font-size: 0.9rem;">
+                            Carregue uma imagem acima para abrir a tela de marcação de números.
+                        </div>
+                    </div>
+
+                    <button onclick="cadastrarDesenho()" class="btn-salvar">
+                        💾 Publicar Desenho no Catálogo
+                    </button>
+                </div>
+            
             <!-- ========================================================
                BLOCO 8: SEÇÃO GESTÃO DE JOGOS
                ======================================================== -->
