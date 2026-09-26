@@ -126,83 +126,103 @@ DB.init();
 
 /* ========================================================
    BLOCO 3: RECEPTOR UNIVERSAL DO MODO MANUTENÇÃO E AVISOS
-   (FUNCIONA EM TODAS AS PÁGINAS DO SITE)
+   (BLINDADO PARA TODAS AS PÁGINAS DO GITHUB PAGES)
    ======================================================== */
-document.addEventListener("DOMContentLoaded", () => {
-    const nomePagina = window.location.pathname.split("/").pop() || "index.html";
+(function executarControleAcesso() {
+    function checarStatus() {
+        const urlCompleta = window.location.pathname.toLowerCase();
+        const manutencao = JSON.parse(localStorage.getItem("sistema_manutencao") || "{}");
 
-    // 1. VERIFICAÇÃO DO MODO MANUTENÇÃO
-    const manutencao = JSON.parse(localStorage.getItem("sistema_manutencao") || "{}");
-    let paginaBloqueada = false;
+        // Nunca bloquear a tela de administração
+        if (urlCompleta.includes("admin.html") || urlCompleta.endsWith("/admin")) {
+            return;
+        }
 
-    // Se a manutenção geral estiver ativa e não for o admin
-    if (manutencao.geral === true && nomePagina !== "admin.html") {
-        paginaBloqueada = true;
-    } 
-    // Manutenção individual por página
-    else if (manutencao.colorir && (nomePagina === "index.html" || nomePagina === "" || nomePagina === "pintar.html")) {
-        paginaBloqueada = true;
-    } else if (manutencao.jogos && nomePagina === "jogos.html") {
-        paginaBloqueada = true;
-    } else if (manutencao.atividades && nomePagina === "atividades.html") {
-        paginaBloqueada = true;
-    } else if (manutencao.conquistas && nomePagina === "conquistas.html") {
-        paginaBloqueada = true;
-    } else if (manutencao.imprimir && nomePagina === "imprimir.html") {
-        paginaBloqueada = true;
-    }
+        let paginaBloqueada = false;
 
-    // Se estiver bloqueada, monta a tela limpa de manutenção
-    if (paginaBloqueada) {
-        const textoMsg = manutencao.textoAviso || "Estamos preparando novidades incríveis! Esta seção volta em instantes.";
-        document.body.innerHTML = `
-            <div style="min-height: 100vh; background-color: #070d1e; color: #f8fafc; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 25px; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-                <div style="font-size: 5rem; margin-bottom: 20px;">🛠️</div>
-                <h1 style="font-size: 2.2rem; margin-bottom: 12px; color: #38bdf8;">Área em Manutenção Programada</h1>
-                <p style="font-size: 1.1rem; max-width: 580px; color: #cbd5e1; line-height: 1.6; margin-bottom: 25px;">${textoMsg}</p>
-                <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
-                    <a href="index.html" style="background-color: #2563eb; color: #fff; text-decoration: none; padding: 10px 22px; border-radius: 20px; font-weight: bold; font-size: 0.95rem;">Ir para a Página Inicial</a>
-                    <button onclick="window.location.reload()" style="background-color: #111c38; color: #38bdf8; border: 1px solid #1e293b; padding: 10px 22px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.95rem;">Tentar Novamente</button>
+        // 1. Manutenção Geral (Trava todo o site público)
+        if (manutencao.geral === true) {
+            paginaBloqueada = true;
+        } 
+        // 2. Manutenção da Página de Colorir (index.html ou raiz /)
+        else if (manutencao.colorir === true && (urlCompleta.endsWith("/") || urlCompleta.includes("index.html") || urlCompleta.includes("pintar.html") || !urlCompleta.includes(".html"))) {
+            paginaBloqueada = true;
+        } 
+        // 3. Manutenção de Jogos
+        else if (manutencao.jogos === true && urlCompleta.includes("jogos.html")) {
+            paginaBloqueada = true;
+        } 
+        // 4. Manutenção de Atividades Escolares
+        else if (manutencao.atividades === true && urlCompleta.includes("atividades.html")) {
+            paginaBloqueada = true;
+        } 
+        // 5. Manutenção de Conquistas
+        else if (manutencao.conquistas === true && urlCompleta.includes("conquistas.html")) {
+            paginaBloqueada = true;
+        } 
+        // 6. Manutenção da Central A4 (Imprimir)
+        else if (manutencao.imprimir === true && urlCompleta.includes("imprimir.html")) {
+            paginaBloqueada = true;
+        }
+
+        // Renderiza a tela de manutenção
+        if (paginaBloqueada) {
+            const textoMsg = manutencao.textoAviso || "Estamos preparando novidades incríveis! Esta seção volta em instantes.";
+            document.body.innerHTML = `
+                <div style="min-height: 100vh; background-color: #070d1e; color: #f8fafc; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 25px; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                    <div style="font-size: 5.5rem; margin-bottom: 20px;">🛠️</div>
+                    <h1 style="font-size: 2.2rem; margin-bottom: 12px; color: #38bdf8;">Área em Manutenção Programada</h1>
+                    <p style="font-size: 1.1rem; max-width: 580px; color: #cbd5e1; line-height: 1.6; margin-bottom: 25px;">${textoMsg}</p>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+                        <a href="index.html" style="background-color: #2563eb; color: #fff; text-decoration: none; padding: 10px 22px; border-radius: 20px; font-weight: bold; font-size: 0.95rem;">Ir para a Página Inicial</a>
+                        <button onclick="window.location.reload()" style="background-color: #111c38; color: #38bdf8; border: 1px solid #1e293b; padding: 10px 22px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.95rem;">Atualizar Página</button>
+                    </div>
                 </div>
-            </div>
-        `;
-        return;
+            `;
+            return;
+        }
+
+        // Barra de Notificação Global no Topo
+        const configAviso = JSON.parse(localStorage.getItem("sistema_aviso_topo") || "{}");
+        if (configAviso.ativo && configAviso.texto && configAviso.texto.trim() !== "") {
+            if (!document.getElementById("barra-aviso-topo-portal")) {
+                let corFundo = "#0284c7";
+                if (configAviso.tipo === "alerta") corFundo = "#d97706";
+                if (configAviso.tipo === "urgente") corFundo = "#dc2626";
+
+                const barraAviso = document.createElement("div");
+                barraAviso.id = "barra-aviso-topo-portal";
+                barraAviso.style.cssText = `
+                    width: 100%;
+                    background-color: ${corFundo};
+                    color: #ffffff;
+                    font-size: 0.9rem;
+                    font-weight: 700;
+                    padding: 9px 20px;
+                    text-align: center;
+                    box-sizing: border-box;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 12px;
+                    position: relative;
+                    z-index: 2000;
+                `;
+                barraAviso.innerHTML = `
+                    <span>📢 ${configAviso.texto}</span>
+                    <button onclick="this.parentElement.remove()" style="background: transparent; border: none; color: #fff; font-size: 1.15rem; cursor: pointer; line-height: 1; padding: 0 4px; margin-left: 8px;">✕</button>
+                `;
+                document.body.insertAdjacentElement("afterbegin", barraAviso);
+            }
+        }
     }
 
-    // 2. EXIBIÇÃO DA BARRA DE AVISO NO TOPO DO SITE
-    const configAviso = JSON.parse(localStorage.getItem("sistema_aviso_topo") || "{}");
-    if (configAviso.ativo && configAviso.texto && configAviso.texto.trim() !== "" && nomePagina !== "admin.html") {
-        let corFundo = "#0284c7"; // Azul
-        if (configAviso.tipo === "alerta") corFundo = "#d97706"; // Amarelo
-        if (configAviso.tipo === "urgente") corFundo = "#dc2626"; // Vermelho
-
-        const barraAviso = document.createElement("div");
-        barraAviso.id = "barra-aviso-topo-portal";
-        barraAviso.style.cssText = `
-            width: 100%;
-            background-color: ${corFundo};
-            color: #ffffff;
-            font-size: 0.9rem;
-            font-weight: 700;
-            padding: 9px 20px;
-            text-align: center;
-            box-sizing: border-box;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            position: relative;
-            z-index: 2000;
-        `;
-        barraAviso.innerHTML = `
-            <span>📢 ${configAviso.texto}</span>
-            <button onclick="this.parentElement.remove()" style="background: transparent; border: none; color: #fff; font-size: 1.15rem; cursor: pointer; line-height: 1; padding: 0 4px; margin-left: 8px;">✕</button>
-        `;
-
-        document.body.insertAdjacentElement("afterbegin", barraAviso);
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", checarStatus);
+    } else {
+        checarStatus();
     }
-});
-
+})();
     // ========================================================
     // 1. CARREGAMENTO DAS ATIVIDADES VIA BANCO CENTRAL
     // ========================================================
