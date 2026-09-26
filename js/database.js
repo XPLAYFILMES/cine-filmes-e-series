@@ -1,7 +1,105 @@
-document.addEventListener("DOMContentLoaded", () => {
+/* ========================================================
+   BLOCO 1: RECEPTOR UNIVERSAL DO MODO MANUTENÇÃO E AVISOS
+   (LEITURA DIRETA DAS CONFIGURAÇÕES DO PAINEL)
+   ======================================================== */
+(function executarControleAcesso() {
+    function checarStatus() {
+        const urlCompleta = window.location.pathname.toLowerCase();
+        const manutencao = JSON.parse(localStorage.getItem("sistema_manutencao") || "{}");
 
-    /* ========================================================
-   BLOCO 1: INICIALIZAÇÃO DO BANCO CENTRALIZADO (LOCALSTORAGE)
+        // Nunca bloqueia a tela de administração
+        if (urlCompleta.includes("admin.html") || urlCompleta.endsWith("/admin")) {
+            return;
+        }
+
+        let paginaBloqueada = false;
+
+        // 1.1 - Manutenção Geral (Trava todo o site público)
+        if (manutencao.geral === true) {
+            paginaBloqueada = true;
+        } 
+        // 1.2 - Manutenção da Página de Colorir
+        else if (manutencao.colorir === true && (urlCompleta.endsWith("/") || urlCompleta.includes("index.html") || urlCompleta.includes("pintar.html") || !urlCompleta.includes(".html"))) {
+            paginaBloqueada = true;
+        } 
+        // 1.3 - Manutenção de Jogos
+        else if (manutencao.jogos === true && urlCompleta.includes("jogos.html")) {
+            paginaBloqueada = true;
+        } 
+        // 1.4 - Manutenção de Atividades Escolares
+        else if (manutencao.atividades === true && urlCompleta.includes("atividades.html")) {
+            paginaBloqueada = true;
+        } 
+        // 1.5 - Manutenção de Conquistas
+        else if (manutencao.conquistas === true && urlCompleta.includes("conquistas.html")) {
+            paginaBloqueada = true;
+        } 
+        // 1.6 - Manutenção da Central A4 (Imprimir)
+        else if (manutencao.imprimir === true && urlCompleta.includes("imprimir.html")) {
+            paginaBloqueada = true;
+        }
+
+        // Renderiza o ecrã amigável de manutenção se a página estiver bloqueada
+        if (paginaBloqueada) {
+            const textoMsg = manutencao.textoAviso || "Estamos preparando novidades incríveis! Esta seção volta em instantes.";
+            document.body.innerHTML = `
+                <div style="min-height: 100vh; background-color: #070d1e; color: #f8fafc; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 25px; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                    <div style="font-size: 5.5rem; margin-bottom: 20px;">🛠️</div>
+                    <h1 style="font-size: 2.2rem; margin-bottom: 12px; color: #38bdf8;">Área em Manutenção Programada</h1>
+                    <p style="font-size: 1.1rem; max-width: 580px; color: #cbd5e1; line-height: 1.6; margin-bottom: 25px;">${textoMsg}</p>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+                        <a href="index.html" style="background-color: #2563eb; color: #fff; text-decoration: none; padding: 10px 22px; border-radius: 20px; font-weight: bold; font-size: 0.95rem;">Ir para a Página Inicial</a>
+                        <button onclick="window.location.reload()" style="background-color: #111c38; color: #38bdf8; border: 1px solid #1e293b; padding: 10px 22px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.95rem;">Atualizar Página</button>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
+        // 1.7 - Barra de Notificação Global no Topo
+        const configAviso = JSON.parse(localStorage.getItem("sistema_aviso_topo") || "{}");
+        if (configAviso.ativo && configAviso.texto && configAviso.texto.trim() !== "") {
+            if (!document.getElementById("barra-aviso-topo-portal")) {
+                let corFundo = "#0284c7";
+                if (configAviso.tipo === "alerta") corFundo = "#d97706";
+                if (configAviso.tipo === "urgente") corFundo = "#dc2626";
+
+                const barraAviso = document.createElement("div");
+                barraAviso.id = "barra-aviso-topo-portal";
+                barraAviso.style.cssText = `
+                    width: 100%;
+                    background-color: ${corFundo};
+                    color: #ffffff;
+                    font-size: 0.9rem;
+                    font-weight: 700;
+                    padding: 9px 20px;
+                    text-align: center;
+                    box-sizing: border-box;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 12px;
+                    position: relative;
+                    z-index: 2000;
+                `;
+                barraAviso.innerHTML = `
+                    <span>📢 ${configAviso.texto}</span>
+                    <button onclick="this.parentElement.remove()" style="background: transparent; border: none; color: #fff; font-size: 1.15rem; cursor: pointer; line-height: 1; padding: 0 4px; margin-left: 8px;">✕</button>
+                `;
+                document.body.insertAdjacentElement("afterbegin", barraAviso);
+            }
+        }
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", checarStatus);
+    } else {
+        checarStatus();
+    }
+})();
+
+/* ========================================================
+   BLOCO 2: INICIALIZAÇÃO DO BANCO CENTRALIZADO (LOCALSTORAGE)
    ======================================================== */
 const DB = {
     init() {
@@ -109,7 +207,7 @@ const DB = {
     },
 
     /* ========================================================
-       BLOCO 2: MÉTODOS DE CONSULTA E GRAVAÇÃO
+       BLOCO 3: MÉTODOS DE CONSULTA E GRAVAÇÃO COMPARTILHADOS
        ======================================================== */
     getDesenhos() { return JSON.parse(localStorage.getItem("db_desenhos") || "[]"); },
     getJogos() { return JSON.parse(localStorage.getItem("db_jogos") || "[]"); },
@@ -125,107 +223,10 @@ const DB = {
 DB.init();
 
 /* ========================================================
-   BLOCO 3: RECEPTOR UNIVERSAL DO MODO MANUTENÇÃO E AVISOS
-   (BLINDADO PARA TODAS AS PÁGINAS DO GITHUB PAGES)
+   BLOCO 4: CARREGAMENTO DE ELEMENTOS E ATIVIDADES DO CATÁLOGO
    ======================================================== */
-(function executarControleAcesso() {
-    function checarStatus() {
-        const urlCompleta = window.location.pathname.toLowerCase();
-        const manutencao = JSON.parse(localStorage.getItem("sistema_manutencao") || "{}");
+document.addEventListener("DOMContentLoaded", () => {
 
-        // Nunca bloquear a tela de administração
-        if (urlCompleta.includes("admin.html") || urlCompleta.endsWith("/admin")) {
-            return;
-        }
-
-        let paginaBloqueada = false;
-
-        // 1. Manutenção Geral (Trava todo o site público)
-        if (manutencao.geral === true) {
-            paginaBloqueada = true;
-        } 
-        // 2. Manutenção da Página de Colorir (index.html ou raiz /)
-        else if (manutencao.colorir === true && (urlCompleta.endsWith("/") || urlCompleta.includes("index.html") || urlCompleta.includes("pintar.html") || !urlCompleta.includes(".html"))) {
-            paginaBloqueada = true;
-        } 
-        // 3. Manutenção de Jogos
-        else if (manutencao.jogos === true && urlCompleta.includes("jogos.html")) {
-            paginaBloqueada = true;
-        } 
-        // 4. Manutenção de Atividades Escolares
-        else if (manutencao.atividades === true && urlCompleta.includes("atividades.html")) {
-            paginaBloqueada = true;
-        } 
-        // 5. Manutenção de Conquistas
-        else if (manutencao.conquistas === true && urlCompleta.includes("conquistas.html")) {
-            paginaBloqueada = true;
-        } 
-        // 6. Manutenção da Central A4 (Imprimir)
-        else if (manutencao.imprimir === true && urlCompleta.includes("imprimir.html")) {
-            paginaBloqueada = true;
-        }
-
-        // Renderiza a tela de manutenção
-        if (paginaBloqueada) {
-            const textoMsg = manutencao.textoAviso || "Estamos preparando novidades incríveis! Esta seção volta em instantes.";
-            document.body.innerHTML = `
-                <div style="min-height: 100vh; background-color: #070d1e; color: #f8fafc; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 25px; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-                    <div style="font-size: 5.5rem; margin-bottom: 20px;">🛠️</div>
-                    <h1 style="font-size: 2.2rem; margin-bottom: 12px; color: #38bdf8;">Área em Manutenção Programada</h1>
-                    <p style="font-size: 1.1rem; max-width: 580px; color: #cbd5e1; line-height: 1.6; margin-bottom: 25px;">${textoMsg}</p>
-                    <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
-                        <a href="index.html" style="background-color: #2563eb; color: #fff; text-decoration: none; padding: 10px 22px; border-radius: 20px; font-weight: bold; font-size: 0.95rem;">Ir para a Página Inicial</a>
-                        <button onclick="window.location.reload()" style="background-color: #111c38; color: #38bdf8; border: 1px solid #1e293b; padding: 10px 22px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.95rem;">Atualizar Página</button>
-                    </div>
-                </div>
-            `;
-            return;
-        }
-
-        // Barra de Notificação Global no Topo
-        const configAviso = JSON.parse(localStorage.getItem("sistema_aviso_topo") || "{}");
-        if (configAviso.ativo && configAviso.texto && configAviso.texto.trim() !== "") {
-            if (!document.getElementById("barra-aviso-topo-portal")) {
-                let corFundo = "#0284c7";
-                if (configAviso.tipo === "alerta") corFundo = "#d97706";
-                if (configAviso.tipo === "urgente") corFundo = "#dc2626";
-
-                const barraAviso = document.createElement("div");
-                barraAviso.id = "barra-aviso-topo-portal";
-                barraAviso.style.cssText = `
-                    width: 100%;
-                    background-color: ${corFundo};
-                    color: #ffffff;
-                    font-size: 0.9rem;
-                    font-weight: 700;
-                    padding: 9px 20px;
-                    text-align: center;
-                    box-sizing: border-box;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 12px;
-                    position: relative;
-                    z-index: 2000;
-                `;
-                barraAviso.innerHTML = `
-                    <span>📢 ${configAviso.texto}</span>
-                    <button onclick="this.parentElement.remove()" style="background: transparent; border: none; color: #fff; font-size: 1.15rem; cursor: pointer; line-height: 1; padding: 0 4px; margin-left: 8px;">✕</button>
-                `;
-                document.body.insertAdjacentElement("afterbegin", barraAviso);
-            }
-        }
-    }
-
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", checarStatus);
-    } else {
-        checarStatus();
-    }
-})();
-    // ========================================================
-    // 1. CARREGAMENTO DAS ATIVIDADES VIA BANCO CENTRAL
-    // ========================================================
     const bancoAtividades = DB.getAtividades();
 
     let serieAtiva = "todas";
@@ -255,9 +256,9 @@ DB.init();
     const btnPesquisarMeuBoletim = document.getElementById("btn-pesquisar-meu-boletim");
     const containerListaBoletim = document.getElementById("container-lista-meu-boletim");
 
-    // ========================================================
-    // 2. TEMA NOTURNO
-    // ========================================================
+    /* ========================================================
+       BLOCO 5: TEMA NOTURNO / CLARO
+       ======================================================== */
     if (btnTema) {
         btnTema.addEventListener("click", () => {
             document.body.classList.toggle("dark-mode");
@@ -265,9 +266,9 @@ DB.init();
         });
     }
 
-    // ========================================================
-    // 3. RENDERIZAR ATIVIDADES DO CATÁLOGO
-    // ========================================================
+    /* ========================================================
+       BLOCO 6: RENDERIZAR ATIVIDADES DO CATÁLOGO
+       ======================================================== */
     function renderizar() {
         if (!gradeAtividades) return;
         gradeAtividades.innerHTML = "";
@@ -307,9 +308,9 @@ DB.init();
         });
     }
 
-    // ========================================================
-    // 4. ENVIO DE ATIVIDADE
-    // ========================================================
+    /* ========================================================
+       BLOCO 7: ENVIO DA ATIVIDADE RESOLVIDA
+       ======================================================== */
     window.abrirResolucao = function(id) {
         atividadeSendoFeita = bancoAtividades.find(a => a.id === id);
         if (!atividadeSendoFeita) return;
@@ -324,7 +325,9 @@ DB.init();
         modalAtiv.style.display = "flex";
     };
 
-    if (btnFecharModal) btnFecharModal.addEventListener("click", () => { modalAtiv.style.display = "none"; });
+    if (btnFecharModal) {
+        btnFecharModal.addEventListener("click", () => { modalAtiv.style.display = "none"; });
+    }
 
     if (btnEnviarTarefa) {
         btnEnviarTarefa.addEventListener("click", () => {
@@ -366,9 +369,9 @@ DB.init();
         });
     }
 
-    // ========================================================
-    // 5. CONSULTA PRIVADA DE NOTAS (BOLETIM DO ALUNO)
-    // ========================================================
+    /* ========================================================
+       BLOCO 8: CONSULTA PRIVADA DE NOTAS (BOLETIM DO ALUNO)
+       ======================================================== */
     function carregarBoletim(nomeFiltro) {
         containerListaBoletim.innerHTML = "";
         const todas = DB.getSubmissoes();
@@ -447,9 +450,9 @@ DB.init();
         });
     }
 
-    // ========================================================
-    // 6. FILTROS E BUSCA
-    // ========================================================
+    /* ========================================================
+       BLOCO 9: FILTROS POR SÉRIE, DISCIPLINA E CAMPO DE BUSCA
+       ======================================================== */
     botoesSerie.forEach(btn => {
         btn.addEventListener("click", () => {
             botoesSerie.forEach(b => b.classList.remove("ativo"));
@@ -477,8 +480,9 @@ DB.init();
 
     renderizar();
 });
+
 /* ========================================================
-   SINCRONIZAÇÃO AUTOMÁTICA DO MENU SUPERIOR ATIVO
+   BLOCO 10: SINCRONIZAÇÃO AUTOMÁTICA DO MENU SUPERIOR ATIVO
    ======================================================== */
 document.addEventListener("DOMContentLoaded", () => {
     const caminhoAtual = window.location.pathname.split("/").pop() || "index.html";
