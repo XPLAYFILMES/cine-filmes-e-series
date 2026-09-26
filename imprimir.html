@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- ========================================================
+       1. CABEÇALHO DO DOCUMENTO E METADADOS
+       ======================================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadernos para Imprimir em A4 - ColorirOnline</title>
+    <link rel="stylesheet" href="css/style.css?v=120">
+</head>
+<body>
+
+    <!-- ========================================================
+       2. CABEÇALHO PRINCIPAL E BARRA DE NAVEGAÇÃO
+       ======================================================== -->
+    <header class="cabecalho-principal">
+        <div class="container-nav">
+            <a href="index.html" class="logo">
+                🎨 Colorir<span class="destaque">Online</span>
+            </a>
+            <div class="container-busca">
+                <span class="icone-busca">🔍</span>
+                <input type="text" id="campo-busca" placeholder="Pesquisar cadernos para imprimir...">
+            </div>
+            <nav class="links-navegacao">
+                <a href="index.html" class="link-nav">🎨 Colorir</a>
+                <a href="jogos.html" class="link-nav">🧩 Jogos</a>
+                <a href="atividades.html" class="link-nav">📚 Atividades Escolares</a>
+                <a href="imprimir.html" class="link-nav ativo">🖨 Imprimir A4</a>
+                <button id="btn-tema-global" class="btn-tema">🌙</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ========================================================
+       3. BANNER PADRONIZADO (FAIXA AZUL CELESTE)
+       ======================================================== -->
+    <section class="banner-novidades" style="width: 100% !important; background: #0284c7 !important; background: linear-gradient(90deg, #0369a1, #0284c7, #38bdf8) !important; padding: 22px 0 !important; margin: 0 0 20px 0 !important; display: block !important;">
+        <div class="conteudo-banner" style="max-width: 1350px; margin: 0 auto; padding: 0 24px; text-align: left;">
+            <h2 style="font-size: 1.8rem; font-weight: 800; color: #ffffff !important; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
+                🖨 Central de Desenhos e Cadernos para Imprimir
+            </h2>
+            <p style="font-size: 0.95rem; color: #e0f2fe !important; margin: 0; opacity: 0.95;">
+                Folhas avulsas e cadernos temáticos completos prontos para impressão em folha A4!
+            </p>
+        </div>
+    </section>
+
+    <!-- ========================================================
+       4. GRELHA DE CADERNOS PRONTOS PARA IMPRESSÃO
+       ======================================================== -->
+    <main class="grade-cadernos" id="catalogo-cadernos">
+        <div class="card-caderno">
+            <div class="capa-caderno" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">🦁</div>
+            <div class="corpo-caderno">
+                <h3>Coleção Animais da Floresta</h3>
+                <p>Contornos nítidos de leão, elefante, girafa e macaco com cabeçalho escolar.</p>
+                <button onclick="imprimirColecao('Coleção Animais da Floresta', '🦁')" class="btn-jogar" style="background: #0284c7; border: none; cursor: pointer;">
+                    🖨 Imprimir em Folha A4
+                </button>
+            </div>
+        </div>
+
+        <div class="card-caderno">
+            <div class="capa-caderno" style="background: linear-gradient(135deg, #10b981, #34d399);">🔤</div>
+            <div class="corpo-caderno">
+                <h3>Caderno de Treino do Alfabeto</h3>
+                <p>Exercícios com linhas pontilhadas de A a Z para apoio pedagógico e coordenação.</p>
+                <button onclick="imprimirColecao('Caderno de Treino do Alfabeto', '🔤')" class="btn-jogar" style="background: #059669; border: none; cursor: pointer;">
+                    🖨 Imprimir em Folha A4
+                </button>
+            </div>
+        </div>
+
+        <div class="card-caderno">
+            <div class="capa-caderno" style="background: linear-gradient(135deg, #8b5cf6, #c084fc);">🧩</div>
+            <div class="corpo-caderno">
+                <h3>Desafios e Passatempos</h3>
+                <p>Labirintos, ligue os pontos e caça-palavras para desenvolver raciocínio lógico.</p>
+                <button onclick="imprimirColecao('Desafios e Passatempos', '🧩')" class="btn-jogar" style="background: #7c3aed; border: none; cursor: pointer;">
+                    🖨 Imprimir em Folha A4
+                </button>
+            </div>
+        </div>
+
+        <div class="card-caderno">
+            <div class="capa-caderno" style="background: linear-gradient(135deg, #ec4899, #f472b6);">🌸</div>
+            <div class="corpo-caderno">
+                <h3>Mandalas Geométricas Relaxantes</h3>
+                <p>Padrões florais e circulares simétricos para foco, relaxamento e pintura com lápis de cor.</p>
+                <button onclick="imprimirColecao('Mandalas Geométricas Relaxantes', '🌸')" class="btn-jogar" style="background: #db2777; border: none; cursor: pointer;">
+                    🖨 Imprimir em Folha A4
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- ========================================================
+       5. MOTOR DE IMPRESSÃO A4 COM CABEÇALHO OFICIAL
+       ======================================================== -->
+    <script>
+        function imprimirColecao(nome, icone) {
+            const win = window.open("", "_blank");
+            win.document.write(`
+                <!DOCTYPE html>
+                <html lang="pt-BR">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Imprimir ${nome} - ColorirOnline</title>
+                    <style>
+                        @page { size: A4; margin: 12mm; }
+                        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 10px; margin: 0; color: #1e293b; }
+                        .cabecalho-escola { border: 2px solid #0f172a; border-radius: 8px; padding: 12px 18px; margin-bottom: 20px; }
+                        .linha-cabecalho { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; font-weight: bold; }
+                        .campo-linha { border-bottom: 1px solid #64748b; flex: 1; margin-left: 8px; }
+                        .titulo-colecao { text-align: center; margin-bottom: 15px; }
+                        .titulo-colecao h2 { margin: 0; font-size: 22px; color: #0f172a; }
+                        .area-desenho {
+                            border: 2px dashed #94a3b8;
+                            border-radius: 12px;
+                            min-height: 600px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            flex-direction: column;
+                            gap: 15px;
+                        }
+                        .icone-central { font-size: 100px; opacity: 0.2; }
+                        .texto-instrucao { font-size: 14px; color: #64748b; font-weight: bold; }
+                        .rodape { text-align: center; margin-top: 25px; font-size: 11px; color: #64748b; }
+                    </style>
+                </head>
+                <body onload="window.print(); window.close();">
+                    <div class="cabecalho-escola">
+                        <div class="linha-cabecalho">
+                            <span style="display: flex; flex: 2;">ESCOLA:<span class="campo-linha"></span></span>
+                            <span style="display: flex; flex: 1; margin-left: 20px;">DATA: ____/____/________</span>
+                        </div>
+                        <div class="linha-cabecalho">
+                            <span style="display: flex; flex: 2;">ALUNO(A):<span class="campo-linha"></span></span>
+                            <span style="display: flex; flex: 1; margin-left: 20px;">TURMA: _______________</span>
+                        </div>
+                    </div>
+                    <div class="titulo-colecao">
+                        <h2>${nome}</h2>
+                    </div>
+                    <div class="area-desenho">
+                        <div class="icone-central">${icone}</div>
+                        <div class="texto-instrucao">Espaço para Colorir / Atividade Prática</div>
+                    </div>
+                    <div class="rodape">
+                        Material Educativo Gerado por ColorirOnline • www.colorironline.com
+                    </div>
+                </body>
+                </html>
+            `);
+            win.document.close();
+        }
+
+        // Modo Escuro
+        const btnTema = document.getElementById("btn-tema-global");
+        if (btnTema) {
+            btnTema.addEventListener("click", () => {
+                document.body.classList.toggle("dark-mode");
+                btnTema.innerText = document.body.classList.contains("dark-mode") ? "☀️" : "🌙";
+            });
+        }
+    </script>
+</body>
+</html>
