@@ -2,11 +2,11 @@
 <html lang="pt-BR">
 <head>
     <!-- ========================================================
-       1. CABEÇALHO DO DOCUMENTO E ESTILOS EMBUTIDOS
+       1. CABEÇALHO DO DOCUMENTO E ESTILOS DO PAINEL PRO
        ======================================================== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Controle Administrativo - ColorirOnline Pro</title>
+    <title>Painel de Controle Central - ColorirOnline Enterprise</title>
     <style>
         * {
             margin: 0;
@@ -22,7 +22,7 @@
             display: flex;
         }
 
-        /* TELA DE LOGIN ISOLADA */
+        /* TELA DE AUTENTICAÇÃO */
         #tela-login-admin {
             position: fixed;
             top: 0; left: 0;
@@ -57,14 +57,14 @@
             margin-bottom: 25px;
         }
 
-        /* ESTRUTURA PRINCIPAL DO PAINEL */
+        /* ESTRUTURA GERAL */
         #painel-container {
             display: none;
             width: 100%;
             min-height: 100vh;
         }
 
-        /* BARRA LATERAL (SIDEBAR) */
+        /* SIDEBAR FIXA */
         .sidebar {
             width: 280px;
             background-color: #070d1e;
@@ -142,11 +142,7 @@
             transition: opacity 0.2s;
         }
 
-        .btn-logout:hover {
-            opacity: 0.9;
-        }
-
-        /* ÁREA DE CONTEÚDO DINÂMICO */
+        /* CONTEÚDO PRINCIPAL */
         .conteudo-principal {
             flex: 1;
             padding: 30px;
@@ -175,6 +171,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
         .cabecalho-secao h1 {
@@ -188,7 +186,7 @@
             margin-top: 4px;
         }
 
-        /* CARDS E GRIDS */
+        /* CARDS DE MÉTRICAS */
         .grid-cards-metricas {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -218,7 +216,7 @@
             color: #38bdf8;
         }
 
-        /* FORMULÁRIOS PROFISSIONAIS */
+        /* CAIXAS E FORMULÁRIOS */
         .painel-box {
             background-color: #111c38;
             border: 1px solid #1e293b;
@@ -289,7 +287,7 @@
             opacity: 0.9;
         }
 
-        /* TABELAS ADMINISTRATIVAS */
+        /* TABELAS */
         .tabela-container {
             width: 100%;
             overflow-x: auto;
@@ -333,7 +331,7 @@
         .btn-avaliar { background-color: #059669; color: #ffffff; }
         .btn-excluir { background-color: #dc2626; color: #ffffff; }
 
-        /* INTERRUPTOR (TOGGLE SWITCH) PARA MANUTENÇÃO */
+        /* TOGGLE SWITCH */
         .toggle-card {
             display: flex;
             align-items: center;
@@ -380,7 +378,7 @@
         }
 
         input:checked + .slider {
-            background-color: #ef4444; /* Vermelho alerta para manutenção */
+            background-color: #ef4444;
         }
 
         input:checked + .slider:before {
@@ -393,7 +391,7 @@
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             z-index: 10000;
             align-items: center;
             justify-content: center;
@@ -413,7 +411,7 @@
 <body>
 
     <!-- ========================================================
-       2. TELA DE AUTENTICAÇÃO / LOGIN SEGURO
+       2. TELA DE LOGIN MESTRE
        ======================================================== -->
     <div id="tela-login-admin">
         <div class="caixa-login">
@@ -434,11 +432,11 @@
     </div>
 
     <!-- ========================================================
-       3. ESTRUTURA GERAL DO PAINEL (SIDEBAR + CONTEÚDO)
+       3. ESTRUTURA GERAL DO PAINEL
        ======================================================== -->
     <div id="painel-container">
 
-        <!-- SIDEBAR FIXA -->
+        <!-- SIDEBAR -->
         <aside class="sidebar">
             <div class="sidebar-logo">
                 ⚙️ Painel<span>Colorir</span>
@@ -463,14 +461,12 @@
         <!-- CONTEÚDO PRINCIPAL -->
         <main class="conteudo-principal">
 
-            <!-- ====================================================
-               SEÇÃO 1: VISÃO GERAL (DASHBOARD)
-               ==================================================== -->
+            <!-- MÓDULO 0: DASHBOARD / VISÃO GERAL -->
             <section id="secao-dashboard" class="secao-painel ativa">
                 <div class="cabecalho-secao">
                     <div>
                         <h1>📊 Visão Geral do Sistema</h1>
-                        <p>Acompanhe métricas, tarefas pendentes e atividades do portal em tempo real.</p>
+                        <p>Métricas, tarefas de alunos pendentes e controles operacionais em tempo real.</p>
                     </div>
                 </div>
 
@@ -494,37 +490,46 @@
                 </div>
 
                 <div class="painel-box">
-                    <h3>🚀 Ações Rápidas Recomendadas</h3>
-                    <p style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 15px;">
-                        Verifique a sala dos professores para lançar notas de atividades enviadas pelos alunos ou adicione novos desafios ao catálogo público.
-                    </p>
+                    <h3>🚀 Ações Rápidas</h3>
                     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                         <button onclick="trocarSecao('professores')" class="btn-salvar" style="background-color: #059669;">
                             🎓 Corrigir Tarefas dos Alunos
                         </button>
                         <button onclick="trocarSecao('desenhos')" class="btn-salvar">
-                            🎨 Adicionar Novo Desenho
+                            🎨 Cadastrar Novo Desenho
                         </button>
                         <button onclick="trocarSecao('manutencao')" class="btn-salvar" style="background-color: #475569;">
-                            🛠️ Ajustar Páginas Ativas
+                            🛠️ Controlar Páginas Ativas
                         </button>
                     </div>
                 </div>
             </section>
 
-            <!-- ====================================================
-               SEÇÃO 2: MODO MANUTENÇÃO (KILL SWITCH MODULAR)
-               ==================================================== -->
+            <!-- MÓDULO 1: MODO MANUTENÇÃO (KILL SWITCH MODULAR) -->
             <section id="secao-manutencao" class="secao-painel">
                 <div class="cabecalho-secao">
                     <div>
                         <h1>🛠️ Central de Manutenção e Bloqueio de Páginas</h1>
-                        <p>Ative a manutenção de páginas individuais durante manutenções sem derrubar o site todo.</p>
+                        <p>Ative a manutenção de páginas individuais ou de todo o portal de uma só vez.</p>
                     </div>
                 </div>
 
                 <div class="painel-box">
-                    <h3>Páginas com Chave de Bloqueio</h3>
+                    <h3>Bloqueio Geral / Mestre</h3>
+                    <div class="toggle-card" style="border: 2px solid #ef4444;">
+                        <div>
+                            <strong style="color: #ef4444; font-size: 1.05rem;">🔴 Manutenção Geral do Portal (Bloquear Tudo)</strong>
+                            <p style="font-size: 0.8rem; color: #94a3b8;">Impede o acesso a todas as páginas do site para manutenção pesada.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="manut-geral" onchange="salvarStatusManutencao()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="painel-box">
+                    <h3>Bloqueio por Página Individual</h3>
 
                     <div class="toggle-card">
                         <div>
@@ -589,14 +594,12 @@
                         <input type="text" id="texto-aviso-manutencao" class="input-admin" value="Estamos atualizando esta área com novidades incríveis! Voltamos em breve.">
                     </div>
                     <button onclick="salvarStatusManutencao()" class="btn-salvar" style="margin-top: 14px;">
-                        Salvar Configuração de Mensagem
+                        Salvar e Aplicar Manutenção Imediatamente
                     </button>
                 </div>
             </section>
 
-            <!-- ====================================================
-               SEÇÃO 3: AVISOS NO TOPO (BARRA DE NOTIFICAÇÃO)
-               ==================================================== -->
+            <!-- MÓDULO 2: AVISOS NO TOPO (BARRA GLOBAL) -->
             <section id="secao-avisos" class="secao-painel">
                 <div class="cabecalho-secao">
                     <div>
@@ -638,14 +641,12 @@
                 </div>
             </section>
 
-            <!-- ====================================================
-               SEÇÃO 4: GESTÃO DE DESENHOS PARA COLORIR
-               ==================================================== -->
+            <!-- MÓDULO 3: GESTÃO DE DESENHOS -->
             <section id="secao-desenhos" class="secao-painel">
                 <div class="cabecalho-secao">
                     <div>
                         <h1>🎨 Cadastro e Moderação de Desenhos</h1>
-                        <p>Adicione novas artes vetoriais ou remova desenhos do catálogo público.</p>
+                        <p>Adicione novas ilustrações vetoriais com suporte a preview instantâneo.</p>
                     </div>
                 </div>
 
@@ -675,8 +676,8 @@
                     </div>
 
                     <div class="form-grupo" style="margin-bottom: 16px;">
-                        <label>Código Vetorial SVG (Path / Formas):</label>
-                        <textarea id="desenho-svg" class="input-admin" rows="3" placeholder='<polygon points="50,5 64,36 98,36 70,57 81,91 50,70 19,91 30,57 2,36 36,36" fill="#ef4444"/>'></textarea>
+                        <label>Código Vetorial SVG:</label>
+                        <textarea id="desenho-svg" class="input-admin" rows="3" placeholder='<circle cx="50" cy="50" r="30" fill="#ef4444"/>'></textarea>
                     </div>
 
                     <button onclick="cadastrarDesenho()" class="btn-salvar">
@@ -703,14 +704,12 @@
                 </div>
             </section>
 
-            <!-- ====================================================
-               SEÇÃO 5: GESTÃO DE JOGOS
-               ==================================================== -->
+            <!-- MÓDULO 4: GESTÃO DE JOGOS -->
             <section id="secao-jogos" class="secao-painel">
                 <div class="cabecalho-secao">
                     <div>
                         <h1>🧩 Gestão de Jogos Interativos</h1>
-                        <p>Crie novos Caça-Palavras e Jogos da Memória para o portal.</p>
+                        <p>Crie novos desafios para as crianças e adultos exercitarem a mente.</p>
                     </div>
                 </div>
 
@@ -763,14 +762,12 @@
                 </div>
             </section>
 
-            <!-- ====================================================
-               SEÇÃO 6: ATIVIDADES ESCOLARES
-               ==================================================== -->
+            <!-- MÓDULO 5: ATIVIDADES ESCOLARES -->
             <section id="secao-atividades" class="secao-painel">
                 <div class="cabecalho-secao">
                     <div>
                         <h1>📚 Gestão de Atividades Escolares</h1>
-                        <p>Publique novas lições para resolução online dos alunos.</p>
+                        <p>Cadastre lições pedagógicas organizadas por série e disciplina.</p>
                     </div>
                 </div>
 
@@ -779,7 +776,7 @@
                     <div class="form-grid">
                         <div class="form-grupo">
                             <label>Título da Atividade:</label>
-                            <input type="text" id="ativ-titulo" class="input-admin" placeholder="Ex: Tabuada do 7">
+                            <input type="text" id="ativ-titulo" class="input-admin" placeholder="Ex: Contas de Multiplicação">
                         </div>
                         <div class="form-grupo">
                             <label>Série / Ano:</label>
@@ -807,7 +804,7 @@
 
                     <div class="form-grupo" style="margin-bottom: 16px;">
                         <label>Enunciado da Pergunta:</label>
-                        <textarea id="ativ-enunciado" class="input-admin" rows="3" placeholder="Escreva aqui a questão ou instrução para o aluno..."></textarea>
+                        <textarea id="ativ-enunciado" class="input-admin" rows="3" placeholder="Escreva a questão a ser respondida pelo aluno..."></textarea>
                     </div>
 
                     <button onclick="cadastrarAtividade()" class="btn-salvar">
@@ -833,17 +830,15 @@
                 </div>
             </section>
 
-            <!-- ====================================================
-               SEÇÃO 7: SALA DOS PROFESSORES (CORREÇÃO DE NOTAS)
-               ==================================================== -->
+            <!-- MÓDULO 6: SALA DOS PROFESSORES (CORREÇÃO DE NOTAS) -->
             <section id="secao-professores" class="secao-painel">
                 <div class="cabecalho-secao">
                     <div>
                         <h1>🎓 Sala de Correção & Avaliação dos Alunos</h1>
-                        <p>Corrija as respostas enviadas, atribua notas de 0 a 10 e envie comentários pedagógicos.</p>
+                        <p>Corrija as lições, lance notas de 0 a 10 e envie comentários aos alunos.</p>
                     </div>
                     <button onclick="imprimirBoletimTurma()" class="btn-salvar" style="background-color: #0f172a;">
-                        🖨️ Imprimir Diário / Boletim
+                        🖨️ Imprimir Diário / Relatório de Notas
                     </button>
                 </div>
 
@@ -868,19 +863,17 @@
                 </div>
             </section>
 
-            <!-- ====================================================
-               SEÇÃO 8: CONQUISTAS & GAMIFICAÇÃO
-               ==================================================== -->
+            <!-- MÓDULO 7: CONQUISTAS & TROFÉUS -->
             <section id="secao-conquistas" class="secao-painel">
                 <div class="cabecalho-secao">
                     <div>
                         <h1>🏆 Conquistas e Medalhas Gamificadas</h1>
-                        <p>Crie troféus de engajamento para os alunos colecionarem.</p>
+                        <p>Gerencie as medalhas desbloqueáveis do portal.</p>
                     </div>
                 </div>
 
                 <div class="painel-box">
-                    <h3>Cadastrar Nova Medalha</h3>
+                    <h3>Cadastrar Novo Troféu</h3>
                     <div class="form-grid">
                         <div class="form-grupo">
                             <label>Nome do Troféu:</label>
@@ -892,32 +885,30 @@
                         </div>
                     </div>
                     <div class="form-grupo" style="margin-bottom: 15px;">
-                        <label>Descrição da Conquista:</label>
-                        <input type="text" id="trofeu-desc" class="input-admin" placeholder="Ex: Tirou nota 10 em 3 exercícios de matemática seguidos.">
+                        <label>Critério de Desbloqueio:</label>
+                        <input type="text" id="trofeu-desc" class="input-admin" placeholder="Ex: Obter nota 10 em 3 exercícios de matemática.">
                     </div>
                     <button onclick="cadastrarTrofeu()" class="btn-salvar">
-                        💾 Criar Troféu
+                        💾 Salvar Nova Conquista
                     </button>
                 </div>
             </section>
 
-            <!-- ====================================================
-               SEÇÃO 9: CADERNOS A4 PARA IMPRIMIR
-               ==================================================== -->
+            <!-- MÓDULO 8: CADERNOS PARA IMPRESSÃO A4 -->
             <section id="secao-imprimir" class="secao-painel">
                 <div class="cabecalho-secao">
                     <div>
                         <h1>🖨️ Cadernos A4 de Impressão Escolar</h1>
-                        <p>Cadastre coleções de exercícios e desenhos para impressão doméstica e escolar.</p>
+                        <p>Controle as coleções temáticas prontas para download e impressão em papel sulfite.</p>
                     </div>
                 </div>
 
                 <div class="painel-box">
-                    <h3>Cadastrar Novo Pacote de Impressão</h3>
+                    <h3>Cadastrar Nova Coleção A4</h3>
                     <div class="form-grid">
                         <div class="form-grupo">
                             <label>Nome do Caderno:</label>
-                            <input type="text" id="caderno-nome" class="input-admin" placeholder="Ex: Caderno de Formas Geométricas">
+                            <input type="text" id="caderno-nome" class="input-admin" placeholder="Ex: Treino de Coordenação e Formas">
                         </div>
                         <div class="form-grupo">
                             <label>Emoji de Capa:</label>
@@ -925,8 +916,8 @@
                         </div>
                     </div>
                     <div class="form-grupo" style="margin-bottom: 15px;">
-                        <label>Descrição do Material:</label>
-                        <input type="text" id="caderno-desc" class="input-admin" placeholder="Ex: Folhas de apoio com círculos, triângulos e quadrados em folha A4.">
+                        <label>Descrição do Conteúdo:</label>
+                        <input type="text" id="caderno-desc" class="input-admin" placeholder="Ex: Linhas pontilhadas e formas geométricas para colorir.">
                     </div>
                     <button onclick="cadastrarCaderno()" class="btn-salvar">
                         💾 Publicar Caderno A4
@@ -934,14 +925,12 @@
                 </div>
             </section>
 
-            <!-- ====================================================
-               SEÇÃO 10: CONFIGURAÇÕES, SEGURANÇA E BACKUP
-               ==================================================== -->
+            <!-- MÓDULO 9: SEGURANÇA E BACKUP DO COFRE -->
             <section id="secao-configuracoes" class="secao-painel">
                 <div class="cabecalho-secao">
                     <div>
                         <h1>⚙️ Segurança Mestre & Cofre de Dados</h1>
-                        <p>Altere suas credenciais de acesso e faça backup completo das notas e cadastros.</p>
+                        <p>Altere suas credenciais e faça o download do backup completo do portal.</p>
                     </div>
                 </div>
 
@@ -963,9 +952,9 @@
                 </div>
 
                 <div class="painel-box">
-                    <h3>Cofre de Dados (Backup & Restauração)</h3>
+                    <h3>Backup & Restauração Completa</h3>
                     <p style="font-size: 0.88rem; color: #94a3b8; margin-bottom: 15px;">
-                        Exporte um arquivo com todos os desenhos, jogos, lições e notas de alunos para guardar em segurança no seu computador.
+                        Exporte um arquivo `.json` com todos os desenhos, jogos, lições e notas de alunos para guardar com segurança no seu computador.
                     </p>
                     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                         <button onclick="baixarBackup()" class="btn-salvar" style="background-color: #059669;">
@@ -983,7 +972,7 @@
     </div>
 
     <!-- ========================================================
-       4. MODAL DE AVALIAÇÃO E NOTA DO PROFESSOR
+       4. MODAL DE AVALIAÇÃO E LANÇAMENTO DE NOTAS
        ======================================================== -->
     <div id="modal-correcao" class="modal-correcao-fundo">
         <div class="caixa-modal-correcao">
@@ -1007,7 +996,7 @@
             </div>
 
             <div class="form-grupo" style="margin-bottom: 15px;">
-                <label>Recado / Feedback do Professor:</label>
+                <label>Recado / Feedback Pedagógico:</label>
                 <input type="text" id="modal-correc-feedback" class="input-admin" placeholder="Ex: Excelente trabalho! Parabéns!">
             </div>
 
@@ -1015,14 +1004,14 @@
                 <label style="font-size: 0.75rem; color: #94a3b8;">Comentários Rápidos (1 clique):</label>
                 <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 5px;">
                     <button type="button" onclick="aplicarFeedbackRapido('🌟 Excelente! Acertou tudo com capricho!')" class="btn-acao-tabela" style="background: #1e293b; color: #f8fafc;">🌟 Excelente!</button>
-                    <button type="button" onclick="aplicarFeedbackRapido('👏 Muito bem! Revise apenas os pequenos detalhes.')" class="btn-acao-tabela" style="background: #1e293b; color: #f8fafc;">👏 Muito bem!</button>
-                    <button type="button" onclick="aplicarFeedbackRapido('💪 Bom esforço! Continue praticando.')" class="btn-acao-tabela" style="background: #1e293b; color: #f8fafc;">💪 Bom esforço!</button>
+                    <button type="button" onclick="aplicarFeedbackRapido('👏 Muito bem! Revise apenas pequenos detalhes na aula.')" class="btn-acao-tabela" style="background: #1e293b; color: #f8fafc;">👏 Muito bem!</button>
+                    <button type="button" onclick="aplicarFeedbackRapido('💪 Bom esforço! Continue praticando os exercícios.')" class="btn-acao-tabela" style="background: #1e293b; color: #f8fafc;">💪 Bom esforço!</button>
                 </div>
             </div>
 
             <div style="display: flex; gap: 10px;">
                 <button onclick="salvarNotaProfessor()" class="btn-salvar" style="background-color: #059669; flex: 2; justify-content: center;">
-                    Salvar Nota e Enviar Parecer
+                    Salvar Nota e Publicar
                 </button>
                 <button onclick="fecharModalCorrecao()" class="btn-salvar" style="background-color: #334155; flex: 1; justify-content: center;">
                     Cancelar
@@ -1032,12 +1021,12 @@
     </div>
 
     <!-- ========================================================
-       5. MOTOR DE CONTROLE, LÓGICA E BANCO LOCAL DO PAINEL
+       5. MOTOR DE CONTROLE E SINCRONIZAÇÃO EM TEMPO REAL
        ======================================================== -->
     <script>
         let submissaoEmCorrecaoId = null;
 
-        /* AUTENTICAÇÃO E SESSÃO */
+        /* AUTENTICAÇÃO */
         function autenticarAdmin() {
             const u = document.getElementById("login-usuario").value.trim();
             const s = document.getElementById("login-senha").value.trim();
@@ -1068,20 +1057,17 @@
             }
         });
 
-        /* NAVEGAÇÃO DE ABAS */
+        /* NAVEGAÇÃO */
         function trocarSecao(secaoId) {
             document.querySelectorAll(".sidebar-item").forEach(item => item.classList.remove("ativo"));
             document.querySelectorAll(".secao-painel").forEach(sec => sec.classList.remove("ativa"));
 
             const elemento = document.getElementById(`secao-${secaoId}`);
-            if (elemento) {
-                elemento.classList.add("ativa");
-            }
-
+            if (elemento) elemento.classList.add("ativa");
             event.currentTarget.classList.add("ativo");
         }
 
-        /* CARREGAMENTO DE DADOS E MÉTRICAS */
+        /* CARREGAMENTO DE DADOS */
         function carregarTudo() {
             atualizarMetricas();
             carregarTabelaDesenhos();
@@ -1109,6 +1095,7 @@
         /* MANUTENÇÃO MODULAR */
         function salvarStatusManutencao() {
             const status = {
+                geral: document.getElementById("manut-geral").checked,
                 colorir: document.getElementById("manut-colorir").checked,
                 jogos: document.getElementById("manut-jogos").checked,
                 atividades: document.getElementById("manut-atividades").checked,
@@ -1117,11 +1104,12 @@
                 textoAviso: document.getElementById("texto-aviso-manutencao").value.trim()
             };
             localStorage.setItem("sistema_manutencao", JSON.stringify(status));
-            alert("Configurações de manutenção salvas com sucesso!");
+            alert("Status de manutenção salvo e sincronizado com o site!");
         }
 
         function carregarStatusManutencao() {
             const status = JSON.parse(localStorage.getItem("sistema_manutencao") || "{}");
+            if (status.geral) document.getElementById("manut-geral").checked = true;
             if (status.colorir) document.getElementById("manut-colorir").checked = true;
             if (status.jogos) document.getElementById("manut-jogos").checked = true;
             if (status.atividades) document.getElementById("manut-atividades").checked = true;
@@ -1138,7 +1126,7 @@
                 texto: document.getElementById("aviso-texto").value.trim()
             };
             localStorage.setItem("sistema_aviso_topo", JSON.stringify(config));
-            alert("Aviso de notificação salvo e sincronizado!");
+            alert("Aviso do topo salvo e sincronizado em todas as páginas públicas!");
         }
 
         function carregarConfigAvisos() {
@@ -1155,10 +1143,7 @@
             const complexidade = document.getElementById("desenho-complexidade").value;
             const svg = document.getElementById("desenho-svg").value.trim();
 
-            if (!titulo || !svg) {
-                alert("Preencha o título e o código SVG!");
-                return;
-            }
+            if (!titulo || !svg) { alert("Preencha o título e o código SVG!"); return; }
 
             const desenhos = JSON.parse(localStorage.getItem("db_desenhos") || "[]");
             desenhos.unshift({
@@ -1174,7 +1159,7 @@
             document.getElementById("desenho-svg").value = "";
             carregarTabelaDesenhos();
             atualizarMetricas();
-            alert("Desenho cadastrado com sucesso no catálogo!");
+            alert("Desenho publicado no catálogo!");
         }
 
         function carregarTabelaDesenhos() {
@@ -1189,16 +1174,14 @@
                     <td><strong>${d.titulo}</strong></td>
                     <td>${d.categoria}</td>
                     <td>${d.complexidade}</td>
-                    <td>
-                        <button onclick="excluirDesenho('${d.id}')" class="btn-acao-tabela btn-excluir">Excluir</button>
-                    </td>
+                    <td><button onclick="excluirDesenho('${d.id}')" class="btn-acao-tabela btn-excluir">Excluir</button></td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
         function excluirDesenho(id) {
-            if (!confirm("Tem certeza que deseja excluir este desenho?")) return;
+            if (!confirm("Excluir este desenho?")) return;
             let desenhos = JSON.parse(localStorage.getItem("db_desenhos") || "[]");
             desenhos = desenhos.filter(d => d.id !== id);
             localStorage.setItem("db_desenhos", JSON.stringify(desenhos));
@@ -1230,7 +1213,7 @@
             document.getElementById("jogo-titulo").value = "";
             carregarTabelaJogos();
             atualizarMetricas();
-            alert("Jogo cadastrado com sucesso!");
+            alert("Jogo ativado com sucesso!");
         }
 
         function carregarTabelaJogos() {
@@ -1244,9 +1227,7 @@
                     <td>${j.icone} <strong>${j.titulo}</strong></td>
                     <td>${j.tipoNome || j.tipo}</td>
                     <td>${j.publicoNome || j.publico}</td>
-                    <td>
-                        <button onclick="excluirJogo('${j.id}')" class="btn-acao-tabela btn-excluir">Excluir</button>
-                    </td>
+                    <td><button onclick="excluirJogo('${j.id}')" class="btn-acao-tabela btn-excluir">Excluir</button></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1302,9 +1283,7 @@
                     <td>${a.icone} <strong>${a.titulo}</strong></td>
                     <td>${a.serieNome || a.serie}</td>
                     <td>${a.materiaNome || a.materia}</td>
-                    <td>
-                        <button onclick="excluirAtividade('${a.id}')" class="btn-acao-tabela btn-excluir">Excluir</button>
-                    </td>
+                    <td><button onclick="excluirAtividade('${a.id}')" class="btn-acao-tabela btn-excluir">Excluir</button></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1338,16 +1317,10 @@
                     <td>${s.turmaAluno}</td>
                     <td>${s.tituloAtividade}</td>
                     <td>${s.dataEnvio}</td>
-                    <td>
-                        <span style="color: ${corrigido ? '#10b981' : '#f59e0b'}; font-weight: bold;">
-                            ${corrigido ? '✅ Avaliado' : '⏳ Pendente'}
-                        </span>
-                    </td>
+                    <td><span style="color: ${corrigido ? '#10b981' : '#f59e0b'}; font-weight: bold;">${corrigido ? '✅ Avaliado' : '⏳ Pendente'}</span></td>
                     <td><strong>${corrigido ? s.nota + '/10' : '-'}</strong></td>
                     <td>
-                        <button onclick="abrirModalCorrecao('${s.id}')" class="btn-acao-tabela btn-avaliar">
-                            ${corrigido ? 'Reavaliar' : 'Avaliar / Nota'}
-                        </button>
+                        <button onclick="abrirModalCorrecao('${s.id}')" class="btn-acao-tabela btn-avaliar">${corrigido ? 'Reavaliar' : 'Avaliar / Nota'}</button>
                         <button onclick="excluirSubmissao('${s.id}')" class="btn-acao-tabela btn-excluir">Excluir</button>
                     </td>
                 `;
@@ -1391,12 +1364,7 @@
             let submissoes = JSON.parse(localStorage.getItem("admin_submissoes_atividades") || "[]");
             submissoes = submissoes.map(s => {
                 if (s.id === submissaoEmCorrecaoId) {
-                    return {
-                        ...s,
-                        nota: nota,
-                        feedbackProfessor: feedback,
-                        status: "Corrigido"
-                    };
+                    return { ...s, nota: nota, feedbackProfessor: feedback, status: "Corrigido" };
                 }
                 return s;
             });
@@ -1405,7 +1373,7 @@
             fecharModalCorrecao();
             carregarTabelaCorrecao();
             atualizarMetricas();
-            alert("Nota e parecer pedagógico registrados com sucesso!");
+            alert("Nota registrada com sucesso!");
         }
 
         function excluirSubmissao(id) {
@@ -1432,7 +1400,7 @@
 
             win.document.write(`
                 <html>
-                <head><title>Boletim Escolar de Atividades Online</title></head>
+                <head><title>Diário Escolar de Atividades Online</title></head>
                 <body onload="window.print();" style="font-family: Arial; padding: 20px;">
                     <h2>Diário de Notas e Avaliações - ColorirOnline</h2>
                     <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
@@ -1455,27 +1423,44 @@
 
         /* CONQUISTAS E CADERNOS A4 */
         function cadastrarTrofeu() {
-            alert("Troféu cadastrado e ativado no sistema de medalhas!");
+            const nome = document.getElementById("trofeu-nome").value.trim();
+            const icone = document.getElementById("trofeu-icone").value.trim() || "⭐";
+            const desc = document.getElementById("trofeu-desc").value.trim();
+            if (!nome) { alert("Preencha o nome do troféu!"); return; }
+
+            const trofeus = JSON.parse(localStorage.getItem("db_trofeus") || "[]");
+            trofeus.push({ nome, icone, desc });
+            localStorage.setItem("db_trofeus", JSON.stringify(trofeus));
+
             document.getElementById("trofeu-nome").value = "";
             document.getElementById("trofeu-desc").value = "";
+            alert("Troféu cadastrado com sucesso!");
         }
 
         function cadastrarCaderno() {
-            alert("Caderno escolar A4 salvo no catálogo de impressão!");
+            const nome = document.getElementById("caderno-nome").value.trim();
+            const icone = document.getElementById("caderno-icone").value.trim() || "📐";
+            const desc = document.getElementById("caderno-desc").value.trim();
+            if (!nome) { alert("Preencha o nome do caderno!"); return; }
+
+            const cadernos = JSON.parse(localStorage.getItem("db_cadernos") || "[]");
+            cadernos.push({ nome, icone, desc });
+            localStorage.setItem("db_cadernos", JSON.stringify(cadernos));
+
             document.getElementById("caderno-nome").value = "";
             document.getElementById("caderno-desc").value = "";
+            alert("Caderno A4 cadastrado com sucesso!");
         }
 
         /* SEGURANÇA E BACKUP */
         function alterarCredenciais() {
             const u = document.getElementById("novo-admin-usuario").value.trim();
             const s = document.getElementById("novo-admin-senha").value.trim();
-
             if (!u || !s) { alert("Preencha o novo usuário e a nova senha!"); return; }
 
             localStorage.setItem("admin_auth_user", u);
             localStorage.setItem("admin_auth_pass", s);
-            alert("Usuário e senha mestre alterados com sucesso!");
+            alert("Usuário e senha alterados com sucesso!");
         }
 
         function baixarBackup() {
@@ -1484,6 +1469,8 @@
                 db_jogos: JSON.parse(localStorage.getItem("db_jogos") || "[]"),
                 db_atividades: JSON.parse(localStorage.getItem("db_atividades") || "[]"),
                 admin_submissoes_atividades: JSON.parse(localStorage.getItem("admin_submissoes_atividades") || "[]"),
+                db_trofeus: JSON.parse(localStorage.getItem("db_trofeus") || "[]"),
+                db_cadernos: JSON.parse(localStorage.getItem("db_cadernos") || "[]"),
                 sistema_manutencao: JSON.parse(localStorage.getItem("sistema_manutencao") || "{}"),
                 sistema_aviso_topo: JSON.parse(localStorage.getItem("sistema_aviso_topo") || "{}")
             };
@@ -1508,6 +1495,8 @@
                     if (dados.db_jogos) localStorage.setItem("db_jogos", JSON.stringify(dados.db_jogos));
                     if (dados.db_atividades) localStorage.setItem("db_atividades", JSON.stringify(dados.db_atividades));
                     if (dados.admin_submissoes_atividades) localStorage.setItem("admin_submissoes_atividades", JSON.stringify(dados.admin_submissoes_atividades));
+                    if (dados.db_trofeus) localStorage.setItem("db_trofeus", JSON.stringify(dados.db_trofeus));
+                    if (dados.db_cadernos) localStorage.setItem("db_cadernos", JSON.stringify(dados.db_cadernos));
                     if (dados.sistema_manutencao) localStorage.setItem("sistema_manutencao", JSON.stringify(dados.sistema_manutencao));
                     if (dados.sistema_aviso_topo) localStorage.setItem("sistema_aviso_topo", JSON.stringify(dados.sistema_aviso_topo));
 
