@@ -1189,76 +1189,50 @@
             if (config.texto) document.getElementById("aviso-texto").value = config.texto;
         }
 
-        /* 15.6 - GESTÃO DE DESENHOS COM UPLOAD, URL E SVG */
-        function alternarCamposEnvio() {
-            const tipo = document.getElementById("desenho-tipo-envio").value;
-            document.getElementById("box-envio-upload").style.display = (tipo === "upload") ? "block" : "none";
-            document.getElementById("box-envio-url").style.display = (tipo === "url") ? "block" : "none";
-            document.getElementById("box-envio-svg").style.display = (tipo === "svg") ? "block" : "none";
-        }
-
-        function processarUploadArquivo(event) {
-            const arquivo = event.target.files[0];
-            if (!arquivo) return;
-            const leitor = new FileReader();
-            leitor.onload = function(e) {
-                imagemCarregadaBase64 = e.target.result;
-                document.getElementById("preview-desenho-box").innerHTML = `<img src="${imagemCarregadaBase64}" style="max-width: 90%; max-height: 90%; object-fit: contain;">`;
-            };
-            leitor.readAsDataURL(arquivo);
-        }
-
-        function atualizarPreviewUrl() {
-            const url = document.getElementById("desenho-url").value.trim();
-            if (url) {
-                document.getElementById("preview-desenho-box").innerHTML = `<img src="${url}" style="max-width: 90%; max-height: 90%; object-fit: contain;" onerror="this.parentElement.innerHTML='<span style=\'color:red;font-size:10px;\'>Erro URL</span>'">`;
-            }
-        }
-
-        function atualizarPreviewSvg() {
-            const svg = document.getElementById("desenho-svg").value.trim();
-            if (svg) {
-                document.getElementById("preview-desenho-box").innerHTML = `<svg viewBox="0 0 100 100" style="width: 90%; height: 90%;">${svg}</svg>`;
-            }
-        }
-
+       /* ========================================================
+           BLOCO 15.6: CADASTRO COM SINCRONIZAÇÃO TOTAL PARA PINTURA
+           ======================================================== */
         function cadastrarDesenho() {
             const titulo = document.getElementById("desenho-titulo").value.trim();
             const categoria = document.getElementById("desenho-categoria").value;
             const complexidade = document.getElementById("desenho-complexidade").value;
             const tipoEnvio = document.getElementById("desenho-tipo-envio").value;
 
-            let conteudoVisual = "";
-            let ehImagemReal = false;
+            let conteudoImagem = null;
+            let conteudoSvg = null;
 
             if (tipoEnvio === "upload") {
                 if (!imagemCarregadaBase64) { alert("Selecione um arquivo de imagem do computador ou celular!"); return; }
-                conteudoVisual = imagemCarregadaBase64;
-                ehImagemReal = true;
+                conteudoImagem = imagemCarregadaBase64;
             } else if (tipoEnvio === "url") {
-                conteudoVisual = document.getElementById("desenho-url").value.trim();
-                if (!conteudoVisual) { alert("Cole o link direto da imagem!"); return; }
-                ehImagemReal = true;
+                const url = document.getElementById("desenho-url").value.trim();
+                if (!url) { alert("Cole o link direto da imagem!"); return; }
+                conteudoImagem = url;
             } else {
-                conteudoVisual = document.getElementById("desenho-svg").value.trim();
-                if (!conteudoVisual) { alert("Insira o código SVG!"); return; }
-                ehImagemReal = false;
+                const svg = document.getElementById("desenho-svg").value.trim();
+                if (!svg) { alert("Insira o código SVG!"); return; }
+                conteudoSvg = svg;
             }
 
             if (!titulo) { alert("Preencha o nome do desenho!"); return; }
 
+            const idGerado = "desenho_" + Date.now();
             const desenhos = JSON.parse(localStorage.getItem("db_desenhos") || "[]");
-            desenhos.unshift({
-                id: "desenho_" + Date.now(),
-                titulo,
-                categoria,
-                complexidade,
-                imagem: ehImagemReal ? conteudoVisual : null,
-                svg: !ehImagemReal ? conteudoVisual : null
-            });
 
+            const novoDesenho = {
+                id: idGerado,
+                titulo: titulo,
+                categoria: categoria,
+                complexidade: complexidade,
+                imagem: conteudoImagem,
+                svg: conteudoSvg
+            };
+
+            // Insere no início para ser o primeiro desenho a aparecer no site
+            desenhos.unshift(novoDesenho);
             localStorage.setItem("db_desenhos", JSON.stringify(desenhos));
 
+            // Limpa o formulário
             document.getElementById("desenho-titulo").value = "";
             document.getElementById("desenho-url").value = "";
             document.getElementById("desenho-svg").value = "";
@@ -1268,38 +1242,7 @@
 
             carregarTabelaDesenhos();
             atualizarMetricas();
-            alert("Desenho cadastrado e publicado com sucesso no catálogo!");
-        }
-
-        function carregarTabelaDesenhos() {
-            const desenhos = JSON.parse(localStorage.getItem("db_desenhos") || "[]");
-            const tbody = document.getElementById("lista-desenhos-tabela");
-            tbody.innerHTML = "";
-
-            desenhos.forEach(d => {
-                const tr = document.createElement("tr");
-                const miniatura = d.imagem 
-                    ? `<img src="${d.imagem}" style="width: 34px; height: 34px; border-radius: 6px; object-fit: contain; background: #fff; padding: 2px;">`
-                    : `<span style="font-size: 1.3rem;">🎨</span>`;
-
-                tr.innerHTML = `
-                    <td>${miniatura} <code>${d.id}</code></td>
-                    <td><strong>${d.titulo}</strong></td>
-                    <td>${d.categoria}</td>
-                    <td>${d.complexidade}</td>
-                    <td><button onclick="excluirDesenho('${d.id}')" class="btn-acao-tabela btn-excluir">Excluir</button></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function excluirDesenho(id) {
-            if (!confirm("Excluir este desenho?")) return;
-            let desenhos = JSON.parse(localStorage.getItem("db_desenhos") || "[]");
-            desenhos = desenhos.filter(d => d.id !== id);
-            localStorage.setItem("db_desenhos", JSON.stringify(desenhos));
-            carregarTabelaDesenhos();
-            atualizarMetricas();
+            alert(`Desenho "${titulo}" publicado com sucesso! Agora você já pode pintar no site.`);
         }
 
         /* 15.7 - GESTÃO DE JOGOS */
