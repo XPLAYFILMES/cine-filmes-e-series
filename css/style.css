@@ -138,29 +138,46 @@ body.dark-mode {
 }
 
 /* ========================================================
-   4. BANNER EM FAIXA TOTAL (LARGURA DE PONTA A PONTA)
+   4. BANNER EM FAIXA TOTAL (LARGURA E ALTURA PADRONIZADAS)
    ======================================================== */
-.banner-novidades {
+.banner-faixa-universal {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 0 20px 0 !important;
-    padding: 22px 0 !important;
-    background-color: #2563eb !important; /* Cor base garantida */
-    background: linear-gradient(90deg, #1d4ed8, #2563eb, #3b82f6) !important; /* Faixa Azul */
+    padding: 22px 0 !important; /* Altura e espaçamento padrão para todas */
     color: #ffffff !important;
     border-radius: 0 !important;
-    box-shadow: 0 4px 15px rgba(29, 78, 216, 0.3) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
     display: block !important;
+    box-sizing: border-box !important;
 }
 
-.conteudo-banner {
+/* Cor Azul (Desenhos / Início) */
+.banner-cor-azul {
+    background-color: #2563eb !important;
+    background: linear-gradient(90deg, #1d4ed8, #2563eb, #3b82f6) !important;
+}
+
+/* Cor Roxa (Jogos) */
+.banner-cor-roxo {
+    background-color: #7c3aed !important;
+    background: linear-gradient(90deg, #6d28d9, #7c3aed, #a855f7) !important;
+}
+
+/* Cor Verde (Atividades Escolares) */
+.banner-cor-verde {
+    background-color: #059669 !important;
+    background: linear-gradient(90deg, #047857, #059669, #10b981) !important;
+}
+
+.conteudo-banner-padrao {
     max-width: 1350px !important;
     margin: 0 auto !important;
     padding: 0 24px !important;
     text-align: left !important;
 }
 
-.conteudo-banner h2 {
+.conteudo-banner-padrao h2 {
     font-size: 1.8rem !important;
     font-weight: 800 !important;
     margin-bottom: 4px !important;
@@ -170,7 +187,7 @@ body.dark-mode {
     gap: 8px !important;
 }
 
-.conteudo-banner p {
+.conteudo-banner-padrao p {
     font-size: 0.95rem !important;
     color: #f1f5f9 !important;
     opacity: 0.95 !important;
