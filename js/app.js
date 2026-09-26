@@ -1,67 +1,76 @@
 /* ========================================================
-   BLOCO 1: RECONHECIMENTO PRECISO DO DESENHO CLICADO
+   BLOCO 1: RECONHECIMENTO DO DESENHO REAL E DEFINIÇÕES
    ======================================================== */
 document.addEventListener("DOMContentLoaded", () => {
     const params = new URLSearchParams(window.location.search);
-    const idDesenho = params.get("id");
+    const idDesenho = params.get("id") || "joaninha";
 
-    // 1.1 - Busca primeiro na lista do painel (db_desenhos)
-    const desenhosDoPainel = JSON.parse(localStorage.getItem("db_desenhos") || "[]");
-    
-    // 1.2 - Desenhos padrão de fallback
-    const desenhosPadrao = [
-        {
-            id: "desenho_1",
-            titulo: "Estrela Mágica",
-            viewBox: "0 0 300 300",
-            svg: `
-                <polygon class="parte-pintavel" data-numero="1" points="150,25 179,111 269,111 197,165 224,251 150,200 76,251 103,165 31,111 121,111" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-                <circle class="parte-pintavel" data-numero="2" cx="70" cy="70" r="30" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-                <circle class="parte-pintavel" data-numero="3" cx="230" cy="70" r="30" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-            `
-        },
-        {
-            id: "desenho_2",
-            titulo: "Foguetão Espacial",
-            viewBox: "0 0 300 300",
-            svg: `
-                <path class="parte-pintavel" data-numero="1" d="M150,30 C180,90 190,180 190,210 L110,210 C110,180 120,90 150,30 Z" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-                <path class="parte-pintavel" data-numero="2" d="M110,160 L60,210 L110,210 Z" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-                <path class="parte-pintavel" data-numero="3" d="M190,160 L240,210 L190,210 Z" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-                <circle class="parte-pintavel" data-numero="4" cx="150" cy="120" r="22" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-                <polygon class="parte-pintavel" data-numero="5" points="130,215 150,270 170,215" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-            `
-        },
-        {
-            id: "desenho_3",
-            titulo: "Flor Geométrica",
-            viewBox: "0 0 300 300",
-            svg: `
-                <ellipse class="parte-pintavel" data-numero="1" cx="150" cy="90" rx="30" ry="45" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-                <ellipse class="parte-pintavel" data-numero="2" cx="150" cy="210" rx="30" ry="45" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-                <ellipse class="parte-pintavel" data-numero="3" cx="90" cy="150" rx="45" ry="30" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-                <ellipse class="parte-pintavel" data-numero="4" cx="210" cy="150" rx="45" ry="30" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-                <circle class="parte-pintavel" data-numero="5" cx="150" cy="150" r="32" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-            `
-        }
-    ];
+    localStorage.setItem("ultimo_desenho_aberto", idDesenho);
 
-    // Procura o desenho correspondente:
-    let desenhoAtual = null;
+    // Vetor oficial da Joaninha na Flor com divisões anatômicas reais por números (Imagem 1 e 3)
+    const svgJoaninhaReal = `
+        <!-- Caule e Folha (Verde - Cor 3) -->
+        <path class="parte-pintavel" data-numero="3" d="M145,280 Q130,330 110,380 L125,380 Q145,330 158,280 Z" fill="#ffffff" stroke="#1e293b" stroke-width="3"/>
+        <path class="parte-pintavel" data-numero="3" d="M125,310 C80,300 50,340 55,390 C90,410 140,360 135,325 Z" fill="#ffffff" stroke="#1e293b" stroke-width="3"/>
 
-    if (idDesenho) {
-        desenhoAtual = desenhosDoPainel.find(d => String(d.id) === String(idDesenho));
-        if (!desenhoAtual) {
-            desenhoAtual = desenhosPadrao.find(d => String(d.id) === String(idDesenho));
-        }
+        <!-- Pétalas da Flor (Amarelo - Cor 1) -->
+        <path class="parte-pintavel" data-numero="1" d="M60,190 C40,210 50,240 80,245 C95,230 95,200 75,190 Z" fill="#ffffff" stroke="#1e293b" stroke-width="3"/>
+        <path class="parte-pintavel" data-numero="1" d="M70,240 C50,270 70,300 100,295 C115,275 110,250 85,240 Z" fill="#ffffff" stroke="#1e293b" stroke-width="3"/>
+        <path class="parte-pintavel" data-numero="1" d="M95,285 C85,325 120,350 145,335 C150,305 130,285 105,280 Z" fill="#ffffff" stroke="#1e293b" stroke-width="3"/>
+        <path class="parte-pintavel" data-numero="1" d="M140,305 C150,350 190,350 205,320 C195,290 165,285 145,300 Z" fill="#ffffff" stroke="#1e293b" stroke-width="3"/>
+        <path class="parte-pintavel" data-numero="1" d="M195,290 C225,320 265,300 260,265 C235,250 205,265 195,285 Z" fill="#ffffff" stroke="#1e293b" stroke-width="3"/>
+        <path class="parte-pintavel" data-numero="1" d="M225,245 C265,255 285,220 270,185 C240,180 220,210 220,240 Z" fill="#ffffff" stroke="#1e293b" stroke-width="3"/>
+        <path class="parte-pintavel" data-numero="1" d="M75,150 C55,165 70,195 100,190 C110,170 100,145 80,145 Z" fill="#ffffff" stroke="#1e293b" stroke-width="3"/>
+
+        <!-- Miolo da Flor com Textura (Laranja Claro - Cor 2) -->
+        <ellipse class="parte-pintavel" data-numero="2" cx="165" cy="225" rx="55" ry="38" fill="#ffffff" stroke="#1e293b" stroke-width="3"/>
+
+        <!-- Patinhas da Joaninha (Preto - Cor 5) -->
+        <path class="parte-pintavel" data-numero="5" d="M140,190 Q135,215 145,225" fill="none" stroke="#1e293b" stroke-width="5" stroke-linecap="round"/>
+        <path class="parte-pintavel" data-numero="5" d="M165,200 Q155,230 170,240" fill="none" stroke="#1e293b" stroke-width="5" stroke-linecap="round"/>
+        <path class="parte-pintavel" data-numero="5" d="M220,205 Q220,235 235,245" fill="none" stroke="#1e293b" stroke-width="5" stroke-linecap="round"/>
+        <path class="parte-pintavel" data-numero="5" d="M260,195 Q265,225 280,230" fill="none" stroke="#1e293b" stroke-width="5" stroke-linecap="round"/>
+
+        <!-- Cabeça da Joaninha (Pele / Bege - Cor 6) -->
+        <ellipse class="parte-pintavel" data-numero="6" cx="130" cy="115" rx="48" ry="42" fill="#ffffff" stroke="#1e293b" stroke-width="3"/>
+
+        <!-- Bochechas (Rosa - Cor 7) -->
+        <circle class="parte-pintavel" data-numero="7" cx="95" cy="130" r="8" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
+        <circle class="parte-pintavel" data-numero="7" cx="160" cy="120" r="8" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
+
+        <!-- Olhos (Preto - Cor 5) -->
+        <ellipse class="parte-pintavel" data-numero="5" cx="108" cy="105" rx="10" ry="14" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
+        <ellipse class="parte-pintavel" data-numero="5" cx="148" cy="98" rx="10" ry="14" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
+
+        <!-- Antenas (Preto - Cor 5) -->
+        <path class="parte-pintavel" data-numero="5" d="M110,80 Q95,45 80,55" fill="none" stroke="#1e293b" stroke-width="3"/>
+        <circle class="parte-pintavel" data-numero="5" cx="80" cy="55" r="5" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
+        <path class="parte-pintavel" data-numero="5" d="M140,75 Q150,40 170,45" fill="none" stroke="#1e293b" stroke-width="3"/>
+        <circle class="parte-pintavel" data-numero="5" cx="170" cy="45" r="5" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
+
+        <!-- Asas da Joaninha (Vermelho - Cor 4) -->
+        <path class="parte-pintavel" data-numero="4" d="M175,90 C220,40 300,90 295,170 C240,210 185,170 175,90 Z" fill="#ffffff" stroke="#1e293b" stroke-width="3.5"/>
+
+        <!-- Pintinhas da Asa (Preto - Cor 5) -->
+        <circle class="parte-pintavel" data-numero="5" cx="215" cy="85" r="14" fill="#ffffff" stroke="#1e293b" stroke-width="2.5"/>
+        <circle class="parte-pintavel" data-numero="5" cx="255" cy="115" r="15" fill="#ffffff" stroke="#1e293b" stroke-width="2.5"/>
+        <circle class="parte-pintavel" data-numero="5" cx="205" cy="135" r="15" fill="#ffffff" stroke="#1e293b" stroke-width="2.5"/>
+        <circle class="parte-pintavel" data-numero="5" cx="265" cy="165" r="14" fill="#ffffff" stroke="#1e293b" stroke-width="2.5"/>
+    `;
+
+    // Busca no banco do painel
+    const desenhosPainel = JSON.parse(localStorage.getItem("db_desenhos") || "[]");
+    let desenhoAtual = desenhosPainel.find(d => String(d.id) === String(idDesenho));
+
+    // Se não encontrou ou for a joaninha, carrega a estrutura anatômica oficial
+    if (!desenhoAtual || idDesenho === "joaninha") {
+        desenhoAtual = {
+            id: "joaninha",
+            titulo: "Joaninha na Flor",
+            viewBox: "0 0 350 420",
+            svg: svgJoaninhaReal
+        };
     }
-
-    // Se ainda não encontrou, pega o mais recente do painel ou o primeiro padrão
-    if (!desenhoAtual) {
-        desenhoAtual = desenhosDoPainel.length > 0 ? desenhosDoPainel[0] : desenhosPadrao[0];
-    }
-
-    localStorage.setItem("ultimo_desenho_aberto", desenhoAtual.id);
 
     const svgPrancheta = document.getElementById("desenho-svg");
     const camadaCanvas = document.getElementById("camada-pincel");
@@ -71,99 +80,70 @@ document.addEventListener("DOMContentLoaded", () => {
     const textoProgresso = document.getElementById("texto-progresso-ativo");
     const pranchetaWrapper = document.getElementById("prancheta-wrapper");
 
-    const tabelaCores = [
-        { num: 1, hex: "#e74c3c" },
-        { num: 2, hex: "#3498db" },
-        { num: 3, hex: "#f1c40f" },
-        { num: 4, hex: "#2ecc71" },
-        { num: 5, hex: "#9b59b6" },
-        { num: 6, hex: "#e67e22" },
-        { num: 7, hex: "#1abc9c" },
-        { num: 8, hex: "#e84393" }
+    // Paleta de Cores Temática e Calibrada para a Joaninha e Natureza (Imagem 3)
+    const paletaTematica = [
+        { num: 1, hex: "#fbbf24", nome: "Amarelo Pétala" },
+        { num: 2, hex: "#f59e0b", nome: "Laranja Miolo" },
+        { num: 3, hex: "#22c55e", nome: "Verde Folha" },
+        { num: 4, hex: "#ef4444", nome: "Vermelho Asa" },
+        { num: 5, hex: "#1e293b", nome: "Preto Bolinhas" },
+        { num: 6, hex: "#fde68a", nome: "Bege Rostinho" },
+        { num: 7, hex: "#f472b6", nome: "Rosa Bochecha" }
     ];
 
     let corAtivaNumero = 1;
-    let corAtivaHex = "#e74c3c";
+    let corAtivaHex = "#fbbf24";
     let modoAtual = "balde";
     let nivelZoom = 1;
     let historicoAcoes = [];
     let partesDoDesenho = [];
 
     /* ========================================================
-       BLOCO 2: MONTAGEM DA IMAGEM REAL E REGIÕES NUMERADAS
+       BLOCO 2: MONTAGEM DO DESENHO E DOS NÚMEROS DENTRO DAS PARTES
        ======================================================== */
     function carregarDesenhoNaPrancheta() {
         if (!svgPrancheta) return;
         svgPrancheta.innerHTML = "";
 
-        // CASO A: Imagem vinda do Painel (Upload ou Link URL)
-        if (desenhoAtual.imagem) {
-            svgPrancheta.setAttribute("viewBox", "0 0 400 400");
-            svgPrancheta.innerHTML = `
-                <!-- A imagem enviada pelo painel fica de fundo -->
-                <image href="${desenhoAtual.imagem}" x="0" y="0" width="400" height="400" preserveAspectRatio="xMidYMid meet" />
-                
-                <!-- Regiões translúcidas clicáveis para pintar por números -->
-                <g id="camada-partes-numeradas">
-                    <!-- Quadrante 1 -->
-                    <rect class="parte-pintavel" data-numero="1" x="20" y="20" width="170" height="170" rx="14" fill="rgba(255,255,255,0.70)" stroke="#1e293b" stroke-width="2"/>
-                    <text class="label-numero" data-numero="1" x="105" y="115" font-size="28" font-weight="900" fill="#0f172a" text-anchor="middle" pointer-events="none">1</text>
+        svgPrancheta.setAttribute("viewBox", desenhoAtual.viewBox || "0 0 350 420");
+        svgPrancheta.innerHTML = desenhoAtual.svg || svgJoaninhaReal;
 
-                    <!-- Quadrante 2 -->
-                    <rect class="parte-pintavel" data-numero="2" x="210" y="20" width="170" height="170" rx="14" fill="rgba(255,255,255,0.70)" stroke="#1e293b" stroke-width="2"/>
-                    <text class="label-numero" data-numero="2" x="295" y="115" font-size="28" font-weight="900" fill="#0f172a" text-anchor="middle" pointer-events="none">2</text>
+        const formas = svgPrancheta.querySelectorAll(".parte-pintavel");
+        
+        formas.forEach((forma, index) => {
+            if (!forma.getAttribute("data-numero")) {
+                forma.setAttribute("data-numero", (index % 7) + 1);
+            }
+            if (!forma.getAttribute("fill") || forma.getAttribute("fill") === "none") {
+                forma.setAttribute("fill", "#ffffff");
+            }
 
-                    <!-- Quadrante 3 -->
-                    <rect class="parte-pintavel" data-numero="3" x="20" y="210" width="170" height="170" rx="14" fill="rgba(255,255,255,0.70)" stroke="#1e293b" stroke-width="2"/>
-                    <text class="label-numero" data-numero="3" x="105" y="305" font-size="28" font-weight="900" fill="#0f172a" text-anchor="middle" pointer-events="none">3</text>
-
-                    <!-- Quadrante 4 -->
-                    <rect class="parte-pintavel" data-numero="4" x="210" y="210" width="170" height="170" rx="14" fill="rgba(255,255,255,0.70)" stroke="#1e293b" stroke-width="2"/>
-                    <text class="label-numero" data-numero="4" x="295" y="305" font-size="28" font-weight="900" fill="#0f172a" text-anchor="middle" pointer-events="none">4</text>
-                </g>
-            `;
-        } 
-        // CASO B: Código SVG (do painel ou padrão)
-        else {
-            svgPrancheta.setAttribute("viewBox", desenhoAtual.viewBox || "0 0 300 300");
-            svgPrancheta.innerHTML = desenhoAtual.svg;
-
-            const formas = svgPrancheta.querySelectorAll("path, polygon, circle, rect, ellipse");
-            formas.forEach((forma, idx) => {
-                if (!forma.getAttribute("data-numero")) {
-                    forma.setAttribute("data-numero", (idx % 5) + 1);
+            // Injeta o número centralizado dentro da própria parte anatômica (Igual Imagem 3)
+            try {
+                const b = forma.getBBox();
+                if (b.width > 8 && b.height > 8) {
+                    const num = forma.getAttribute("data-numero");
+                    const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    txt.setAttribute("class", "label-numero");
+                    txt.setAttribute("data-numero", num);
+                    txt.setAttribute("x", b.x + b.width / 2);
+                    txt.setAttribute("y", b.y + b.height / 2 + 5);
+                    txt.setAttribute("font-size", b.width > 30 ? "15" : "11");
+                    txt.setAttribute("font-weight", "900");
+                    txt.setAttribute("fill", "#334155");
+                    txt.setAttribute("text-anchor", "middle");
+                    txt.setAttribute("pointer-events", "none");
+                    txt.textContent = num;
+                    svgPrancheta.appendChild(txt);
                 }
-                forma.classList.add("parte-pintavel");
-                if (!forma.getAttribute("fill") || forma.getAttribute("fill") === "none") {
-                    forma.setAttribute("fill", "#ffffff");
-                }
-
-                try {
-                    const b = forma.getBBox();
-                    if (b.width > 8 && b.height > 8) {
-                        const num = forma.getAttribute("data-numero");
-                        const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                        txt.setAttribute("class", "label-numero");
-                        txt.setAttribute("data-numero", num);
-                        txt.setAttribute("x", b.x + b.width / 2);
-                        txt.setAttribute("y", b.y + b.height / 2 + 5);
-                        txt.setAttribute("font-size", "14");
-                        txt.setAttribute("font-weight", "900");
-                        txt.setAttribute("fill", "#334155");
-                        txt.setAttribute("text-anchor", "middle");
-                        txt.setAttribute("pointer-events", "none");
-                        txt.textContent = num;
-                        svgPrancheta.appendChild(txt);
-                    }
-                } catch(e) {}
-            });
-        }
+            } catch(e) {}
+        });
 
         partesDoDesenho = Array.from(svgPrancheta.querySelectorAll(".parte-pintavel"));
     }
 
     /* ========================================================
-       BLOCO 3: GERAÇÃO DA PALETA CONFORME A QUANTIDADE DE PARTES
+       BLOCO 3: PALETA DINÂMICA COM CONTADOR DE PARTES RESTANTES
        ======================================================== */
     function montarPaletaDinamica() {
         if (!barraPaleta) return;
@@ -171,8 +151,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const numerosPresentes = [...new Set(partesDoDesenho.map(p => parseInt(p.getAttribute("data-numero"))))].sort((a,b) => a - b);
 
-        numerosPresentes.forEach((num, index) => {
-            const defCor = tabelaCores.find(c => c.num === num) || tabelaCores[index % tabelaCores.length];
+        numerosPresentes.forEach((num) => {
+            const defCor = paletaTematica.find(c => c.num === num) || { num, hex: "#3b82f6" };
             const restantes = partesDoDesenho.filter(p => parseInt(p.getAttribute("data-numero")) === num && p.getAttribute("data-pintado") !== "true").length;
 
             const divCor = document.createElement("div");
@@ -198,10 +178,9 @@ document.addEventListener("DOMContentLoaded", () => {
             barraPaleta.appendChild(divCor);
         });
 
-        // Atualiza a primeira cor como ativa
         if (numerosPresentes.length > 0 && !numerosPresentes.includes(corAtivaNumero)) {
             corAtivaNumero = numerosPresentes[0];
-            const prim = tabelaCores.find(c => c.num === corAtivaNumero);
+            const prim = paletaTematica.find(c => c.num === corAtivaNumero);
             if (prim) corAtivaHex = prim.hex;
         }
 
@@ -209,7 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* ========================================================
-       BLOCO 4: PINTURA INTERATIVA POR NÚMERO (BALDE)
+       BLOCO 4: PINTURA E ANIMAÇÃO PULSANTE DA COR ATIVA
        ======================================================== */
     function destacarAreasAtivas() {
         partesDoDesenho.forEach(parte => {
@@ -238,10 +217,9 @@ document.addEventListener("DOMContentLoaded", () => {
             parte.setAttribute("data-pintado", "true");
             parte.classList.remove("parte-pendente-ativa");
 
-            // Registra no histórico para a ferramenta "Desfazer"
             historicoAcoes.push({ elemento: parte, corAntiga: corAnterior, numParte });
 
-            // Remove o número visível daquela região
+            // Remove o número visível daquela região preenchida
             const rotulos = svgPrancheta.querySelectorAll(`.label-numero[data-numero="${numParte}"]`);
             if (rotulos.length > 0) {
                 rotulos[0].style.display = "none";
@@ -249,17 +227,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
             atualizarProgresso();
         } else {
-            // Efeito visual caso o clique seja na cor errada
+            // Efeito de dica caso a criança clique com o número incorreto selecionado
             const btnCerto = document.querySelector(`.item-cor[data-numero="${numParte}"]`);
             if (btnCerto) {
-                btnCerto.style.transform = "scale(1.25)";
+                btnCerto.style.transform = "scale(1.3)";
                 setTimeout(() => btnCerto.style.transform = "", 250);
             }
         }
     });
 
     /* ========================================================
-       BLOCO 5: CÁLCULO DE PROGRESSO E CONCLUSÃO (MODAL A4 / PNG)
+       BLOCO 5: PROGRESSO E CONCLUSÃO (MODAL A4 / PNG)
        ======================================================== */
     function atualizarProgresso() {
         const total = partesDoDesenho.length;
@@ -269,7 +247,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (barraProgresso) barraProgresso.style.width = `${porcentagem}%`;
         if (textoProgresso) textoProgresso.innerText = `${porcentagem}% Concluído`;
 
-        // Salva progresso individual para alimentar a home e o hero
         localStorage.setItem(`progresso_${desenhoAtual.id}`, JSON.stringify({ porcentagem }));
 
         montarPaletaDinamica();
@@ -287,7 +264,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const imgPreview = document.getElementById("img-modal-preview");
         if (!modal) return;
 
-        // Gera a imagem final para prévia no modal
         const svgData = new XMLSerializer().serializeToString(svgPrancheta);
         const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
         const URLObj = window.URL || window.webkitURL || window;
@@ -311,7 +287,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnSalvar = document.getElementById("btn-salvar");
     const btnTema = document.getElementById("btn-tema-pintar");
 
-    // Alternar Balde / Pincel
     if (btnModoBalde && btnModoPincel) {
         btnModoBalde.addEventListener("click", () => {
             modoAtual = "balde";
@@ -330,7 +305,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Pincel livre sobre o Canvas
     if (camadaCanvas && ctxCanvas) {
         camadaCanvas.style.pointerEvents = "none";
         let desenhando = false;
@@ -354,7 +328,6 @@ document.addEventListener("DOMContentLoaded", () => {
         window.addEventListener("mouseup", () => { desenhando = false; });
     }
 
-    // Ferramenta Desfazer
     if (btnDesfazer) {
         btnDesfazer.addEventListener("click", () => {
             if (historicoAcoes.length === 0) return;
@@ -369,7 +342,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Ferramenta Dica Mágica
     if (btnDica) {
         btnDica.addEventListener("click", () => {
             const pendente = partesDoDesenho.find(p => parseInt(p.getAttribute("data-numero")) === corAtivaNumero && p.getAttribute("data-pintado") !== "true");
@@ -380,7 +352,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Ferramentas de Zoom
     if (btnZoomIn && btnZoomOut && pranchetaWrapper) {
         btnZoomIn.addEventListener("click", () => {
             if (nivelZoom < 2.5) {
@@ -397,7 +368,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Tela Cheia
     if (btnTelaCheia) {
         btnTelaCheia.addEventListener("click", () => {
             if (!document.fullscreenElement) {
@@ -408,7 +378,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Limpar
     if (btnLimpar) {
         btnLimpar.addEventListener("click", () => {
             if (!confirm("Deseja reiniciar a pintura deste desenho?")) return;
@@ -423,14 +392,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Salvar Rascunho
     if (btnSalvar) {
         btnSalvar.addEventListener("click", () => {
             alert("Progresso salvo com sucesso!");
         });
     }
 
-    // Alternador de Modo Escuro
     if (btnTema) {
         if (localStorage.getItem("tema_colorir_online") === "dark") {
             document.body.classList.add("dark-mode");
@@ -455,7 +422,6 @@ document.addEventListener("DOMContentLoaded", () => {
         btnModalFechar.addEventListener("click", () => { modalConclusao.style.display = "none"; });
     }
 
-    // Baixar Imagem PNG em HD
     if (btnModalPng) {
         btnModalPng.addEventListener("click", () => {
             const svgData = new XMLSerializer().serializeToString(svgPrancheta);
@@ -477,7 +443,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Imprimir com Cabeçalho em Folha A4
     if (btnModalImprimir) {
         btnModalImprimir.addEventListener("click", () => {
             const svgData = new XMLSerializer().serializeToString(svgPrancheta);
