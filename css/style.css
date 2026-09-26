@@ -21,12 +21,12 @@ body.dark-mode {
 }
 
 /* ========================================================
-   2. CABEÇALHO E ESTRUTURA DO MENU SUPERIOR
+   2. CABEÇALHO PRINCIPAL E NAVEGAÇÃO PADRONIZADA
    ======================================================== */
 .cabecalho-principal {
-    background-color: #0b1329 !important;
+    background-color: #070d1e !important; /* Azul escuro oficial da imagem */
     padding: 10px 0 !important;
-    border-bottom: 1px solid #1e293b !important;
+    border-bottom: 1px solid #172554 !important;
     position: sticky !important;
     top: 0 !important;
     z-index: 1000 !important;
@@ -34,13 +34,12 @@ body.dark-mode {
 }
 
 .container-nav {
-    max-width: 1400px !important;
+    max-width: 1350px !important;
     margin: 0 auto !important;
-    padding: 0 24px !important;
+    padding: 0 20px !important;
     display: flex !important;
     align-items: center !important;
-    justify-content: flex-start !important;
-    gap: 20px !important;
+    justify-content: space-between !important;
     box-sizing: border-box !important;
 }
 
@@ -57,20 +56,19 @@ body.dark-mode {
 }
 
 .logo .destaque {
-    color: #38bdf8 !important;
+    color: #38bdf8 !important; /* Azul claro do Online */
 }
 
 /* ========================================================
-   3. CAMPO DE PESQUISA (LARGURA FIXA TRAVADA EM TODAS AS TELAS)
+   3. CAMPO DE PESQUISA (LARGURA FIXA TRAVADA EM TODAS AS PÁGINAS)
    ======================================================== */
 .container-busca {
     position: relative !important;
-    width: 360px !important;
-    min-width: 360px !important;
-    max-width: 360px !important;
+    width: 330px !important;
+    min-width: 330px !important;
+    max-width: 330px !important;
     flex-shrink: 0 !important;
-    flex-grow: 0 !important;
-    margin: 0 !important;
+    margin: 0 20px 0 25px !important;
 }
 
 .icone-busca {
@@ -87,26 +85,24 @@ body.dark-mode {
     width: 100% !important;
     padding: 9px 16px 9px 40px !important;
     border-radius: 25px !important;
-    border: 1px solid #334155 !important;
-    background-color: #1e293b !important;
-    font-size: 0.9rem !important;
+    border: 1px solid #1e293b !important;
+    background-color: #111c38 !important;
+    font-size: 0.88rem !important;
     color: #f8fafc !important;
     outline: none !important;
     box-sizing: border-box !important;
-    transition: border-color 0.2s ease !important;
 }
 
 .container-busca input:focus {
-    background-color: #0f172a !important;
     border-color: #38bdf8 !important;
+    background-color: #0c152b !important;
 }
 
-/* LINKS DO MENU (SEMPRE ALINHADOS À DIREITA) */
+/* LINKS DO MENU SUPERIOR */
 .links-navegacao {
     display: flex !important;
     align-items: center !important;
     gap: 8px !important;
-    margin-left: auto !important;
     flex-shrink: 0 !important;
 }
 
@@ -115,9 +111,9 @@ body.dark-mode {
     text-decoration: none !important;
     font-size: 0.92rem !important;
     font-weight: 700 !important;
-    padding: 7px 14px !important;
+    padding: 7px 15px !important;
     border-radius: 20px !important;
-    transition: all 0.2s ease !important;
+    transition: background-color 0.2s ease, color 0.2s ease !important;
     white-space: nowrap !important;
     display: inline-flex !important;
     align-items: center !important;
@@ -129,23 +125,24 @@ body.dark-mode {
     background-color: rgba(255, 255, 255, 0.08) !important;
 }
 
+/* Pílula Selecionada (Exatamente como em Colorir na Imagem) */
 .link-nav.ativo {
-    background-color: #1e293b !important;
+    background-color: #172554 !important;
     color: #ffffff !important;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* BOTÃO DA LUA (TRANSPARENTE E SEM FUNDO BRANCO) */
+/* Botão da Lua (Sem Fundo Branco, Fundo Totalmente Azul) */
 .btn-tema {
     background: transparent !important;
     background-color: transparent !important;
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
-    font-size: 1.25rem !important;
+    font-size: 1.15rem !important;
     cursor: pointer !important;
-    padding: 4px 8px !important;
-    margin-left: 6px !important;
+    padding: 4px 6px !important;
+    margin-left: 4px !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -154,8 +151,7 @@ body.dark-mode {
 }
 
 .btn-tema:hover {
-    transform: scale(1.1) !important;
-    background-color: rgba(255, 255, 255, 0.08) !important;
+    transform: scale(1.15) !important;
 }
 
 /* ========================================================
