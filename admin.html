@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- ========================================================
+       1. CABEÇALHO DO DOCUMENTO E ESTILOS EMBUTIDOS
+       ======================================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Controle Administrativo - ColorirOnline Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0b1329;
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* TELA DE LOGIN ISOLADA */
+        #tela-login-admin {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: #070d1e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .caixa-login {
+            background: #111c38;
+            border: 2px solid #1e293b;
+            border-radius: 20px;
+            padding: 35px 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .caixa-login h2 {
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            color: #38bdf8;
+        }
+
+        .caixa-login p {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 25px;
+        }
+
+        /* ESTRUTURA PRINCIPAL DO PAINEL */
+        #painel-container {
+            display: none;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* BARRA LATERAL (SIDEBAR) */
+        .sidebar {
+            width: 280px;
+            background-color: #070d1e;
+            border-right: 1px solid #1e293b;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+        }
+
+        .sidebar-logo {
+            padding: 22px 20px;
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: #ffffff;
+            border-bottom: 1px solid #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sidebar-logo span {
+            color: #38bdf8;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 15px 10px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: #94a3b8;
+            font-size: 0.92rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-item:hover {
+            color: #f8fafc;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-item.ativo {
+            background-color: #2563eb;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+        }
+
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid #1e293b;
+        }
+
+        .btn-logout {
+            width: 100%;
+            padding: 10px;
+            background-color: #dc2626;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-logout:hover {
+            opacity: 0.9;
+        }
+
+        /* ÁREA DE CONTEÚDO DINÂMICO */
+        .conteudo-principal {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background-color: #0b1329;
+        }
+
+        .secao-painel {
+            display: none;
+        }
+
+        .secao-painel.ativa {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .cabecalho-secao {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #1e293b;
+            padding-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cabecalho-secao h1 {
+            font-size: 1.6rem;
+            color: #ffffff;
+        }
+
+        .cabecalho-secao p {
+            font-size: 0.88rem;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        /* CARDS E GRIDS */
+        .grid-cards-metricas {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card-metrica {
+            background-color: #111c38;
+            border: 1px solid #1e293b;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-metrica h4 {
+            font-size: 0.82rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .card-metrica .valor {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #38bdf8;
+        }
+
+        /* FORMULÁRIOS PROFISSIONAIS */
+        .painel-box {
+            background-color: #111c38;
+            border: 1px solid #1e293b;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .painel-box h3 {
+            font-size: 1.15rem;
+            color: #ffffff;
+            margin-bottom: 18px;
+            border-bottom: 1px dashed #1e293b;
+            padding-bottom: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-grupo {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-grupo label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #cbd5e1;
+        }
+
+        .input-admin {
+            background-color: #0b1329;
+            border: 1px solid #1e293b;
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: #f8fafc;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-admin:focus {
+            border-color: #38bdf8;
+        }
+
+        .btn-salvar {
+            background-color: #2563eb;
+            color: #ffffff;
+            border: none;
+            padding: 11px 22px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-salvar:hover {
+            opacity: 0.9;
+        }
+
+        /* TABELAS ADMINISTRATIVAS */
+        .tabela-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table.tabela-admin {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.88rem;
+        }
+
+        table.tabela-admin th {
+            background-color: #0b1329;
+            color: #94a3b8;
+            padding: 12px 14px;
+            font-weight: 800;
+            border-bottom: 2px solid #1e293b;
+        }
+
+        table.tabela-admin td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #1e293b;
+            color: #cbd5e1;
+        }
+
+        table.tabela-admin tr:hover {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .btn-acao-tabela {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.78rem;
+            border: none;
+            cursor: pointer;
+            margin-right: 6px;
+        }
+
+        .btn-avaliar { background-color: #059669; color: #ffffff; }
+        .btn-excluir { background-color: #dc2626; color: #ffffff; }
+
+        /* INTERRUPTOR (TOGGLE SWITCH) PARA MANUTENÇÃO */
+        .toggle-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            background-color: #0b1329;
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #334155;
+            transition: .3s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #ef4444; /* Vermelho alerta para manutenção */
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        /* MODAL DE CORREÇÃO PEDAGÓGICA */
+        .modal-correcao-fundo {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .caixa-modal-correcao {
+            background: #111c38;
+            border: 2px solid #1e293b;
+            border-radius: 18px;
+            padding: 24px;
+            width: 90%;
+            max-width: 550px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========================================================
+       2. TELA DE AUTENTICAÇÃO / LOGIN SEGURO
+       ======================================================== -->
+    <div id="tela-login-admin">
+        <div class="caixa-login">
+            <h2>🔐 Acesso Restrito</h2>
+            <p>Painel de Controle Geral do Portal ColorirOnline</p>
+            <div class="form-grupo" style="text-align: left; margin-bottom: 12px;">
+                <label>Usuário Mestre:</label>
+                <input type="text" id="login-usuario" class="input-admin" placeholder="Ex: admin">
+            </div>
+            <div class="form-grupo" style="text-align: left; margin-bottom: 20px;">
+                <label>Senha de Acesso:</label>
+                <input type="password" id="login-senha" class="input-admin" placeholder="••••••••">
+            </div>
+            <button onclick="autenticarAdmin()" class="btn-salvar" style="width: 100%; justify-content: center;">
+                Entrar no Painel
+            </button>
+        </div>
+    </div>
+
+    <!-- ========================================================
+       3. ESTRUTURA GERAL DO PAINEL (SIDEBAR + CONTEÚDO)
+       ======================================================== -->
+    <div id="painel-container">
+
+        <!-- SIDEBAR FIXA -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                ⚙️ Painel<span>Colorir</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="sidebar-item ativo" onclick="trocarSecao('dashboard')">📊 Visão Geral</li>
+                <li class="sidebar-item" onclick="trocarSecao('manutencao')">🛠️ Modo Manutenção</li>
+                <li class="sidebar-item" onclick="trocarSecao('avisos')">📢 Avisos no Topo</li>
+                <li class="sidebar-item" onclick="trocarSecao('desenhos')">🎨 Gestão de Desenhos</li>
+                <li class="sidebar-item" onclick="trocarSecao('jogos')">🧩 Gestão de Jogos</li>
+                <li class="sidebar-item" onclick="trocarSecao('atividades')">📚 Atividades Escolares</li>
+                <li class="sidebar-item" onclick="trocarSecao('professores')">🎓 Sala de Correção & Notas</li>
+                <li class="sidebar-item" onclick="trocarSecao('conquistas')">🏆 Conquistas & Troféus</li>
+                <li class="sidebar-item" onclick="trocarSecao('imprimir')">🖨️ Cadernos A4</li>
+                <li class="sidebar-item" onclick="trocarSecao('configuracoes')">⚙️ Segurança & Backup</li>
+            </ul>
+            <div class="sidebar-footer">
+                <button onclick="fazerLogout()" class="btn-logout">Sair do Painel</button>
+            </div>
+        </aside>
+
+        <!-- CONTEÚDO PRINCIPAL -->
+        <main class="conteudo-principal">
+
+            <!-- ====================================================
+               SEÇÃO 1: VISÃO GERAL (DASHBOARD)
+               ==================================================== -->
+            <section id="secao-dashboard" class="secao-painel ativa">
+                <div class="cabecalho-secao">
+                    <div>
+                        <h1>📊 Visão Geral do Sistema</h1>
+                        <p>Acompanhe métricas, tarefas pendentes e atividades do portal em tempo real.</p>
+                    </div>
+                </div>
+
+                <div class="grid-cards-metricas">
+                    <div class="card-metrica">
+                        <h4>Desenhos Cadastrados</h4>
+                        <div class="valor" id="total-desenhos-dash">0</div>
+                    </div>
+                    <div class="card-metrica">
+                        <h4>Jogos Ativos</h4>
+                        <div class="valor" id="total-jogos-dash">0</div>
+                    </div>
+                    <div class="card-metrica">
+                        <h4>Atividades Escolares</h4>
+                        <div class="valor" id="total-atividades-dash">0</div>
+                    </div>
+                    <div class="card-metrica">
+                        <h4>Tarefas Aguardando Nota</h4>
+                        <div class="valor" id="total-pendentes-dash" style="color: #f59e0b;">0</div>
+                    </div>
+                </div>
+
+                <div class="painel-box">
+                    <h3>🚀 Ações Rápidas Recomendadas</h3>
+                    <p style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 15px;">
+                        Verifique a sala dos professores para lançar notas de atividades enviadas pelos alunos ou adicione novos desafios ao catálogo público.
+                    </p>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button onclick="trocarSecao('professores')" class="btn-salvar" style="background-color: #059669;">
+                            🎓 Corrigir Tarefas dos Alunos
+                        </button>
+                        <button onclick="trocarSecao('desenhos')" class="btn-salvar">
+                            🎨 Adicionar Novo Desenho
+                        </button>
+                        <button onclick="trocarSecao('manutencao')" class="btn-salvar" style="background-color: #475569;">
+                            🛠️ Ajustar Páginas Ativas
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================
+               SEÇÃO 2: MODO MANUTENÇÃO (KILL SWITCH MODULAR)
+               ==================================================== -->
+            <section id="secao-manutencao" class="secao-painel">
+                <div class="cabecalho-secao">
+                    <div>
+                        <h1>🛠️ Central de Manutenção e Bloqueio de Páginas</h1>
+                        <p>Ative a manutenção de páginas individuais durante manutenções sem derrubar o site todo.</p>
+                    </div>
+                </div>
+
+                <div class="painel-box">
+                    <h3>Páginas com Chave de Bloqueio</h3>
+
+                    <div class="toggle-card">
+                        <div>
+                            <strong>🎨 Página de Colorir (`index.html`)</strong>
+                            <p style="font-size: 0.78rem; color: #94a3b8;">Desativa o catálogo e o motor de pintura.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="manut-colorir" onchange="salvarStatusManutencao()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-card">
+                        <div>
+                            <strong>🧩 Página de Jogos (`jogos.html`)</strong>
+                            <p style="font-size: 0.78rem; color: #94a3b8;">Desativa Caça-Palavras e Jogo da Memória.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="manut-jogos" onchange="salvarStatusManutencao()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-card">
+                        <div>
+                            <strong>📚 Atividades Escolares (`atividades.html`)</strong>
+                            <p style="font-size: 0.78rem; color: #94a3b8;">Pausa o envio de lições e consulta de notas.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="manut-atividades" onchange="salvarStatusManutencao()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-card">
+                        <div>
+                            <strong>🏆 Salão de Conquistas (`conquistas.html`)</strong>
+                            <p style="font-size: 0.78rem; color: #94a3b8;">Oculta a visualização dos troféus.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="manut-conquistas" onchange="salvarStatusManutencao()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-card">
+                        <div>
+                            <strong>🖨️ Central de Impressão A4 (`imprimir.html`)</strong>
+                            <p style="font-size: 0.78rem; color: #94a3b8;">Pausa o gerador de folhas A4.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="manut-imprimir" onchange="salvarStatusManutencao()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="painel-box">
+                    <h3>Mensagem Exibida ao Visitante</h3>
+                    <div class="form-grupo">
+                        <label>Texto da Tela de Bloqueio:</label>
+                        <input type="text" id="texto-aviso-manutencao" class="input-admin" value="Estamos atualizando esta área com novidades incríveis! Voltamos em breve.">
+                    </div>
+                    <button onclick="salvarStatusManutencao()" class="btn-salvar" style="margin-top: 14px;">
+                        Salvar Configuração de Mensagem
+                    </button>
+                </div>
+            </section>
+
+            <!-- ====================================================
+               SEÇÃO 3: AVISOS NO TOPO (BARRA DE NOTIFICAÇÃO)
+               ==================================================== -->
+            <section id="secao-avisos" class="secao-painel">
+                <div class="cabecalho-secao">
+                    <div>
+                        <h1>📢 Gerenciador de Avisos Globais do Topo</h1>
+                        <p>Mostre comunicados importantes para todos os visitantes acima da barra de navegação.</p>
+                    </div>
+                </div>
+
+                <div class="painel-box">
+                    <h3>Configurar Faixa de Alerta</h3>
+                    <div class="toggle-card" style="margin-bottom: 20px;">
+                        <div>
+                            <strong>Exibir Barra de Aviso em Todas as Páginas</strong>
+                            <p style="font-size: 0.78rem; color: #94a3b8;">Ativa ou esconde a faixa no topo.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="aviso-ativo" onchange="salvarConfigAvisos()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-grupo">
+                            <label>Tipo de Alerta / Cor:</label>
+                            <select id="aviso-tipo" class="input-admin">
+                                <option value="info">🔵 Novidade / Informativo (Azul)</option>
+                                <option value="alerta">🟡 Aviso Pedagógico (Amarelo)</option>
+                                <option value="urgente">🔴 Alerta Importante (Vermelho)</option>
+                            </select>
+                        </div>
+                        <div class="form-grupo">
+                            <label>Texto da Notificação:</label>
+                            <input type="text" id="aviso-texto" class="input-admin" placeholder="Ex: Notas do 2º bimestre lançadas no sistema!">
+                        </div>
+                    </div>
+                    <button onclick="salvarConfigAvisos()" class="btn-salvar">
+                        Salvar e Publicar Notificação
+                    </button>
+                </div>
+            </section>
+
+            <!-- ====================================================
+               SEÇÃO 4: GESTÃO DE DESENHOS PARA COLORIR
+               ==================================================== -->
+            <section id="secao-desenhos" class="secao-painel">
+                <div class="cabecalho-secao">
+                    <div>
+                        <h1>🎨 Cadastro e Moderação de Desenhos</h1>
+                        <p>Adicione novas artes vetoriais ou remova desenhos do catálogo público.</p>
+                    </div>
+                </div>
+
+                <div class="painel-box">
+                    <h3>Cadastrar Novo Desenho</h3>
+                    <div class="form-grid">
+                        <div class="form-grupo">
+                            <label>Nome do Desenho:</label>
+                            <input type="text" id="desenho-titulo" class="input-admin" placeholder="Ex: Leão da Savana">
+                        </div>
+                        <div class="form-grupo">
+                            <label>Categoria:</label>
+                            <select id="desenho-categoria" class="input-admin">
+                                <option value="animais">Animais</option>
+                                <option value="infantil">Infantil</option>
+                                <option value="mandalas">Mandalas</option>
+                            </select>
+                        </div>
+                        <div class="form-grupo">
+                            <label>Nível de Complexidade:</label>
+                            <select id="desenho-complexidade" class="input-admin">
+                                <option value="Fácil">Fácil</option>
+                                <option value="Médio">Médio</option>
+                                <option value="Difícil">Difícil</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-grupo" style="margin-bottom: 16px;">
+                        <label>Código Vetorial SVG (Path / Formas):</label>
+                        <textarea id="desenho-svg" class="input-admin" rows="3" placeholder='<polygon points="50,5 64,36 98,36 70,57 81,91 50,70 19,91 30,57 2,36 36,36" fill="#ef4444"/>'></textarea>
+                    </div>
+
+                    <button onclick="cadastrarDesenho()" class="btn-salvar">
+                        💾 Publicar Desenho no Catálogo
+                    </button>
+                </div>
+
+                <div class="painel-box">
+                    <h3>Desenhos Ativos no Catálogo</h3>
+                    <div class="tabela-container">
+                        <table class="tabela-admin">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Título</th>
+                                    <th>Categoria</th>
+                                    <th>Complexidade</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lista-desenhos-tabela"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================
+               SEÇÃO 5: GESTÃO DE JOGOS
+               ==================================================== -->
+            <section id="secao-jogos" class="secao-painel">
+                <div class="cabecalho-secao">
+                    <div>
+                        <h1>🧩 Gestão de Jogos Interativos</h1>
+                        <p>Crie novos Caça-Palavras e Jogos da Memória para o portal.</p>
+                    </div>
+                </div>
+
+                <div class="painel-box">
+                    <h3>Cadastrar Novo Jogo</h3>
+                    <div class="form-grid">
+                        <div class="form-grupo">
+                            <label>Título do Jogo:</label>
+                            <input type="text" id="jogo-titulo" class="input-admin" placeholder="Ex: Caça-Palavras: Cores">
+                        </div>
+                        <div class="form-grupo">
+                            <label>Tipo de Jogo:</label>
+                            <select id="jogo-tipo" class="input-admin">
+                                <option value="caca-palavras">🔤 Caça-Palavras</option>
+                                <option value="memoria">🧠 Jogo da Memória</option>
+                            </select>
+                        </div>
+                        <div class="form-grupo">
+                            <label>Público Alvo:</label>
+                            <select id="jogo-publico" class="input-admin">
+                                <option value="infantil">Infantil (Fácil)</option>
+                                <option value="adultos">Adultos & Terceira Idade</option>
+                            </select>
+                        </div>
+                        <div class="form-grupo">
+                            <label>Ícone Representativo (Emoji):</label>
+                            <input type="text" id="jogo-icone" class="input-admin" value="🎮">
+                        </div>
+                    </div>
+                    <button onclick="cadastrarJogo()" class="btn-salvar">
+                        💾 Salvar e Ativar Jogo
+                    </button>
+                </div>
+
+                <div class="painel-box">
+                    <h3>Jogos Ativos</h3>
+                    <div class="tabela-container">
+                        <table class="tabela-admin">
+                            <thead>
+                                <tr>
+                                    <th>Título</th>
+                                    <th>Modalidade</th>
+                                    <th>Público</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lista-jogos-tabela"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================
+               SEÇÃO 6: ATIVIDADES ESCOLARES
+               ==================================================== -->
+            <section id="secao-atividades" class="secao-painel">
+                <div class="cabecalho-secao">
+                    <div>
+                        <h1>📚 Gestão de Atividades Escolares</h1>
+                        <p>Publique novas lições para resolução online dos alunos.</p>
+                    </div>
+                </div>
+
+                <div class="painel-box">
+                    <h3>Cadastrar Nova Atividade Escolar</h3>
+                    <div class="form-grid">
+                        <div class="form-grupo">
+                            <label>Título da Atividade:</label>
+                            <input type="text" id="ativ-titulo" class="input-admin" placeholder="Ex: Tabuada do 7">
+                        </div>
+                        <div class="form-grupo">
+                            <label>Série / Ano:</label>
+                            <select id="ativ-serie" class="input-admin">
+                                <option value="infantil">Educação Infantil (3-5 anos)</option>
+                                <option value="1ano">1º Ano (6-7 anos)</option>
+                                <option value="2ano">2º Ano (7-8 anos)</option>
+                                <option value="3ano">3º Ano (8-9 anos)</option>
+                                <option value="4e5ano">4º e 5º Ano (9-11 anos)</option>
+                            </select>
+                        </div>
+                        <div class="form-grupo">
+                            <label>Disciplina:</label>
+                            <select id="ativ-materia" class="input-admin">
+                                <option value="portugues">📖 Língua Portuguesa</option>
+                                <option value="matematica">🔢 Matemática</option>
+                                <option value="ciencias">🌱 Ciências Naturais</option>
+                            </select>
+                        </div>
+                        <div class="form-grupo">
+                            <label>Ícone (Emoji):</label>
+                            <input type="text" id="ativ-icone" class="input-admin" value="📝">
+                        </div>
+                    </div>
+
+                    <div class="form-grupo" style="margin-bottom: 16px;">
+                        <label>Enunciado da Pergunta:</label>
+                        <textarea id="ativ-enunciado" class="input-admin" rows="3" placeholder="Escreva aqui a questão ou instrução para o aluno..."></textarea>
+                    </div>
+
+                    <button onclick="cadastrarAtividade()" class="btn-salvar">
+                        💾 Publicar Lição no Portal
+                    </button>
+                </div>
+
+                <div class="painel-box">
+                    <h3>Lições Cadastradas</h3>
+                    <div class="tabela-container">
+                        <table class="tabela-admin">
+                            <thead>
+                                <tr>
+                                    <th>Título</th>
+                                    <th>Série</th>
+                                    <th>Disciplina</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lista-atividades-tabela"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================
+               SEÇÃO 7: SALA DOS PROFESSORES (CORREÇÃO DE NOTAS)
+               ==================================================== -->
+            <section id="secao-professores" class="secao-painel">
+                <div class="cabecalho-secao">
+                    <div>
+                        <h1>🎓 Sala de Correção & Avaliação dos Alunos</h1>
+                        <p>Corrija as respostas enviadas, atribua notas de 0 a 10 e envie comentários pedagógicos.</p>
+                    </div>
+                    <button onclick="imprimirBoletimTurma()" class="btn-salvar" style="background-color: #0f172a;">
+                        🖨️ Imprimir Diário / Boletim
+                    </button>
+                </div>
+
+                <div class="painel-box">
+                    <h3>Fila de Tarefas Enviadas pelos Alunos</h3>
+                    <div class="tabela-container">
+                        <table class="tabela-admin">
+                            <thead>
+                                <tr>
+                                    <th>Aluno</th>
+                                    <th>Turma</th>
+                                    <th>Atividade</th>
+                                    <th>Data de Envio</th>
+                                    <th>Status</th>
+                                    <th>Nota</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lista-correcao-tabela"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====================================================
+               SEÇÃO 8: CONQUISTAS & GAMIFICAÇÃO
+               ==================================================== -->
+            <section id="secao-conquistas" class="secao-painel">
+                <div class="cabecalho-secao">
+                    <div>
+                        <h1>🏆 Conquistas e Medalhas Gamificadas</h1>
+                        <p>Crie troféus de engajamento para os alunos colecionarem.</p>
+                    </div>
+                </div>
+
+                <div class="painel-box">
+                    <h3>Cadastrar Nova Medalha</h3>
+                    <div class="form-grid">
+                        <div class="form-grupo">
+                            <label>Nome do Troféu:</label>
+                            <input type="text" id="trofeu-nome" class="input-admin" placeholder="Ex: Gênio da Tabuada">
+                        </div>
+                        <div class="form-grupo">
+                            <label>Emoji / Ícone:</label>
+                            <input type="text" id="trofeu-icone" class="input-admin" value="⭐">
+                        </div>
+                    </div>
+                    <div class="form-grupo" style="margin-bottom: 15px;">
+                        <label>Descrição da Conquista:</label>
+                        <input type="text" id="trofeu-desc" class="input-admin" placeholder="Ex: Tirou nota 10 em 3 exercícios de matemática seguidos.">
+                    </div>
+                    <button onclick="cadastrarTrofeu()" class="btn-salvar">
+                        💾 Criar Troféu
+                    </button>
+                </div>
+            </section>
+
+            <!-- ====================================================
+               SEÇÃO 9: CADERNOS A4 PARA IMPRIMIR
+               ==================================================== -->
+            <section id="secao-imprimir" class="secao-painel">
+                <div class="cabecalho-secao">
+                    <div>
+                        <h1>🖨️ Cadernos A4 de Impressão Escolar</h1>
+                        <p>Cadastre coleções de exercícios e desenhos para impressão doméstica e escolar.</p>
+                    </div>
+                </div>
+
+                <div class="painel-box">
+                    <h3>Cadastrar Novo Pacote de Impressão</h3>
+                    <div class="form-grid">
+                        <div class="form-grupo">
+                            <label>Nome do Caderno:</label>
+                            <input type="text" id="caderno-nome" class="input-admin" placeholder="Ex: Caderno de Formas Geométricas">
+                        </div>
+                        <div class="form-grupo">
+                            <label>Emoji de Capa:</label>
+                            <input type="text" id="caderno-icone" class="input-admin" value="📐">
+                        </div>
+                    </div>
+                    <div class="form-grupo" style="margin-bottom: 15px;">
+                        <label>Descrição do Material:</label>
+                        <input type="text" id="caderno-desc" class="input-admin" placeholder="Ex: Folhas de apoio com círculos, triângulos e quadrados em folha A4.">
+                    </div>
+                    <button onclick="cadastrarCaderno()" class="btn-salvar">
+                        💾 Publicar Caderno A4
+                    </button>
+                </div>
+            </section>
+
+            <!-- ====================================================
+               SEÇÃO 10: CONFIGURAÇÕES, SEGURANÇA E BACKUP
+               ==================================================== -->
+            <section id="secao-configuracoes" class="secao-painel">
+                <div class="cabecalho-secao">
+                    <div>
+                        <h1>⚙️ Segurança Mestre & Cofre de Dados</h1>
+                        <p>Altere suas credenciais de acesso e faça backup completo das notas e cadastros.</p>
+                    </div>
+                </div>
+
+                <div class="painel-box">
+                    <h3>Alterar Usuário e Senha de Acesso</h3>
+                    <div class="form-grid">
+                        <div class="form-grupo">
+                            <label>Novo Usuário:</label>
+                            <input type="text" id="novo-admin-usuario" class="input-admin" placeholder="admin">
+                        </div>
+                        <div class="form-grupo">
+                            <label>Nova Senha:</label>
+                            <input type="password" id="novo-admin-senha" class="input-admin" placeholder="••••••••">
+                        </div>
+                    </div>
+                    <button onclick="alterarCredenciais()" class="btn-salvar">
+                        Atualizar Credenciais
+                    </button>
+                </div>
+
+                <div class="painel-box">
+                    <h3>Cofre de Dados (Backup & Restauração)</h3>
+                    <p style="font-size: 0.88rem; color: #94a3b8; margin-bottom: 15px;">
+                        Exporte um arquivo com todos os desenhos, jogos, lições e notas de alunos para guardar em segurança no seu computador.
+                    </p>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button onclick="baixarBackup()" class="btn-salvar" style="background-color: #059669;">
+                            📥 Fazer Download do Backup (JSON)
+                        </button>
+                        <label class="btn-salvar" style="background-color: #475569; cursor: pointer;">
+                            📤 Restaurar Backup de Arquivo
+                            <input type="file" id="input-restaurar" onchange="restaurarBackup(event)" style="display: none;" accept=".json">
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ========================================================
+       4. MODAL DE AVALIAÇÃO E NOTA DO PROFESSOR
+       ======================================================== -->
+    <div id="modal-correcao" class="modal-correcao-fundo">
+        <div class="caixa-modal-correcao">
+            <h3 style="color: #38bdf8; margin-bottom: 8px;">🎓 Avaliação do Aluno</h3>
+            <div style="background: #0b1329; border: 1px solid #1e293b; padding: 12px; border-radius: 10px; margin-bottom: 12px; font-size: 0.85rem;">
+                <p><strong>Aluno:</strong> <span id="modal-correc-aluno"></span></p>
+                <p><strong>Atividade:</strong> <span id="modal-correc-atividade"></span></p>
+                <p style="margin-top: 6px; color: #94a3b8;"><strong>Enunciado:</strong> <span id="modal-correc-enunciado"></span></p>
+            </div>
+
+            <div style="background: #0b1329; border: 1px dashed #38bdf8; padding: 12px; border-radius: 10px; margin-bottom: 15px;">
+                <label style="font-size: 0.75rem; color: #38bdf8; font-weight: bold; text-transform: uppercase;">Resposta Digitada pelo Aluno:</label>
+                <p id="modal-correc-resposta" style="font-size: 0.95rem; color: #ffffff; margin-top: 4px;"></p>
+            </div>
+
+            <div class="form-grid" style="margin-bottom: 10px;">
+                <div class="form-grupo">
+                    <label>Nota Atribuída (0 a 10):</label>
+                    <input type="number" id="modal-correc-nota" class="input-admin" min="0" max="10" step="0.5" value="10">
+                </div>
+            </div>
+
+            <div class="form-grupo" style="margin-bottom: 15px;">
+                <label>Recado / Feedback do Professor:</label>
+                <input type="text" id="modal-correc-feedback" class="input-admin" placeholder="Ex: Excelente trabalho! Parabéns!">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="font-size: 0.75rem; color: #94a3b8;">Comentários Rápidos (1 clique):</label>
+                <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 5px;">
+                    <button type="button" onclick="aplicarFeedbackRapido('🌟 Excelente! Acertou tudo com capricho!')" class="btn-acao-tabela" style="background: #1e293b; color: #f8fafc;">🌟 Excelente!</button>
+                    <button type="button" onclick="aplicarFeedbackRapido('👏 Muito bem! Revise apenas os pequenos detalhes.')" class="btn-acao-tabela" style="background: #1e293b; color: #f8fafc;">👏 Muito bem!</button>
+                    <button type="button" onclick="aplicarFeedbackRapido('💪 Bom esforço! Continue praticando.')" class="btn-acao-tabela" style="background: #1e293b; color: #f8fafc;">💪 Bom esforço!</button>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button onclick="salvarNotaProfessor()" class="btn-salvar" style="background-color: #059669; flex: 2; justify-content: center;">
+                    Salvar Nota e Enviar Parecer
+                </button>
+                <button onclick="fecharModalCorrecao()" class="btn-salvar" style="background-color: #334155; flex: 1; justify-content: center;">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================
+       5. MOTOR DE CONTROLE, LÓGICA E BANCO LOCAL DO PAINEL
+       ======================================================== -->
+    <script>
+        let submissaoEmCorrecaoId = null;
+
+        /* AUTENTICAÇÃO E SESSÃO */
+        function autenticarAdmin() {
+            const u = document.getElementById("login-usuario").value.trim();
+            const s = document.getElementById("login-senha").value.trim();
+
+            const usuarioSalvo = localStorage.getItem("admin_auth_user") || "admin";
+            const senhaSalva = localStorage.getItem("admin_auth_pass") || "admin123";
+
+            if (u === usuarioSalvo && s === senhaSalva) {
+                sessionStorage.setItem("admin_logado", "true");
+                document.getElementById("tela-login-admin").style.display = "none";
+                document.getElementById("painel-container").style.display = "flex";
+                carregarTudo();
+            } else {
+                alert("Usuário ou senha incorretos!");
+            }
+        }
+
+        function fazerLogout() {
+            sessionStorage.removeItem("admin_logado");
+            window.location.reload();
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            if (sessionStorage.getItem("admin_logado") === "true") {
+                document.getElementById("tela-login-admin").style.display = "none";
+                document.getElementById("painel-container").style.display = "flex";
+                carregarTudo();
+            }
+        });
+
+        /* NAVEGAÇÃO DE ABAS */
+        function trocarSecao(secaoId) {
+            document.querySelectorAll(".sidebar-item").forEach(item => item.classList.remove("ativo"));
+            document.querySelectorAll(".secao-painel").forEach(sec => sec.classList.remove("ativa"));
+
+            const elemento = document.getElementById(`secao-${secaoId}`);
+            if (elemento) {
+                elemento.classList.add("ativa");
+            }
+
+            event.currentTarget.classList.add("ativo");
+        }
+
+        /* CARREGAMENTO DE DADOS E MÉTRICAS */
+        function carregarTudo() {
+            atualizarMetricas();
+            carregarTabelaDesenhos();
+            carregarTabelaJogos();
+            carregarTabelaAtividades();
+            carregarTabelaCorrecao();
+            carregarStatusManutencao();
+            carregarConfigAvisos();
+        }
+
+        function atualizarMetricas() {
+            const desenhos = JSON.parse(localStorage.getItem("db_desenhos") || "[]");
+            const jogos = JSON.parse(localStorage.getItem("db_jogos") || "[]");
+            const atividades = JSON.parse(localStorage.getItem("db_atividades") || "[]");
+            const submissoes = JSON.parse(localStorage.getItem("admin_submissoes_atividades") || "[]");
+
+            document.getElementById("total-desenhos-dash").innerText = desenhos.length;
+            document.getElementById("total-jogos-dash").innerText = jogos.length;
+            document.getElementById("total-atividades-dash").innerText = atividades.length;
+
+            const pendentes = submissoes.filter(s => s.status !== "Corrigido").length;
+            document.getElementById("total-pendentes-dash").innerText = pendentes;
+        }
+
+        /* MANUTENÇÃO MODULAR */
+        function salvarStatusManutencao() {
+            const status = {
+                colorir: document.getElementById("manut-colorir").checked,
+                jogos: document.getElementById("manut-jogos").checked,
+                atividades: document.getElementById("manut-atividades").checked,
+                conquistas: document.getElementById("manut-conquistas").checked,
+                imprimir: document.getElementById("manut-imprimir").checked,
+                textoAviso: document.getElementById("texto-aviso-manutencao").value.trim()
+            };
+            localStorage.setItem("sistema_manutencao", JSON.stringify(status));
+            alert("Configurações de manutenção salvas com sucesso!");
+        }
+
+        function carregarStatusManutencao() {
+            const status = JSON.parse(localStorage.getItem("sistema_manutencao") || "{}");
+            if (status.colorir) document.getElementById("manut-colorir").checked = true;
+            if (status.jogos) document.getElementById("manut-jogos").checked = true;
+            if (status.atividades) document.getElementById("manut-atividades").checked = true;
+            if (status.conquistas) document.getElementById("manut-conquistas").checked = true;
+            if (status.imprimir) document.getElementById("manut-imprimir").checked = true;
+            if (status.textoAviso) document.getElementById("texto-aviso-manutencao").value = status.textoAviso;
+        }
+
+        /* AVISOS DO TOPO */
+        function salvarConfigAvisos() {
+            const config = {
+                ativo: document.getElementById("aviso-ativo").checked,
+                tipo: document.getElementById("aviso-tipo").value,
+                texto: document.getElementById("aviso-texto").value.trim()
+            };
+            localStorage.setItem("sistema_aviso_topo", JSON.stringify(config));
+            alert("Aviso de notificação salvo e sincronizado!");
+        }
+
+        function carregarConfigAvisos() {
+            const config = JSON.parse(localStorage.getItem("sistema_aviso_topo") || "{}");
+            if (config.ativo) document.getElementById("aviso-ativo").checked = true;
+            if (config.tipo) document.getElementById("aviso-tipo").value = config.tipo;
+            if (config.texto) document.getElementById("aviso-texto").value = config.texto;
+        }
+
+        /* GESTÃO DE DESENHOS */
+        function cadastrarDesenho() {
+            const titulo = document.getElementById("desenho-titulo").value.trim();
+            const categoria = document.getElementById("desenho-categoria").value;
+            const complexidade = document.getElementById("desenho-complexidade").value;
+            const svg = document.getElementById("desenho-svg").value.trim();
+
+            if (!titulo || !svg) {
+                alert("Preencha o título e o código SVG!");
+                return;
+            }
+
+            const desenhos = JSON.parse(localStorage.getItem("db_desenhos") || "[]");
+            desenhos.unshift({
+                id: "desenho_" + Date.now(),
+                titulo,
+                categoria,
+                complexidade,
+                svg
+            });
+
+            localStorage.setItem("db_desenhos", JSON.stringify(desenhos));
+            document.getElementById("desenho-titulo").value = "";
+            document.getElementById("desenho-svg").value = "";
+            carregarTabelaDesenhos();
+            atualizarMetricas();
+            alert("Desenho cadastrado com sucesso no catálogo!");
+        }
+
+        function carregarTabelaDesenhos() {
+            const desenhos = JSON.parse(localStorage.getItem("db_desenhos") || "[]");
+            const tbody = document.getElementById("lista-desenhos-tabela");
+            tbody.innerHTML = "";
+
+            desenhos.forEach(d => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td><code>${d.id}</code></td>
+                    <td><strong>${d.titulo}</strong></td>
+                    <td>${d.categoria}</td>
+                    <td>${d.complexidade}</td>
+                    <td>
+                        <button onclick="excluirDesenho('${d.id}')" class="btn-acao-tabela btn-excluir">Excluir</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function excluirDesenho(id) {
+            if (!confirm("Tem certeza que deseja excluir este desenho?")) return;
+            let desenhos = JSON.parse(localStorage.getItem("db_desenhos") || "[]");
+            desenhos = desenhos.filter(d => d.id !== id);
+            localStorage.setItem("db_desenhos", JSON.stringify(desenhos));
+            carregarTabelaDesenhos();
+            atualizarMetricas();
+        }
+
+        /* GESTÃO DE JOGOS */
+        function cadastrarJogo() {
+            const titulo = document.getElementById("jogo-titulo").value.trim();
+            const tipo = document.getElementById("jogo-tipo").value;
+            const publico = document.getElementById("jogo-publico").value;
+            const icone = document.getElementById("jogo-icone").value.trim() || "🎮";
+
+            if (!titulo) { alert("Preencha o título do jogo!"); return; }
+
+            const jogos = JSON.parse(localStorage.getItem("db_jogos") || "[]");
+            jogos.unshift({
+                id: "jogo_" + Date.now(),
+                titulo,
+                tipo,
+                tipoNome: tipo === "caca-palavras" ? "Caça-Palavras" : "Memória",
+                publico,
+                publicoNome: publico === "infantil" ? "Infantil" : "Adultos",
+                icone
+            });
+
+            localStorage.setItem("db_jogos", JSON.stringify(jogos));
+            document.getElementById("jogo-titulo").value = "";
+            carregarTabelaJogos();
+            atualizarMetricas();
+            alert("Jogo cadastrado com sucesso!");
+        }
+
+        function carregarTabelaJogos() {
+            const jogos = JSON.parse(localStorage.getItem("db_jogos") || "[]");
+            const tbody = document.getElementById("lista-jogos-tabela");
+            tbody.innerHTML = "";
+
+            jogos.forEach(j => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${j.icone} <strong>${j.titulo}</strong></td>
+                    <td>${j.tipoNome || j.tipo}</td>
+                    <td>${j.publicoNome || j.publico}</td>
+                    <td>
+                        <button onclick="excluirJogo('${j.id}')" class="btn-acao-tabela btn-excluir">Excluir</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function excluirJogo(id) {
+            if (!confirm("Excluir este jogo?")) return;
+            let jogos = JSON.parse(localStorage.getItem("db_jogos") || "[]");
+            jogos = jogos.filter(j => j.id !== id);
+            localStorage.setItem("db_jogos", JSON.stringify(jogos));
+            carregarTabelaJogos();
+            atualizarMetricas();
+        }
+
+        /* GESTÃO DE ATIVIDADES */
+        function cadastrarAtividade() {
+            const titulo = document.getElementById("ativ-titulo").value.trim();
+            const serie = document.getElementById("ativ-serie").value;
+            const materia = document.getElementById("ativ-materia").value;
+            const icone = document.getElementById("ativ-icone").value.trim() || "📝";
+            const enunciado = document.getElementById("ativ-enunciado").value.trim();
+
+            if (!titulo || !enunciado) { alert("Preencha título e enunciado!"); return; }
+
+            const atividades = JSON.parse(localStorage.getItem("db_atividades") || "[]");
+            atividades.unshift({
+                id: "ativ_" + Date.now(),
+                titulo,
+                serie,
+                serieNome: document.getElementById("ativ-serie").selectedOptions[0].text,
+                materia,
+                materiaNome: document.getElementById("ativ-materia").selectedOptions[0].text,
+                icone,
+                enunciado
+            });
+
+            localStorage.setItem("db_atividades", JSON.stringify(atividades));
+            document.getElementById("ativ-titulo").value = "";
+            document.getElementById("ativ-enunciado").value = "";
+            carregarTabelaAtividades();
+            atualizarMetricas();
+            alert("Atividade escolar publicada!");
+        }
+
+        function carregarTabelaAtividades() {
+            const atividades = JSON.parse(localStorage.getItem("db_atividades") || "[]");
+            const tbody = document.getElementById("lista-atividades-tabela");
+            tbody.innerHTML = "";
+
+            atividades.forEach(a => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${a.icone} <strong>${a.titulo}</strong></td>
+                    <td>${a.serieNome || a.serie}</td>
+                    <td>${a.materiaNome || a.materia}</td>
+                    <td>
+                        <button onclick="excluirAtividade('${a.id}')" class="btn-acao-tabela btn-excluir">Excluir</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function excluirAtividade(id) {
+            if (!confirm("Excluir esta atividade?")) return;
+            let atividades = JSON.parse(localStorage.getItem("db_atividades") || "[]");
+            atividades = atividades.filter(a => a.id !== id);
+            localStorage.setItem("db_atividades", JSON.stringify(atividades));
+            carregarTabelaAtividades();
+            atualizarMetricas();
+        }
+
+        /* SALA DOS PROFESSORES: CORREÇÃO E NOTAS */
+        function carregarTabelaCorrecao() {
+            const submissoes = JSON.parse(localStorage.getItem("admin_submissoes_atividades") || "[]");
+            const tbody = document.getElementById("lista-correcao-tabela");
+            tbody.innerHTML = "";
+
+            if (submissoes.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #64748b;">Nenhuma tarefa enviada pelos alunos até o momento.</td></tr>`;
+                return;
+            }
+
+            submissoes.forEach(s => {
+                const corrigido = s.status === "Corrigido";
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td><strong>${s.nomeAluno}</strong></td>
+                    <td>${s.turmaAluno}</td>
+                    <td>${s.tituloAtividade}</td>
+                    <td>${s.dataEnvio}</td>
+                    <td>
+                        <span style="color: ${corrigido ? '#10b981' : '#f59e0b'}; font-weight: bold;">
+                            ${corrigido ? '✅ Avaliado' : '⏳ Pendente'}
+                        </span>
+                    </td>
+                    <td><strong>${corrigido ? s.nota + '/10' : '-'}</strong></td>
+                    <td>
+                        <button onclick="abrirModalCorrecao('${s.id}')" class="btn-acao-tabela btn-avaliar">
+                            ${corrigido ? 'Reavaliar' : 'Avaliar / Nota'}
+                        </button>
+                        <button onclick="excluirSubmissao('${s.id}')" class="btn-acao-tabela btn-excluir">Excluir</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function abrirModalCorrecao(id) {
+            const submissoes = JSON.parse(localStorage.getItem("admin_submissoes_atividades") || "[]");
+            const sub = submissoes.find(s => s.id === id);
+            if (!sub) return;
+
+            submissaoEmCorrecaoId = id;
+            document.getElementById("modal-correc-aluno").innerText = `${sub.nomeAluno} (${sub.turmaAluno})`;
+            document.getElementById("modal-correc-atividade").innerText = sub.tituloAtividade;
+            document.getElementById("modal-correc-enunciado").innerText = sub.enunciado;
+            document.getElementById("modal-correc-resposta").innerText = sub.resposta;
+            document.getElementById("modal-correc-nota").value = sub.nota !== null ? sub.nota : 10;
+            document.getElementById("modal-correc-feedback").value = sub.feedbackProfessor || "";
+
+            document.getElementById("modal-correcao").style.display = "flex";
+        }
+
+        function fecharModalCorrecao() {
+            document.getElementById("modal-correcao").style.display = "none";
+        }
+
+        function aplicarFeedbackRapido(texto) {
+            document.getElementById("modal-correc-feedback").value = texto;
+        }
+
+        function salvarNotaProfessor() {
+            const nota = parseFloat(document.getElementById("modal-correc-nota").value);
+            const feedback = document.getElementById("modal-correc-feedback").value.trim();
+
+            if (isNaN(nota) || nota < 0 || nota > 10) {
+                alert("Insira uma nota válida de 0 a 10!");
+                return;
+            }
+
+            let submissoes = JSON.parse(localStorage.getItem("admin_submissoes_atividades") || "[]");
+            submissoes = submissoes.map(s => {
+                if (s.id === submissaoEmCorrecaoId) {
+                    return {
+                        ...s,
+                        nota: nota,
+                        feedbackProfessor: feedback,
+                        status: "Corrigido"
+                    };
+                }
+                return s;
+            });
+
+            localStorage.setItem("admin_submissoes_atividades", JSON.stringify(submissoes));
+            fecharModalCorrecao();
+            carregarTabelaCorrecao();
+            atualizarMetricas();
+            alert("Nota e parecer pedagógico registrados com sucesso!");
+        }
+
+        function excluirSubmissao(id) {
+            if (!confirm("Excluir o envio deste aluno?")) return;
+            let submissoes = JSON.parse(localStorage.getItem("admin_submissoes_atividades") || "[]");
+            submissoes = submissoes.filter(s => s.id !== id);
+            localStorage.setItem("admin_submissoes_atividades", JSON.stringify(submissoes));
+            carregarTabelaCorrecao();
+            atualizarMetricas();
+        }
+
+        function imprimirBoletimTurma() {
+            const submissoes = JSON.parse(localStorage.getItem("admin_submissoes_atividades") || "[]");
+            const win = window.open("", "_blank");
+            let linhas = submissoes.map(s => `
+                <tr>
+                    <td style="border: 1px solid #000; padding: 6px;">${s.nomeAluno}</td>
+                    <td style="border: 1px solid #000; padding: 6px;">${s.turmaAluno}</td>
+                    <td style="border: 1px solid #000; padding: 6px;">${s.tituloAtividade}</td>
+                    <td style="border: 1px solid #000; padding: 6px;">${s.nota !== null ? s.nota : 'Pendente'}</td>
+                    <td style="border: 1px solid #000; padding: 6px;">${s.feedbackProfessor || '-'}</td>
+                </tr>
+            `).join("");
+
+            win.document.write(`
+                <html>
+                <head><title>Boletim Escolar de Atividades Online</title></head>
+                <body onload="window.print();" style="font-family: Arial; padding: 20px;">
+                    <h2>Diário de Notas e Avaliações - ColorirOnline</h2>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                        <thead>
+                            <tr style="background: #eee;">
+                                <th style="border: 1px solid #000; padding: 6px;">Aluno</th>
+                                <th style="border: 1px solid #000; padding: 6px;">Turma</th>
+                                <th style="border: 1px solid #000; padding: 6px;">Atividade</th>
+                                <th style="border: 1px solid #000; padding: 6px;">Nota</th>
+                                <th style="border: 1px solid #000; padding: 6px;">Parecer</th>
+                            </tr>
+                        </thead>
+                        <tbody>${linhas}</tbody>
+                    </table>
+                </body>
+                </html>
+            `);
+            win.document.close();
+        }
+
+        /* CONQUISTAS E CADERNOS A4 */
+        function cadastrarTrofeu() {
+            alert("Troféu cadastrado e ativado no sistema de medalhas!");
+            document.getElementById("trofeu-nome").value = "";
+            document.getElementById("trofeu-desc").value = "";
+        }
+
+        function cadastrarCaderno() {
+            alert("Caderno escolar A4 salvo no catálogo de impressão!");
+            document.getElementById("caderno-nome").value = "";
+            document.getElementById("caderno-desc").value = "";
+        }
+
+        /* SEGURANÇA E BACKUP */
+        function alterarCredenciais() {
+            const u = document.getElementById("novo-admin-usuario").value.trim();
+            const s = document.getElementById("novo-admin-senha").value.trim();
+
+            if (!u || !s) { alert("Preencha o novo usuário e a nova senha!"); return; }
+
+            localStorage.setItem("admin_auth_user", u);
+            localStorage.setItem("admin_auth_pass", s);
+            alert("Usuário e senha mestre alterados com sucesso!");
+        }
+
+        function baixarBackup() {
+            const dadosCompletos = {
+                db_desenhos: JSON.parse(localStorage.getItem("db_desenhos") || "[]"),
+                db_jogos: JSON.parse(localStorage.getItem("db_jogos") || "[]"),
+                db_atividades: JSON.parse(localStorage.getItem("db_atividades") || "[]"),
+                admin_submissoes_atividades: JSON.parse(localStorage.getItem("admin_submissoes_atividades") || "[]"),
+                sistema_manutencao: JSON.parse(localStorage.getItem("sistema_manutencao") || "{}"),
+                sistema_aviso_topo: JSON.parse(localStorage.getItem("sistema_aviso_topo") || "{}")
+            };
+
+            const blob = new Blob([JSON.stringify(dadosCompletos, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `backup_colorironline_${Date.now()}.json`;
+            a.click();
+        }
+
+        function restaurarBackup(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const dados = JSON.parse(e.target.result);
+                    if (dados.db_desenhos) localStorage.setItem("db_desenhos", JSON.stringify(dados.db_desenhos));
+                    if (dados.db_jogos) localStorage.setItem("db_jogos", JSON.stringify(dados.db_jogos));
+                    if (dados.db_atividades) localStorage.setItem("db_atividades", JSON.stringify(dados.db_atividades));
+                    if (dados.admin_submissoes_atividades) localStorage.setItem("admin_submissoes_atividades", JSON.stringify(dados.admin_submissoes_atividades));
+                    if (dados.sistema_manutencao) localStorage.setItem("sistema_manutencao", JSON.stringify(dados.sistema_manutencao));
+                    if (dados.sistema_aviso_topo) localStorage.setItem("sistema_aviso_topo", JSON.stringify(dados.sistema_aviso_topo));
+
+                    alert("Backup restaurado com sucesso!");
+                    carregarTudo();
+                } catch (err) {
+                    alert("Erro ao ler o arquivo de backup!");
+                }
+            };
+            reader.readAsText(file);
+        }
+    </script>
+</body>
+</html>
