@@ -647,15 +647,23 @@
                 </div>
             </section>
 
-            <!-- ====================================================
-                   BLOCO 7: GESTÃO DE DESENHOS COM MAPEADOR VISUAL REAL
-                   ==================================================== -->
+            <!-- ========================================================
+               BLOCO 7: SEÇÃO GESTÃO DE DESENHOS (COM UPLOAD, LINK E SVG)
+               ======================================================== -->
+            <section id="secao-desenhos" class="secao-painel">
+                <div class="cabecalho-secao">
+                    <div>
+                        <h1>🎨 Cadastro e Moderação de Desenhos</h1>
+                        <p>Adicione novas ilustrações por arquivo local, link da internet ou código SVG.</p>
+                    </div>
+                </div>
+
                 <div class="painel-box">
-                    <h3>Cadastrar Novo Desenho e Mapear Números</h3>
+                    <h3>Cadastrar Novo Desenho</h3>
                     <div class="form-grid">
                         <div class="form-grupo">
                             <label>Nome do Desenho:</label>
-                            <input type="text" id="desenho-titulo" class="input-admin" placeholder="Ex: Joaninha na Flor">
+                            <input type="text" id="desenho-titulo" class="input-admin" placeholder="Ex: Leão da Savana">
                         </div>
                         <div class="form-grupo">
                             <label>Categoria:</label>
@@ -666,7 +674,7 @@
                             </select>
                         </div>
                         <div class="form-grupo">
-                            <label>Complexidade:</label>
+                            <label>Nível de Complexidade:</label>
                             <select id="desenho-complexidade" class="input-admin">
                                 <option value="Fácil">Fácil</option>
                                 <option value="Médio">Médio</option>
@@ -674,54 +682,41 @@
                             </select>
                         </div>
                         <div class="form-grupo">
-                            <label>Origem da Imagem:</label>
+                            <label>Forma de Envio da Imagem:</label>
                             <select id="desenho-tipo-envio" class="input-admin" onchange="alternarCamposEnvio()">
                                 <option value="upload">📁 Upload do Computador / Celular</option>
-                                <option value="url">🔗 Link Direto da Imagem (URL)</option>
+                                <option value="url">🔗 Link Direto da Imagem (URL da Web)</option>
+                                <option value="svg">📐 Código Vetorial SVG</option>
                             </select>
                         </div>
                     </div>
 
+                    <!-- CAMPO 1: UPLOAD DE ARQUIVO -->
                     <div class="form-grupo" id="box-envio-upload" style="margin-bottom: 16px;">
-                        <label>Selecione o arquivo da Imagem (PNG ou JPG):</label>
+                        <label>Selecione a Imagem (PNG, JPG, SVG, WebP):</label>
                         <input type="file" id="desenho-arquivo" class="input-admin" accept="image/*" onchange="processarUploadArquivo(event)">
                     </div>
 
+                    <!-- CAMPO 2: LINK DA WEB -->
                     <div class="form-grupo" id="box-envio-url" style="margin-bottom: 16px; display: none;">
-                        <label>Cole a URL da Imagem:</label>
-                        <input type="url" id="desenho-url" class="input-admin" placeholder="https://..." oninput="atualizarPreviewUrl()">
+                        <label>Cole a URL Direta da Imagem:</label>
+                        <input type="url" id="desenho-url" class="input-admin" placeholder="https://exemplo.com/desenho.png" oninput="atualizarPreviewUrl()">
                     </div>
 
-                    <!-- ÁREA DO MAPEADOR INTERATIVO -->
-                    <div style="background: #070d1e; border: 2px dashed #38bdf8; border-radius: 12px; padding: 16px; margin-bottom: 16px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
-                            <div>
-                                <strong style="color: #38bdf8;">🎯 Marcador de Números na Imagem Real</strong>
-                                <p style="font-size: 0.8rem; color: #94a3b8; margin: 0;">Selecione o número abaixo e clique diretamente em cima de cada região da imagem para registrar os pontos de pintura.</p>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <label style="font-size: 0.85rem; font-weight: bold;">Número Ativo:</label>
-                                <select id="marcador-numero-ativo" class="input-admin" style="padding: 5px 12px; width: 80px;">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                </select>
-                                <button type="button" onclick="limparPontosMarcados()" class="btn-acao-tabela btn-excluir" style="padding: 8px 12px;">Desfazer Pontos</button>
-                            </div>
-                        </div>
+                    <!-- CAMPO 3: CÓDIGO SVG -->
+                    <div class="form-grupo" id="box-envio-svg" style="margin-bottom: 16px; display: none;">
+                        <label>Código Vetorial SVG:</label>
+                        <textarea id="desenho-svg" class="input-admin" rows="3" placeholder='<circle cx="50" cy="50" r="30" fill="#ef4444"/>' oninput="atualizarPreviewSvg()"></textarea>
+                    </div>
 
-                        <!-- Canvas onde a imagem é carregada e clicada -->
-                        <div id="container-mapeador-admin" style="position: relative; width: 100%; max-width: 420px; margin: 0 auto; background: #ffffff; border-radius: 8px; overflow: hidden; display: none;">
-                            <img id="img-mapeador-preview" src="" alt="Desenho" style="width: 100%; display: block; user-select: none;" onclick="marcarPontoNaImagem(event)">
-                            <div id="camada-pontos-admin" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></div>
+                    <!-- PRÉ-VISUALIZAÇÃO EM TEMPO REAL -->
+                    <div style="margin-bottom: 18px; background: #0b1329; border: 1px dashed #38bdf8; border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 15px;">
+                        <div id="preview-desenho-box" style="width: 80px; height: 80px; background: #ffffff; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid #1e293b;">
+                            <span style="font-size: 0.75rem; color: #94a3b8;">Sem Preview</span>
                         </div>
-                        <div id="aviso-sem-imagem" style="text-align: center; padding: 25px; color: #64748b; font-size: 0.9rem;">
-                            Carregue uma imagem acima para abrir a tela de marcação de números.
+                        <div>
+                            <strong style="color: #38bdf8; font-size: 0.9rem;">Pré-visualização Instantânea</strong>
+                            <p style="font-size: 0.78rem; color: #94a3b8; margin: 0;">Aparecerá exatamente como a imagem ficará no catálogo público.</p>
                         </div>
                     </div>
 
@@ -729,6 +724,25 @@
                         💾 Publicar Desenho no Catálogo
                     </button>
                 </div>
+
+                <div class="painel-box">
+                    <h3>Desenhos Ativos no Catálogo</h3>
+                    <div class="tabela-container">
+                        <table class="tabela-admin">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Título</th>
+                                    <th>Categoria</th>
+                                    <th>Complexidade</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lista-desenhos-tabela"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
             
             <!-- ========================================================
                BLOCO 8: SEÇÃO GESTÃO DE JOGOS
