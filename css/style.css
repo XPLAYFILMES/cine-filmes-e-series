@@ -157,11 +157,12 @@ body.dark-mode {
 /* ========================================================
    4. BANNER EM FAIXA TOTAL (LARGURA E ALTURA PADRONIZADAS)
    ======================================================== */
-.banner-faixa-universal {
+.banner-faixa-universal,
+.banner-novidades {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 0 25px 0 !important; /* Espaçamento idêntico antes dos filtros */
-    padding: 24px 0 !important;   /* Altura idêntica à da Imagem 1 */
+    padding: 24px 0 !important;   /* Altura padronizada */
     color: #ffffff !important;
     border-radius: 0 !important;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12) !important;
@@ -179,13 +180,14 @@ body.dark-mode {
     background: linear-gradient(90deg, #6d28d9, #7c3aed, #a855f7) !important;
 }
 
-/* Cor Verde (Atividades Escolares - Mantém a cor da Imagem 2) */
+/* Cor Verde (Atividades Escolares) */
 .banner-cor-verde {
     background: linear-gradient(90deg, #047857, #059669, #10b981) !important;
 }
 
 /* Alinhamento Universal dos Textos do Banner */
-.conteudo-banner-padrao {
+.conteudo-banner-padrao,
+.conteudo-banner {
     max-width: 1350px !important;
     margin: 0 auto !important;
     padding: 0 24px !important;
@@ -193,7 +195,8 @@ body.dark-mode {
     box-sizing: border-box !important;
 }
 
-.conteudo-banner-padrao h2 {
+.conteudo-banner-padrao h2,
+.conteudo-banner h2 {
     font-size: 1.8rem !important;
     font-weight: 800 !important;
     margin: 0 0 6px 0 !important;
@@ -204,7 +207,8 @@ body.dark-mode {
     letter-spacing: -0.5px !important;
 }
 
-.conteudo-banner-padrao p {
+.conteudo-banner-padrao p,
+.conteudo-banner p {
     font-size: 0.95rem !important;
     color: #f1f5f9 !important;
     opacity: 0.95 !important;
@@ -251,6 +255,12 @@ body.dark-mode {
     border-color: #2563eb;
 }
 
+body.dark-mode .btn-categoria {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #cbd5e1;
+}
+
 /* ========================================================
    6. ABAS DE STATUS / MATÉRIAS (ALINHAMENTO CENTRALIZADO)
    ======================================================== */
@@ -289,8 +299,20 @@ body.dark-mode {
     border-color: #0f172a;
 }
 
+body.dark-mode .btn-aba {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #cbd5e1;
+}
+
+body.dark-mode .btn-aba.ativa {
+    background-color: #38bdf8;
+    color: #0f172a;
+    border-color: #38bdf8;
+}
+
 /* ========================================================
-   7. CATÁLOGO DE CARDS EM GRADE
+   7. CATÁLOGO DE CARDS EM GRADE E ESTILO DOS CARDS
    ======================================================== */
 .catalogo-desenhos {
     max-width: 1350px;
@@ -337,6 +359,107 @@ body.dark-mode {
     #catalogo-atividades {
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     }
+}
+
+/* Estilo do Card Branco Oficial */
+.card-desenho {
+    background: #ffffff;
+    border: 2px solid #cbd5e1;
+    border-radius: 16px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+body.dark-mode .card-desenho {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+.card-desenho:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+.cabecalho-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.tag-categoria {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 12px;
+    background-color: #e2e8f0;
+    color: #475569;
+}
+
+.badge-complexidade {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 700;
+}
+
+.preview-svg-container {
+    width: 100%;
+    height: 135px;
+    background: #f8fafc;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+}
+
+body.dark-mode .preview-svg-container {
+    background: #0f172a;
+    border-color: #334155;
+}
+
+.preview-svg-container svg {
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.titulo-card {
+    font-size: 1rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 8px;
+    color: #0f172a;
+}
+
+body.dark-mode .titulo-card {
+    color: #f8fafc;
+}
+
+.btn-jogar {
+    background-color: #2563eb;
+    color: #ffffff;
+    border: none;
+    padding: 10px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 0.88rem;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    margin-top: auto;
+    transition: opacity 0.2s ease;
+}
+
+.btn-jogar:hover {
+    opacity: 0.9;
 }
 
 /* ========================================================
@@ -669,6 +792,7 @@ body.dark-mode .item-cor.ativa:not(.concluida) {
     color: #ffffff;
     font-weight: 900;
 }
+
 /* ========================================================
    11. MODAIS DE ENVIO DE ATIVIDADE E FORMULÁRIO DO ALUNO
    ======================================================== */
@@ -721,9 +845,7 @@ body.dark-mode .campo-formulario-aluno {
     border-color: #2563eb;
 }
 
-/* ========================================================
-   11. MODAL COMEMORATIVO DE 100% COM EXPORTAÇÃO E IMPRESSÃO
-   ======================================================== */
+/* Modal Comemorativo 100% */
 .modal-overlay {
     position: fixed;
     top: 0; left: 0;
