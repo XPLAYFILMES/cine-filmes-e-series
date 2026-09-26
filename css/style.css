@@ -880,3 +880,76 @@ body.dark-mode .modal-card {
 .btn-acao-imprimir { background: #0f172a; color: #fff; }
 .btn-acao-fechar { background: #e2e8f0; color: #334155; }
 
+/* ========================================================
+   12. SALÃO DE TROFÉUS E CONQUISTAS (CONQUISTAS.HTML)
+   ======================================================== */
+.grade-trofeus {
+    max-width: 1200px;
+    margin: 30px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    padding: 0 20px;
+}
+
+.card-trofeu {
+    background: #ffffff;
+    border: 2px solid #cbd5e1;
+    border-radius: 18px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    transition: transform 0.2s ease;
+}
+
+.card-trofeu.bloqueado {
+    opacity: 0.55;
+    filter: grayscale(1);
+}
+
+.card-trofeu:hover {
+    transform: translateY(-4px);
+}
+
+.icone-trofeu {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+/* ========================================================
+   13. CENTRAL DE CADERNOS A4 PARA IMPRIMIR (IMPRIMIR.HTML)
+   ======================================================== */
+.grade-cadernos {
+    max-width: 1200px;
+    margin: 30px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 22px;
+    padding: 0 20px;
+}
+
+.card-caderno {
+    background: #ffffff;
+    border: 2px solid #cbd5e1;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+}
+
+.capa-caderno {
+    height: 140px;
+    background: linear-gradient(135deg, #0284c7, #38bdf8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+}
+
+.corpo-caderno {
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
