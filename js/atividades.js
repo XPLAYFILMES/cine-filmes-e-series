@@ -46,7 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     ];
 
-    // Carrega também as atividades criadas pelo Admin
     const atividadesCustom = JSON.parse(localStorage.getItem("admin_atividades") || "[]");
     const bancoAtividades = [...atividadesCustom, ...atividadesPadrao];
 
@@ -64,6 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const campoBusca = document.getElementById("campo-busca");
     const btnTema = document.getElementById("btn-tema-atividades");
 
+    // Modais de Realização
     const modalAtiv = document.getElementById("modal-fazer-atividade");
     const modalTitulo = document.getElementById("modal-titulo-ativ");
     const modalEnunciado = document.getElementById("modal-enunciado-ativ");
@@ -72,6 +72,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputTurma = document.getElementById("turma-aluno");
     const btnEnviarTarefa = document.getElementById("btn-enviar-tarefa");
     const btnFecharModal = document.getElementById("btn-fechar-modal-ativ");
+
+    // Modais de Consulta Privada de Notas
+    const btnAbrirBoletim = document.getElementById("btn-abrir-boletim");
+    const modalBoletim = document.getElementById("modal-boletim-aluno");
+    const btnFecharBoletim = document.getElementById("btn-fechar-boletim");
+    const inputBuscarMeuNome = document.getElementById("input-buscar-meu-nome");
+    const btnPesquisarMeuBoletim = document.getElementById("btn-pesquisar-meu-boletim");
+    const containerListaBoletim = document.getElementById("container-lista-meu-boletim");
 
     // ========================================================
     // 3. TEMA NOTURNO
@@ -84,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================================
-    // 4. RENDERIZAR ATIVIDADES
+    // 4. RENDERIZAR ATIVIDADES DO CATÁLOGO
     // ========================================================
     function renderizar() {
         if (!gradeAtividades) return;
@@ -126,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================================
-    // 5. ABRIR E ENVIAR ATIVIDADE PARA O PAINEL DO ADMIN
+    // 5. ABRIR E ENVIAR ATIVIDADE ONLINE
     // ========================================================
     window.abrirResolucao = function(id) {
         atividadeSendoFeita = bancoAtividades.find(a => a.id === id);
@@ -135,6 +143,11 @@ document.addEventListener("DOMContentLoaded", () => {
         modalTitulo.innerText = `Atividade: ${atividadeSendoFeita.titulo}`;
         modalEnunciado.innerText = atividadeSendoFeita.enunciado;
         inputResposta.value = "";
+
+        // Se o aluno já digitou o nome antes neste aparelho, já preenche automaticamente
+        const ultimoNome = localStorage.getItem("aluno_ultimo_nome");
+        if (ultimoNome) inputNome.value = ultimoNome;
+
         modalAtiv.style.display = "flex";
     };
 
@@ -154,6 +167,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 alert("Por favor, preencha sua resposta e o seu nome completo antes de enviar!");
                 return;
             }
+
+            // Memoriza o nome do aluno neste aparelho para consultas futuras
+            localStorage.setItem("aluno_ultimo_nome", nome);
 
             const novaSubmissao = {
                 id: "submissao_" + Date.now(),
@@ -178,15 +194,108 @@ document.addEventListener("DOMContentLoaded", () => {
             modalAtiv.style.display = "none";
 
             if (typeof confetti === "function") {
-                confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+                confetti({ particleCount: 130, spread: 80, origin: { y: 0.6 } });
             }
 
-            alert(`Parabéns, ${nome}! Sua atividade foi enviada com sucesso para o painel do professor. Em breve ele atribuirá a sua nota!`);
+            alert(`Parabéns, ${nome}! Sua atividade foi enviada com sucesso.\n\nVocê pode acompanhar sua nota a qualquer momento clicando no botão "📋 Minhas Notas / Resultados"!`);
         });
     }
 
     // ========================================================
-    // 6. EVENTOS DE FILTROS E BUSCA
+    // 6. CONSULTA PRIVADA DE NOTAS (BOLETIM DO ALUNO)
+    // ========================================================
+    function carregarBoletimDoAluno(nomeParaFiltrar) {
+        containerListaBoletim.innerHTML = "";
+        const todasSubmissoes = JSON.parse(localStorage.getItem("admin_submissoes_atividades") || "[]");
+
+        const nomeBusca = (nomeParaFiltrar || "").trim().toLowerCase();
+        const minhasTarefas = todasSubmissoes.filter(sub => 
+            sub.nomeAluno.toLowerCase().includes(nomeBusca)
+        );
+
+        if (minhasTarefas.length === 0) {
+            containerListaBoletim.innerHTML = `
+                <div style="text-align: center; color: #64748b; padding: 25px; background: #f8fafc; border-radius: 10px;">
+                    <p style="font-weight: bold; margin-bottom: 4px;">Nenhuma atividade encontrada para "${nomeParaFiltrar}".</p>
+                    <p style="font-size: 0.8rem; margin: 0;">Certifique-se de digitar o mesmo nome usado no envio da tarefa.</p>
+                </div>
+            `;
+            return;
+        }
+
+        minhasTarefas.forEach(tarefa => {
+            const cardItem = document.createElement("div");
+            cardItem.style.background = "#f8fafc";
+            cardItem.style.border = "1px solid #cbd5e1";
+            cardItem.style.borderRadius = "12px";
+            cardItem.style.padding = "14px";
+            cardItem.style.display = "flex";
+            cardItem.style.flexDirection = "column";
+            cardItem.style.gap = "6px";
+
+            const estaCorrigido = (tarefa.status === "Corrigido");
+
+            cardItem.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong style="color: #0f172a; font-size: 0.95rem;">${tarefa.tituloAtividade}</strong>
+                    <span style="font-size: 0.75rem; color: #64748b;">${tarefa.dataEnvio}</span>
+                </div>
+                <div style="font-size: 0.82rem; color: #475569;">
+                    <span>Aluno: <strong>${tarefa.nomeAluno}</strong> | Turma: ${tarefa.turmaAluno}</span>
+                </div>
+                
+                <div style="margin-top: 6px; padding-top: 8px; border-top: 1px dashed #cbd5e1; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span style="font-size: 0.85rem; font-weight: bold;">Status: </span>
+                        <span style="font-size: 0.85rem; font-weight: bold; color: ${estaCorrigido ? '#059669' : '#d97706'};">
+                            ${estaCorrigido ? '✅ Avaliado pelo Professor' : '⏳ Aguardando Correção'}
+                        </span>
+                    </div>
+
+                    ${estaCorrigido ? `
+                        <div style="background: #ecfdf5; border: 2px solid #059669; padding: 4px 12px; border-radius: 20px;">
+                            <span style="font-size: 0.9rem; font-weight: 900; color: #065f46;">Nota: ${tarefa.nota} / 10</span>
+                        </div>
+                    ` : `
+                        <span style="font-size: 0.8rem; color: #64748b; font-style: italic;">Em análise...</span>
+                    `}
+                </div>
+
+                ${estaCorrigido && tarefa.feedbackProfessor ? `
+                    <div style="background: #ffffff; border-left: 3px solid #059669; padding: 8px 12px; border-radius: 4px; margin-top: 6px;">
+                        <span style="font-size: 0.78rem; font-weight: bold; color: #065f46;">Recado do Professor:</span>
+                        <p style="font-size: 0.82rem; color: #334155; margin: 3px 0 0 0;">${tarefa.feedbackProfessor}</p>
+                    </div>
+                ` : ''}
+            `;
+
+            containerListaBoletim.appendChild(cardItem);
+        });
+    }
+
+    if (btnAbrirBoletim) {
+        btnAbrirBoletim.addEventListener("click", () => {
+            const ultimoNome = localStorage.getItem("aluno_ultimo_nome") || "";
+            inputBuscarMeuNome.value = ultimoNome;
+            carregarBoletimDoAluno(ultimoNome);
+            modalBoletim.style.display = "flex";
+        });
+    }
+
+    if (btnFecharBoletim) {
+        btnFecharBoletim.addEventListener("click", () => {
+            modalBoletim.style.display = "none";
+        });
+    }
+
+    if (btnPesquisarMeuBoletim) {
+        btnPesquisarMeuBoletim.addEventListener("click", () => {
+            carregarBoletimDoAluno(inputBuscarMeuNome.value);
+        });
+    }
+
+    // ========================================================
+    // 7. EVENTOS DE FILTROS E BUSCA
     // ========================================================
     botoesSerie.forEach(btn => {
         btn.addEventListener("click", () => {
