@@ -1,16 +1,17 @@
 /* ========================================================
-   BLOCO 1: IDENTIFICAÇÃO E CARREGAMENTO DO DESENHO REAL
+   BLOCO 1: RECONHECIMENTO PRECISO DO DESENHO CLICADO
    ======================================================== */
 document.addEventListener("DOMContentLoaded", () => {
     const params = new URLSearchParams(window.location.search);
-    const idDesenho = params.get("id") || "desenho_1";
+    const idDesenho = params.get("id");
 
-    // Registra como último desenho para o atalho hero da home
-    localStorage.setItem("ultimo_desenho_aberto", idDesenho);
-
-    // 1.1 - Desenhos padrão do sistema
-    const desenhosPadrao = {
-        desenho_1: {
+    // 1.1 - Busca primeiro na lista do painel (db_desenhos)
+    const desenhosDoPainel = JSON.parse(localStorage.getItem("db_desenhos") || "[]");
+    
+    // 1.2 - Desenhos padrão de fallback
+    const desenhosPadrao = [
+        {
+            id: "desenho_1",
             titulo: "Estrela Mágica",
             viewBox: "0 0 300 300",
             svg: `
@@ -19,7 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 <circle class="parte-pintavel" data-numero="3" cx="230" cy="70" r="30" fill="#ffffff" stroke="#333333" stroke-width="4"/>
             `
         },
-        desenho_2: {
+        {
+            id: "desenho_2",
             titulo: "Foguetão Espacial",
             viewBox: "0 0 300 300",
             svg: `
@@ -30,7 +32,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 <polygon class="parte-pintavel" data-numero="5" points="130,215 150,270 170,215" fill="#ffffff" stroke="#333333" stroke-width="4"/>
             `
         },
-        desenho_3: {
+        {
+            id: "desenho_3",
             titulo: "Flor Geométrica",
             viewBox: "0 0 300 300",
             svg: `
@@ -41,31 +44,25 @@ document.addEventListener("DOMContentLoaded", () => {
                 <circle class="parte-pintavel" data-numero="5" cx="150" cy="150" r="32" fill="#ffffff" stroke="#333333" stroke-width="4"/>
             `
         }
-    };
+    ];
 
-    // 1.2 - Busca no banco do painel
-    const bancoPainel = JSON.parse(localStorage.getItem("db_desenhos") || "[]");
-    let desenhoAtual = bancoPainel.find(d => String(d.id) === String(idDesenho));
+    // Procura o desenho correspondente:
+    let desenhoAtual = null;
 
-    if (!desenhoAtual && desenhosPadrao[idDesenho]) {
-        desenhoAtual = {
-            id: idDesenho,
-            titulo: desenhosPadrao[idDesenho].titulo,
-            svg: desenhosPadrao[idDesenho].svg,
-            viewBox: desenhosPadrao[idDesenho].viewBox
-        };
+    if (idDesenho) {
+        desenhoAtual = desenhosDoPainel.find(d => String(d.id) === String(idDesenho));
+        if (!desenhoAtual) {
+            desenhoAtual = desenhosPadrao.find(d => String(d.id) === String(idDesenho));
+        }
     }
 
+    // Se ainda não encontrou, pega o mais recente do painel ou o primeiro padrão
     if (!desenhoAtual) {
-        desenhoAtual = {
-            id: "desenho_1",
-            titulo: desenhosPadrao.desenho_1.titulo,
-            svg: desenhosPadrao.desenho_1.svg,
-            viewBox: desenhosPadrao.desenho_1.viewBox
-        };
+        desenhoAtual = desenhosDoPainel.length > 0 ? desenhosDoPainel[0] : desenhosPadrao[0];
     }
 
-    // Elementos principais do DOM
+    localStorage.setItem("ultimo_desenho_aberto", desenhoAtual.id);
+
     const svgPrancheta = document.getElementById("desenho-svg");
     const camadaCanvas = document.getElementById("camada-pincel");
     const ctxCanvas = camadaCanvas ? camadaCanvas.getContext("2d") : null;
@@ -74,7 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const textoProgresso = document.getElementById("texto-progresso-ativo");
     const pranchetaWrapper = document.getElementById("prancheta-wrapper");
 
-    // Paleta de cores oficial com seus números e códigos hex
     const tabelaCores = [
         { num: 1, hex: "#e74c3c" },
         { num: 2, hex: "#3498db" },
@@ -88,39 +84,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let corAtivaNumero = 1;
     let corAtivaHex = "#e74c3c";
-    let modoAtual = "balde"; // "balde" ou "pincel"
+    let modoAtual = "balde";
     let nivelZoom = 1;
     let historicoAcoes = [];
     let partesDoDesenho = [];
 
     /* ========================================================
-       BLOCO 2: MONTAGEM DO DESENHO E DOS NÚMEROS NA TELA
+       BLOCO 2: MONTAGEM DA IMAGEM REAL E REGIÕES NUMERADAS
        ======================================================== */
     function carregarDesenhoNaPrancheta() {
         if (!svgPrancheta) return;
         svgPrancheta.innerHTML = "";
 
-        // CASO A: Imagem enviada pelo painel (Upload ou Link Web)
+        // CASO A: Imagem vinda do Painel (Upload ou Link URL)
         if (desenhoAtual.imagem) {
-            svgPrancheta.setAttribute("viewBox", "0 0 320 320");
+            svgPrancheta.setAttribute("viewBox", "0 0 400 400");
             svgPrancheta.innerHTML = `
-                <image href="${desenhoAtual.imagem}" x="0" y="0" width="320" height="320" preserveAspectRatio="xMidYMid meet" />
-                <g id="regioes-interativas">
-                    <rect class="parte-pintavel" data-numero="1" x="20" y="20" width="130" height="130" rx="14" fill="rgba(255,255,255,0.72)" stroke="#333333" stroke-width="2"/>
-                    <text class="label-numero" data-numero="1" x="85" y="95" font-size="24" font-weight="900" fill="#0f172a" text-anchor="middle" pointer-events="none">1</text>
+                <!-- A imagem enviada pelo painel fica de fundo -->
+                <image href="${desenhoAtual.imagem}" x="0" y="0" width="400" height="400" preserveAspectRatio="xMidYMid meet" />
+                
+                <!-- Regiões translúcidas clicáveis para pintar por números -->
+                <g id="camada-partes-numeradas">
+                    <!-- Quadrante 1 -->
+                    <rect class="parte-pintavel" data-numero="1" x="20" y="20" width="170" height="170" rx="14" fill="rgba(255,255,255,0.70)" stroke="#1e293b" stroke-width="2"/>
+                    <text class="label-numero" data-numero="1" x="105" y="115" font-size="28" font-weight="900" fill="#0f172a" text-anchor="middle" pointer-events="none">1</text>
 
-                    <rect class="parte-pintavel" data-numero="2" x="170" y="20" width="130" height="130" rx="14" fill="rgba(255,255,255,0.72)" stroke="#333333" stroke-width="2"/>
-                    <text class="label-numero" data-numero="2" x="235" y="95" font-size="24" font-weight="900" fill="#0f172a" text-anchor="middle" pointer-events="none">2</text>
+                    <!-- Quadrante 2 -->
+                    <rect class="parte-pintavel" data-numero="2" x="210" y="20" width="170" height="170" rx="14" fill="rgba(255,255,255,0.70)" stroke="#1e293b" stroke-width="2"/>
+                    <text class="label-numero" data-numero="2" x="295" y="115" font-size="28" font-weight="900" fill="#0f172a" text-anchor="middle" pointer-events="none">2</text>
 
-                    <rect class="parte-pintavel" data-numero="3" x="20" y="170" width="130" height="130" rx="14" fill="rgba(255,255,255,0.72)" stroke="#333333" stroke-width="2"/>
-                    <text class="label-numero" data-numero="3" x="85" y="245" font-size="24" font-weight="900" fill="#0f172a" text-anchor="middle" pointer-events="none">3</text>
+                    <!-- Quadrante 3 -->
+                    <rect class="parte-pintavel" data-numero="3" x="20" y="210" width="170" height="170" rx="14" fill="rgba(255,255,255,0.70)" stroke="#1e293b" stroke-width="2"/>
+                    <text class="label-numero" data-numero="3" x="105" y="305" font-size="28" font-weight="900" fill="#0f172a" text-anchor="middle" pointer-events="none">3</text>
 
-                    <rect class="parte-pintavel" data-numero="4" x="170" y="170" width="130" height="130" rx="14" fill="rgba(255,255,255,0.72)" stroke="#333333" stroke-width="2"/>
-                    <text class="label-numero" data-numero="4" x="235" y="245" font-size="24" font-weight="900" fill="#0f172a" text-anchor="middle" pointer-events="none">4</text>
+                    <!-- Quadrante 4 -->
+                    <rect class="parte-pintavel" data-numero="4" x="210" y="210" width="170" height="170" rx="14" fill="rgba(255,255,255,0.70)" stroke="#1e293b" stroke-width="2"/>
+                    <text class="label-numero" data-numero="4" x="295" y="305" font-size="28" font-weight="900" fill="#0f172a" text-anchor="middle" pointer-events="none">4</text>
                 </g>
             `;
         } 
-        // CASO B: Desenho em código SVG
+        // CASO B: Código SVG (do painel ou padrão)
         else {
             svgPrancheta.setAttribute("viewBox", desenhoAtual.viewBox || "0 0 300 300");
             svgPrancheta.innerHTML = desenhoAtual.svg;
@@ -135,7 +138,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     forma.setAttribute("fill", "#ffffff");
                 }
 
-                // Injeta rótulo com número dentro do SVG
                 try {
                     const b = forma.getBBox();
                     if (b.width > 8 && b.height > 8) {
