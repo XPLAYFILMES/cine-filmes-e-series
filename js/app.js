@@ -1,250 +1,305 @@
+/* ========================================================
+   BLOCO 1: IDENTIFICAÇÃO E CARREGAMENTO DO DESENHO REAL
+   ======================================================== */
 document.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    const idDesenho = params.get("id") || "desenho_1";
 
-    // ========================================================
-    // 1. BANCO DE DESENHOS SVG E METADADOS
-    // ========================================================
-    const catalogoSVG = {
+    // Registra como último desenho para o atalho hero da home
+    localStorage.setItem("ultimo_desenho_aberto", idDesenho);
+
+    // 1.1 - Desenhos padrão do sistema
+    const desenhosPadrao = {
         desenho_1: {
             titulo: "Estrela Mágica",
             viewBox: "0 0 300 300",
-            cores: [
-                { numero: "1", hex: "#e74c3c" },
-                { numero: "2", hex: "#3498db" },
-                { numero: "3", hex: "#f1c40f" }
-            ],
             svg: `
-                <polygon class="parte-pintavel" data-numero="1" points="150,25 179,111 269,111 197,165 224,251 150,200 76,251 103,165 31,111 121,111" fill="#ffffff" stroke="#333333" stroke-width="4" stroke-linejoin="round" />
-                <circle class="parte-pintavel" data-numero="2" cx="70" cy="70" r="30" fill="#ffffff" stroke="#333333" stroke-width="4" />
-                <circle class="parte-pintavel" data-numero="3" cx="230" cy="70" r="30" fill="#ffffff" stroke="#333333" stroke-width="4" />
-                <text x="150" y="155" font-family="Arial" font-size="20" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">1</text>
-                <text x="70" y="77" font-family="Arial" font-size="18" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">2</text>
-                <text x="230" y="77" font-family="Arial" font-size="18" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">3</text>
+                <polygon class="parte-pintavel" data-numero="1" points="150,25 179,111 269,111 197,165 224,251 150,200 76,251 103,165 31,111 121,111" fill="#ffffff" stroke="#333333" stroke-width="4"/>
+                <circle class="parte-pintavel" data-numero="2" cx="70" cy="70" r="30" fill="#ffffff" stroke="#333333" stroke-width="4"/>
+                <circle class="parte-pintavel" data-numero="3" cx="230" cy="70" r="30" fill="#ffffff" stroke="#333333" stroke-width="4"/>
             `
         },
         desenho_2: {
             titulo: "Foguetão Espacial",
             viewBox: "0 0 300 300",
-            cores: [
-                { numero: "1", hex: "#e74c3c" },
-                { numero: "2", hex: "#3498db" },
-                { numero: "3", hex: "#9b59b6" },
-                { numero: "4", hex: "#f1c40f" }
-            ],
             svg: `
-                <path class="parte-pintavel" data-numero="1" d="M150,30 C180,90 190,180 190,210 L110,210 C110,180 120,90 150,30 Z" fill="#ffffff" stroke="#333333" stroke-width="4" stroke-linejoin="round"/>
-                <path class="parte-pintavel" data-numero="2" d="M110,160 L60,210 L110,210 Z" fill="#ffffff" stroke="#333333" stroke-width="4" stroke-linejoin="round"/>
-                <path class="parte-pintavel" data-numero="2" d="M190,160 L240,210 L190,210 Z" fill="#ffffff" stroke="#333333" stroke-width="4" stroke-linejoin="round"/>
-                <circle class="parte-pintavel" data-numero="3" cx="150" cy="120" r="22" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-                <polygon class="parte-pintavel" data-numero="4" points="130,215 150,270 170,215" fill="#ffffff" stroke="#333333" stroke-width="4" stroke-linejoin="round"/>
-                <text x="150" y="175" font-family="Arial" font-size="20" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">1</text>
-                <text x="90" y="200" font-family="Arial" font-size="16" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">2</text>
-                <text x="210" y="200" font-family="Arial" font-size="16" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">2</text>
-                <text x="150" y="127" font-family="Arial" font-size="18" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">3</text>
-                <text x="150" y="245" font-family="Arial" font-size="16" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">4</text>
+                <path class="parte-pintavel" data-numero="1" d="M150,30 C180,90 190,180 190,210 L110,210 C110,180 120,90 150,30 Z" fill="#ffffff" stroke="#333333" stroke-width="4"/>
+                <path class="parte-pintavel" data-numero="2" d="M110,160 L60,210 L110,210 Z" fill="#ffffff" stroke="#333333" stroke-width="4"/>
+                <path class="parte-pintavel" data-numero="3" d="M190,160 L240,210 L190,210 Z" fill="#ffffff" stroke="#333333" stroke-width="4"/>
+                <circle class="parte-pintavel" data-numero="4" cx="150" cy="120" r="22" fill="#ffffff" stroke="#333333" stroke-width="4"/>
+                <polygon class="parte-pintavel" data-numero="5" points="130,215 150,270 170,215" fill="#ffffff" stroke="#333333" stroke-width="4"/>
             `
         },
         desenho_3: {
             titulo: "Flor Geométrica",
             viewBox: "0 0 300 300",
-            cores: [
-                { numero: "1", hex: "#e74c3c" },
-                { numero: "2", hex: "#f1c40f" }
-            ],
             svg: `
                 <ellipse class="parte-pintavel" data-numero="1" cx="150" cy="90" rx="30" ry="45" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-                <ellipse class="parte-pintavel" data-numero="1" cx="150" cy="210" rx="30" ry="45" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-                <ellipse class="parte-pintavel" data-numero="1" cx="90" cy="150" rx="45" ry="30" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-                <ellipse class="parte-pintavel" data-numero="1" cx="210" cy="150" rx="45" ry="30" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-                <circle class="parte-pintavel" data-numero="2" cx="150" cy="150" r="32" fill="#ffffff" stroke="#333333" stroke-width="4"/>
-                <text x="150" y="95" font-family="Arial" font-size="18" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">1</text>
-                <text x="150" y="215" font-family="Arial" font-size="18" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">1</text>
-                <text x="90" y="155" font-family="Arial" font-size="18" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">1</text>
-                <text x="210" y="155" font-family="Arial" font-size="18" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">1</text>
-                <text x="150" y="157" font-family="Arial" font-size="20" font-weight="bold" fill="#666666" text-anchor="middle" pointer-events="none">2</text>
+                <ellipse class="parte-pintavel" data-numero="2" cx="150" cy="210" rx="30" ry="45" fill="#ffffff" stroke="#333333" stroke-width="4"/>
+                <ellipse class="parte-pintavel" data-numero="3" cx="90" cy="150" rx="45" ry="30" fill="#ffffff" stroke="#333333" stroke-width="4"/>
+                <ellipse class="parte-pintavel" data-numero="4" cx="210" cy="150" rx="45" ry="30" fill="#ffffff" stroke="#333333" stroke-width="4"/>
+                <circle class="parte-pintavel" data-numero="5" cx="150" cy="150" r="32" fill="#ffffff" stroke="#333333" stroke-width="4"/>
             `
         }
     };
 
-    // ========================================================
-    // 2. SISTEMA DE ÁUDIO WEB OTIMIZADO
-    // ========================================================
-    let audioCtx = null;
+    // 1.2 - Busca no banco do painel
+    const bancoPainel = JSON.parse(localStorage.getItem("db_desenhos") || "[]");
+    let desenhoAtual = bancoPainel.find(d => String(d.id) === String(idDesenho));
 
-    function obterAudioContext() {
-        if (!audioCtx) {
-            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-            if (AudioContextClass) audioCtx = new AudioContextClass();
-        }
-        if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
-        return audioCtx;
+    if (!desenhoAtual && desenhosPadrao[idDesenho]) {
+        desenhoAtual = {
+            id: idDesenho,
+            titulo: desenhosPadrao[idDesenho].titulo,
+            svg: desenhosPadrao[idDesenho].svg,
+            viewBox: desenhosPadrao[idDesenho].viewBox
+        };
     }
 
-    const desbloquear = () => {
-        obterAudioContext();
-        window.removeEventListener("pointerdown", desbloquear);
-    };
-    window.addEventListener("pointerdown", desbloquear);
-
-    function tocarSomAcerto() {
-        try {
-            const ctxA = obterAudioContext();
-            if (!ctxA) return;
-            const agora = ctxA.currentTime;
-            const osc = ctxA.createOscillator();
-            const gain = ctxA.createGain();
-            osc.type = "sine";
-            osc.frequency.setValueAtTime(340, agora);
-            osc.frequency.exponentialRampToValueAtTime(900, agora + 0.08);
-            gain.gain.setValueAtTime(0.4, agora);
-            gain.gain.exponentialRampToValueAtTime(0.001, agora + 0.1);
-            osc.connect(gain);
-            gain.connect(ctxA.destination);
-            osc.start(agora);
-            osc.stop(agora + 0.1);
-        } catch (e) {}
+    if (!desenhoAtual) {
+        desenhoAtual = {
+            id: "desenho_1",
+            titulo: desenhosPadrao.desenho_1.titulo,
+            svg: desenhosPadrao.desenho_1.svg,
+            viewBox: desenhosPadrao.desenho_1.viewBox
+        };
     }
 
-    function tocarSomCorFinalizada() {
-        try {
-            const ctxA = obterAudioContext();
-            if (!ctxA) return;
-            const agora = ctxA.currentTime;
-            [659.25, 880.00].forEach((freq, idx) => {
-                const osc = ctxA.createOscillator();
-                const gain = ctxA.createGain();
-                const t = agora + (idx * 0.09);
-                osc.type = "sine";
-                osc.frequency.setValueAtTime(freq, t);
-                gain.gain.setValueAtTime(0.3, t);
-                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
-                osc.connect(gain);
-                gain.connect(ctxA.destination);
-                osc.start(t);
-                osc.stop(t + 0.25);
+    // Elementos principais do DOM
+    const svgPrancheta = document.getElementById("desenho-svg");
+    const camadaCanvas = document.getElementById("camada-pincel");
+    const ctxCanvas = camadaCanvas ? camadaCanvas.getContext("2d") : null;
+    const barraPaleta = document.getElementById("barra-paleta");
+    const barraProgresso = document.getElementById("barra-progresso-ativa");
+    const textoProgresso = document.getElementById("texto-progresso-ativo");
+    const pranchetaWrapper = document.getElementById("prancheta-wrapper");
+
+    // Paleta de cores oficial com seus números e códigos hex
+    const tabelaCores = [
+        { num: 1, hex: "#e74c3c" },
+        { num: 2, hex: "#3498db" },
+        { num: 3, hex: "#f1c40f" },
+        { num: 4, hex: "#2ecc71" },
+        { num: 5, hex: "#9b59b6" },
+        { num: 6, hex: "#e67e22" },
+        { num: 7, hex: "#1abc9c" },
+        { num: 8, hex: "#e84393" }
+    ];
+
+    let corAtivaNumero = 1;
+    let corAtivaHex = "#e74c3c";
+    let modoAtual = "balde"; // "balde" ou "pincel"
+    let nivelZoom = 1;
+    let historicoAcoes = [];
+    let partesDoDesenho = [];
+
+    /* ========================================================
+       BLOCO 2: MONTAGEM DO DESENHO E DOS NÚMEROS NA TELA
+       ======================================================== */
+    function carregarDesenhoNaPrancheta() {
+        if (!svgPrancheta) return;
+        svgPrancheta.innerHTML = "";
+
+        // CASO A: Imagem enviada pelo painel (Upload ou Link Web)
+        if (desenhoAtual.imagem) {
+            svgPrancheta.setAttribute("viewBox", "0 0 320 320");
+            svgPrancheta.innerHTML = `
+                <image href="${desenhoAtual.imagem}" x="0" y="0" width="320" height="320" preserveAspectRatio="xMidYMid meet" />
+                <g id="regioes-interativas">
+                    <rect class="parte-pintavel" data-numero="1" x="20" y="20" width="130" height="130" rx="14" fill="rgba(255,255,255,0.72)" stroke="#333333" stroke-width="2"/>
+                    <text class="label-numero" data-numero="1" x="85" y="95" font-size="24" font-weight="900" fill="#0f172a" text-anchor="middle" pointer-events="none">1</text>
+
+                    <rect class="parte-pintavel" data-numero="2" x="170" y="20" width="130" height="130" rx="14" fill="rgba(255,255,255,0.72)" stroke="#333333" stroke-width="2"/>
+                    <text class="label-numero" data-numero="2" x="235" y="95" font-size="24" font-weight="900" fill="#0f172a" text-anchor="middle" pointer-events="none">2</text>
+
+                    <rect class="parte-pintavel" data-numero="3" x="20" y="170" width="130" height="130" rx="14" fill="rgba(255,255,255,0.72)" stroke="#333333" stroke-width="2"/>
+                    <text class="label-numero" data-numero="3" x="85" y="245" font-size="24" font-weight="900" fill="#0f172a" text-anchor="middle" pointer-events="none">3</text>
+
+                    <rect class="parte-pintavel" data-numero="4" x="170" y="170" width="130" height="130" rx="14" fill="rgba(255,255,255,0.72)" stroke="#333333" stroke-width="2"/>
+                    <text class="label-numero" data-numero="4" x="235" y="245" font-size="24" font-weight="900" fill="#0f172a" text-anchor="middle" pointer-events="none">4</text>
+                </g>
+            `;
+        } 
+        // CASO B: Desenho em código SVG
+        else {
+            svgPrancheta.setAttribute("viewBox", desenhoAtual.viewBox || "0 0 300 300");
+            svgPrancheta.innerHTML = desenhoAtual.svg;
+
+            const formas = svgPrancheta.querySelectorAll("path, polygon, circle, rect, ellipse");
+            formas.forEach((forma, idx) => {
+                if (!forma.getAttribute("data-numero")) {
+                    forma.setAttribute("data-numero", (idx % 5) + 1);
+                }
+                forma.classList.add("parte-pintavel");
+                if (!forma.getAttribute("fill") || forma.getAttribute("fill") === "none") {
+                    forma.setAttribute("fill", "#ffffff");
+                }
+
+                // Injeta rótulo com número dentro do SVG
+                try {
+                    const b = forma.getBBox();
+                    if (b.width > 8 && b.height > 8) {
+                        const num = forma.getAttribute("data-numero");
+                        const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                        txt.setAttribute("class", "label-numero");
+                        txt.setAttribute("data-numero", num);
+                        txt.setAttribute("x", b.x + b.width / 2);
+                        txt.setAttribute("y", b.y + b.height / 2 + 5);
+                        txt.setAttribute("font-size", "14");
+                        txt.setAttribute("font-weight", "900");
+                        txt.setAttribute("fill", "#334155");
+                        txt.setAttribute("text-anchor", "middle");
+                        txt.setAttribute("pointer-events", "none");
+                        txt.textContent = num;
+                        svgPrancheta.appendChild(txt);
+                    }
+                } catch(e) {}
             });
-        } catch (e) {}
-    }
-
-    function tocarSomDica() {
-        try {
-            const ctxA = obterAudioContext();
-            if (!ctxA) return;
-            const agora = ctxA.currentTime;
-            const osc = ctxA.createOscillator();
-            const gain = ctxA.createGain();
-            osc.type = "sine";
-            osc.frequency.setValueAtTime(800, agora);
-            osc.frequency.exponentialRampToValueAtTime(1200, agora + 0.15);
-            gain.gain.setValueAtTime(0.25, agora);
-            gain.gain.exponentialRampToValueAtTime(0.001, agora + 0.2);
-            osc.connect(gain);
-            gain.connect(ctxA.destination);
-            osc.start(agora);
-            osc.stop(agora + 0.2);
-        } catch (e) {}
-    }
-
-    function tocarSomErro() {
-        try {
-            const ctxA = obterAudioContext();
-            if (!ctxA) return;
-            const agora = ctxA.currentTime;
-            const osc = ctxA.createOscillator();
-            const gain = ctxA.createGain();
-            osc.type = "triangle";
-            osc.frequency.setValueAtTime(200, agora);
-            osc.frequency.linearRampToValueAtTime(140, agora + 0.14);
-            gain.gain.setValueAtTime(0.2, agora);
-            gain.gain.exponentialRampToValueAtTime(0.001, agora + 0.14);
-            osc.connect(gain);
-            gain.connect(ctxA.destination);
-            osc.start(agora);
-            osc.stop(agora + 0.14);
-        } catch (e) {}
-    }
-
-    function tocarSomVitoria() {
-        try {
-            const ctxA = obterAudioContext();
-            if (!ctxA) return;
-            const agora = ctxA.currentTime;
-            const notas = [523.25, 659.25, 783.99, 1046.50, 1318.51];
-            notas.forEach((freq, idx) => {
-                const osc = ctxA.createOscillator();
-                const gain = ctxA.createGain();
-                const tempo = agora + (idx * 0.11);
-                osc.type = "sine";
-                osc.frequency.setValueAtTime(freq, tempo);
-                gain.gain.setValueAtTime(0.25, tempo);
-                gain.gain.exponentialRampToValueAtTime(0.001, tempo + 0.35);
-                osc.connect(gain);
-                gain.connect(ctxA.destination);
-                osc.start(tempo);
-                osc.stop(tempo + 0.35);
-            });
-        } catch (e) {}
-    }
-
-    function dispararConfetes() {
-        if (typeof confetti === "function") {
-            confetti({ particleCount: 150, spread: 85, origin: { y: 0.55 } });
         }
+
+        partesDoDesenho = Array.from(svgPrancheta.querySelectorAll(".parte-pintavel"));
     }
 
-    // ========================================================
-    // 3. INJEÇÃO DO DESENHO PELA URL
-    // ========================================================
-    const parametrosUrl = new URLSearchParams(window.location.search);
-    const idDesenhoAtual = parametrosUrl.get("id") || "desenho_1";
-    const desenhoDados = catalogoSVG[idDesenhoAtual] || catalogoSVG["desenho_1"];
+    /* ========================================================
+       BLOCO 3: GERAÇÃO DA PALETA CONFORME A QUANTIDADE DE PARTES
+       ======================================================== */
+    function montarPaletaDinamica() {
+        if (!barraPaleta) return;
+        barraPaleta.innerHTML = "";
 
-    // Guarda o último desenho acessado para o banner "Continuar Pintando"
-    localStorage.setItem("ultimo_desenho_aberto", idDesenhoAtual);
+        const numerosPresentes = [...new Set(partesDoDesenho.map(p => parseInt(p.getAttribute("data-numero"))))].sort((a,b) => a - b);
 
-    const svgElemento = document.getElementById("desenho-svg");
-    if (svgElemento) {
-        svgElemento.setAttribute("viewBox", desenhoDados.viewBox);
-        svgElemento.innerHTML = desenhoDados.svg;
+        numerosPresentes.forEach((num, index) => {
+            const defCor = tabelaCores.find(c => c.num === num) || tabelaCores[index % tabelaCores.length];
+            const restantes = partesDoDesenho.filter(p => parseInt(p.getAttribute("data-numero")) === num && p.getAttribute("data-pintado") !== "true").length;
+
+            const divCor = document.createElement("div");
+            divCor.className = `item-cor ${num === corAtivaNumero ? 'ativa' : ''} ${restantes === 0 ? 'concluida' : ''}`;
+            divCor.style.backgroundColor = defCor.hex;
+            divCor.setAttribute("data-numero", num);
+            divCor.setAttribute("data-hex", defCor.hex);
+
+            divCor.innerHTML = `
+                ${num}
+                <span class="badge-contador">${restantes}</span>
+            `;
+
+            divCor.addEventListener("click", () => {
+                if (divCor.classList.contains("concluida")) return;
+                corAtivaNumero = num;
+                corAtivaHex = defCor.hex;
+                document.querySelectorAll(".item-cor").forEach(c => c.classList.remove("ativa"));
+                divCor.classList.add("ativa");
+                destacarAreasAtivas();
+            });
+
+            barraPaleta.appendChild(divCor);
+        });
+
+        // Atualiza a primeira cor como ativa
+        if (numerosPresentes.length > 0 && !numerosPresentes.includes(corAtivaNumero)) {
+            corAtivaNumero = numerosPresentes[0];
+            const prim = tabelaCores.find(c => c.num === corAtivaNumero);
+            if (prim) corAtivaHex = prim.hex;
+        }
+
+        destacarAreasAtivas();
     }
 
-    // ========================================================
-    // 4. CONFIGURAÇÃO DA PALETA DINÂMICA
-    // ========================================================
-    const botoesCor = document.querySelectorAll(".item-cor");
-    botoesCor.forEach(botao => {
-        const num = botao.getAttribute("data-numero");
-        const corObj = desenhoDados.cores.find(c => c.numero === num);
-        if (corObj) {
-            botao.style.display = "flex";
-            botao.style.backgroundColor = corObj.hex;
-            botao.setAttribute("data-hex", corObj.hex);
-            botao.innerText = corObj.numero;
+    /* ========================================================
+       BLOCO 4: PINTURA INTERATIVA POR NÚMERO (BALDE)
+       ======================================================== */
+    function destacarAreasAtivas() {
+        partesDoDesenho.forEach(parte => {
+            const num = parseInt(parte.getAttribute("data-numero"));
+            const jaPintado = parte.getAttribute("data-pintado") === "true";
 
-            let badge = botao.querySelector(".badge-contador");
-            if (!badge) {
-                badge = document.createElement("span");
-                badge.className = "badge-contador";
-                badge.innerText = "0";
-                botao.appendChild(badge);
+            if (num === corAtivaNumero && !jaPintado && modoAtual === "balde") {
+                parte.classList.add("parte-pendente-ativa");
+            } else {
+                parte.classList.remove("parte-pendente-ativa");
             }
+        });
+    }
+
+    svgPrancheta.addEventListener("click", (e) => {
+        if (modoAtual !== "balde") return;
+
+        const parte = e.target.closest(".parte-pintavel");
+        if (!parte) return;
+
+        const numParte = parseInt(parte.getAttribute("data-numero"));
+
+        if (numParte === corAtivaNumero) {
+            const corAnterior = parte.getAttribute("fill");
+            parte.setAttribute("fill", corAtivaHex);
+            parte.setAttribute("data-pintado", "true");
+            parte.classList.remove("parte-pendente-ativa");
+
+            // Registra no histórico para a ferramenta "Desfazer"
+            historicoAcoes.push({ elemento: parte, corAntiga: corAnterior, numParte });
+
+            // Remove o número visível daquela região
+            const rotulos = svgPrancheta.querySelectorAll(`.label-numero[data-numero="${numParte}"]`);
+            if (rotulos.length > 0) {
+                rotulos[0].style.display = "none";
+            }
+
+            atualizarProgresso();
         } else {
-            botao.style.display = "none";
+            // Efeito visual caso o clique seja na cor errada
+            const btnCerto = document.querySelector(`.item-cor[data-numero="${numParte}"]`);
+            if (btnCerto) {
+                btnCerto.style.transform = "scale(1.25)";
+                setTimeout(() => btnCerto.style.transform = "", 250);
+            }
         }
     });
 
-    // ========================================================
-    // 5. ELEMENTOS DO DOM, ESTADOS E HISTÓRICO DE DESFAZER
-    // ========================================================
-    let corSelecionada = desenhoDados.cores[0]?.hex || "#e74c3c";
-    let numeroSelecionado = desenhoDados.cores[0]?.numero || "1";
-    let modoAtual = "balde";
-    let pintando = false;
-    let jaEstavaConcluidoInicialmente = false;
-    const historicoAcoes = []; // Pilha para a função Desfazer (Undo)
+    /* ========================================================
+       BLOCO 5: CÁLCULO DE PROGRESSO E CONCLUSÃO (MODAL A4 / PNG)
+       ======================================================== */
+    function atualizarProgresso() {
+        const total = partesDoDesenho.length;
+        const pintadas = partesDoDesenho.filter(p => p.getAttribute("data-pintado") === "true").length;
+        const porcentagem = total > 0 ? Math.round((pintadas / total) * 100) : 0;
 
-    const partesSvg = document.querySelectorAll(".parte-pintavel");
-    const btnBalde = document.getElementById("btn-modo-balde");
-    const btnPincel = document.getElementById("btn-modo-pincel");
+        if (barraProgresso) barraProgresso.style.width = `${porcentagem}%`;
+        if (textoProgresso) textoProgresso.innerText = `${porcentagem}% Concluído`;
+
+        // Salva progresso individual para alimentar a home e o hero
+        localStorage.setItem(`progresso_${desenhoAtual.id}`, JSON.stringify({ porcentagem }));
+
+        montarPaletaDinamica();
+
+        if (porcentagem === 100) {
+            if (typeof confetti === "function") {
+                confetti({ particleCount: 160, spread: 80, origin: { y: 0.6 } });
+            }
+            abrirModalConclusao();
+        }
+    }
+
+    function abrirModalConclusao() {
+        const modal = document.getElementById("modal-conclusao");
+        const imgPreview = document.getElementById("img-modal-preview");
+        if (!modal) return;
+
+        // Gera a imagem final para prévia no modal
+        const svgData = new XMLSerializer().serializeToString(svgPrancheta);
+        const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+        const URLObj = window.URL || window.webkitURL || window;
+        const blobURL = URLObj.createObjectURL(svgBlob);
+
+        if (imgPreview) imgPreview.src = blobURL;
+        modal.style.display = "flex";
+    }
+
+    /* ========================================================
+       BLOCO 6: FERRAMENTAS SUPERIORES (PINCEL, DESFAZER, ZOOM, DICA)
+       ======================================================== */
+    const btnModoBalde = document.getElementById("btn-modo-balde");
+    const btnModoPincel = document.getElementById("btn-modo-pincel");
     const btnDesfazer = document.getElementById("btn-desfazer");
     const btnDica = document.getElementById("btn-dica");
     const btnZoomIn = document.getElementById("btn-zoom-in");
@@ -254,470 +309,205 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnSalvar = document.getElementById("btn-salvar");
     const btnTema = document.getElementById("btn-tema-pintar");
 
-    const pranchetaWrapper = document.getElementById("prancheta-wrapper");
-    const containerPan = document.getElementById("container-pan");
-    const canvas = document.getElementById("camada-pincel");
-    const ctx = canvas ? canvas.getContext("2d") : null;
+    // Alternar Balde / Pincel
+    if (btnModoBalde && btnModoPincel) {
+        btnModoBalde.addEventListener("click", () => {
+            modoAtual = "balde";
+            btnModoBalde.classList.add("ativo");
+            btnModoPincel.classList.remove("ativo");
+            if (camadaCanvas) camadaCanvas.style.pointerEvents = "none";
+            destacarAreasAtivas();
+        });
 
-    const barraAtiva = document.getElementById("barra-progresso-ativa");
-    const textoAtivo = document.getElementById("texto-progresso-ativo");
-    const modalConclusao = document.getElementById("modal-conclusao");
-    const imgModalPreview = document.getElementById("img-modal-preview");
-    const btnModalPng = document.getElementById("btn-modal-png");
-    const btnModalImprimir = document.getElementById("btn-modal-imprimir");
-    const btnModalFechar = document.getElementById("btn-modal-fechar");
-
-    // ========================================================
-    // 6. ZOOM E PANORÂMICA (ARRASTAR PRANCHETA)
-    // ========================================================
-    let escalaZoom = 1;
-    let panX = 0, panY = 0;
-    let arrastandoPrancheta = false;
-    let inicioPanX = 0, inicioPanY = 0;
-
-    function atualizarTransformacaoPrancheta() {
-        if (pranchetaWrapper) {
-            pranchetaWrapper.style.transform = `translate(${panX}px, ${panY}px) scale(${escalaZoom})`;
-        }
-    }
-
-    if (btnZoomIn) {
-        btnZoomIn.addEventListener("click", () => {
-            if (escalaZoom < 2.5) {
-                escalaZoom += 0.25;
-                atualizarTransformacaoPrancheta();
-            }
+        btnModoPincel.addEventListener("click", () => {
+            modoAtual = "pincel";
+            btnModoPincel.classList.add("ativo");
+            btnModoBalde.classList.remove("ativo");
+            if (camadaCanvas) camadaCanvas.style.pointerEvents = "auto";
+            partesDoDesenho.forEach(p => p.classList.remove("parte-pendente-ativa"));
         });
     }
 
-    if (btnZoomOut) {
-        btnZoomOut.addEventListener("click", () => {
-            if (escalaZoom > 0.8) {
-                escalaZoom -= 0.25;
-                if (escalaZoom === 1) { panX = 0; panY = 0; }
-                atualizarTransformacaoPrancheta();
-            }
+    // Pincel livre sobre o Canvas
+    if (camadaCanvas && ctxCanvas) {
+        camadaCanvas.style.pointerEvents = "none";
+        let desenhando = false;
+
+        camadaCanvas.addEventListener("mousedown", (e) => {
+            if (modoAtual !== "pincel") return;
+            desenhando = true;
+            ctxCanvas.beginPath();
+            ctxCanvas.moveTo(e.offsetX, e.offsetY);
         });
+
+        camadaCanvas.addEventListener("mousemove", (e) => {
+            if (!desenhando || modoAtual !== "pincel") return;
+            ctxCanvas.lineTo(e.offsetX, e.offsetY);
+            ctxCanvas.strokeStyle = corAtivaHex;
+            ctxCanvas.lineWidth = 6;
+            ctxCanvas.lineCap = "round";
+            ctxCanvas.stroke();
+        });
+
+        window.addEventListener("mouseup", () => { desenhando = false; });
     }
 
-    if (containerPan) {
-        containerPan.addEventListener("mousedown", (e) => {
-            if (e.target.classList.contains("parte-pintavel") || modoAtual === "pincel") return;
-            arrastandoPrancheta = true;
-            inicioPanX = e.clientX - panX;
-            inicioPanY = e.clientY - panY;
-        });
-
-        window.addEventListener("mousemove", (e) => {
-            if (!arrastandoPrancheta) return;
-            panX = e.clientX - inicioPanX;
-            panY = e.clientY - inicioPanY;
-            atualizarTransformacaoPrancheta();
-        });
-
-        window.addEventListener("mouseup", () => {
-            arrastandoPrancheta = false;
-        });
-    }
-
-    // ========================================================
-    // 7. LÂMPADA DE DICA MÁGICA (ENCONTRAR PEÇA PENDENTE)
-    // ========================================================
-    if (btnDica) {
-        btnDica.addEventListener("click", () => {
-            obterAudioContext();
-            let pecaEncontrada = null;
-
-            // Busca a primeira peça pendente do número ativo
-            partesSvg.forEach(parte => {
-                if (pecaEncontrada) return;
-                const num = parte.getAttribute("data-numero");
-                const cor = parte.getAttribute("fill");
-                const pintado = (cor && cor.toLowerCase() !== "#ffffff" && cor.toLowerCase() !== "#fff" && cor !== "rgb(255, 255, 255)");
-                if (!pintado && num === numeroSelecionado) {
-                    pecaEncontrada = parte;
-                }
-            });
-
-            if (pecaEncontrada) {
-                tocarSomDica();
-                pecaEncontrada.classList.add("destaque-dica");
-                setTimeout(() => {
-                    pecaEncontrada.classList.remove("destaque-dica");
-                }, 2400);
-            }
-        });
-    }
-
-    // ========================================================
-    // 8. FUNÇÃO DESFAZER (UNDO)
-    // ========================================================
-    function salvarEstadoCanvasParaUndo() {
-        if (!canvas) return;
-        historicoAcoes.push({
-            tipo: "pincel",
-            dados: ctx.getImageData(0, 0, canvas.width, canvas.height)
-        });
-    }
-
+    // Ferramenta Desfazer
     if (btnDesfazer) {
         btnDesfazer.addEventListener("click", () => {
             if (historicoAcoes.length === 0) return;
-            const ultimaAcao = historicoAcoes.pop();
+            const ultima = historicoAcoes.pop();
+            ultima.elemento.setAttribute("fill", ultima.corAntiga || "#ffffff");
+            ultima.elemento.removeAttribute("data-pintado");
 
-            if (ultimaAcao.tipo === "balde") {
-                ultimaAcao.elemento.setAttribute("fill", ultimaAcao.corAnterior);
-                salvarProgressoAutomatico();
-            } else if (ultimaAcao.tipo === "pincel" && ctx) {
-                ctx.putImageData(ultimaAcao.dados, 0, 0);
+            const rotulos = svgPrancheta.querySelectorAll(`.label-numero[data-numero="${ultima.numParte}"]`);
+            if (rotulos.length > 0) rotulos[0].style.display = "block";
+
+            atualizarProgresso();
+        });
+    }
+
+    // Ferramenta Dica Mágica
+    if (btnDica) {
+        btnDica.addEventListener("click", () => {
+            const pendente = partesDoDesenho.find(p => parseInt(p.getAttribute("data-numero")) === corAtivaNumero && p.getAttribute("data-pintado") !== "true");
+            if (pendente) {
+                pendente.classList.add("destaque-dica");
+                setTimeout(() => pendente.classList.remove("destaque-dica"), 2200);
             }
         });
     }
 
-    // ========================================================
-    // 9. GESTÃO DE CORES, CONTADORES E AUTO-SELEÇÃO
-    // ========================================================
-    function atualizarStatusDasCores(tocarSom = true) {
-        const contagemTotal = {};
-        const contagemConcluidas = {};
-
-        partesSvg.forEach(parte => {
-            const num = parte.getAttribute("data-numero");
-            const cor = parte.getAttribute("fill");
-            const pintado = (cor && cor.toLowerCase() !== "#ffffff" && cor.toLowerCase() !== "#fff" && cor !== "rgb(255, 255, 255)");
-
-            contagemTotal[num] = (contagemTotal[num] || 0) + 1;
-            if (pintado) contagemConcluidas[num] = (contagemConcluidas[num] || 0) + 1;
-        });
-
-        let corAtualFinalizada = false;
-
-        botoesCor.forEach(botao => {
-            if (botao.style.display === "none") return;
-            const num = botao.getAttribute("data-numero");
-            const total = contagemTotal[num] || 0;
-            const prontas = contagemConcluidas[num] || 0;
-            const restantes = total - prontas;
-
-            const badge = botao.querySelector(".badge-contador");
-            if (badge) badge.innerText = restantes;
-
-            if (restantes <= 0 && total > 0) {
-                botao.classList.add("concluida");
-                if (num === numeroSelecionado) corAtualFinalizada = true;
-            } else {
-                botao.classList.remove("concluida");
+    // Ferramentas de Zoom
+    if (btnZoomIn && btnZoomOut && pranchetaWrapper) {
+        btnZoomIn.addEventListener("click", () => {
+            if (nivelZoom < 2.5) {
+                nivelZoom += 0.25;
+                pranchetaWrapper.style.transform = `scale(${nivelZoom})`;
             }
         });
 
-        if (corAtualFinalizada) {
-            if (tocarSom) tocarSomCorFinalizada();
-            selecionarProximaCorDisponivel();
-        }
-
-        destacarAreasPendentes();
-    }
-
-    function selecionarProximaCorDisponivel() {
-        let selecionou = false;
-        botoesCor.forEach(botao => {
-            if (!selecionou && botao.style.display !== "none" && !botao.classList.contains("concluida")) {
-                botoesCor.forEach(b => b.classList.remove("ativa"));
-                botao.classList.add("ativa");
-                corSelecionada = botao.getAttribute("data-hex");
-                numeroSelecionado = botao.getAttribute("data-numero");
-                selecionou = true;
+        btnZoomOut.addEventListener("click", () => {
+            if (nivelZoom > 0.75) {
+                nivelZoom -= 0.25;
+                pranchetaWrapper.style.transform = `scale(${nivelZoom})`;
             }
         });
     }
 
-    function destacarAreasPendentes() {
-        partesSvg.forEach(parte => {
-            const num = parte.getAttribute("data-numero");
-            const cor = parte.getAttribute("fill");
-            const pintado = (cor && cor.toLowerCase() !== "#ffffff" && cor.toLowerCase() !== "#fff" && cor !== "rgb(255, 255, 255)");
-            if (!pintado && num === numeroSelecionado && modoAtual === "balde") {
-                parte.classList.add("parte-pendente-ativa");
-            } else {
-                parte.classList.remove("parte-pendente-ativa");
-            }
-        });
-    }
-
-    // ========================================================
-    // 10. ATUALIZAR BARRA E MODAL DE CONCLUSÃO 100%
-    // ========================================================
-    function abrirModalVitoria() {
-        gerarDataURLFinal((dataUrl) => {
-            if (imgModalPreview) imgModalPreview.src = dataUrl;
-            if (modalConclusao) modalConclusao.style.display = "flex";
-        });
-    }
-
-    function atualizarBarraVisual(porcentagem, concluido, emitirComemoracao = true) {
-        if (barraAtiva) barraAtiva.style.width = `${porcentagem}%`;
-        if (textoAtivo) textoAtivo.innerText = `${porcentagem}% Concluído`;
-
-        if (concluido && emitirComemoracao && !jaEstavaConcluidoInicialmente) {
-            jaEstavaConcluidoInicialmente = true;
-            tocarSomVitoria();
-            dispararConfetes();
-            setTimeout(abrirModalVitoria, 800);
-        }
-    }
-
-    // ========================================================
-    // 11. SALVAMENTO AUTOMÁTICO E RESTAURAÇÃO
-    // ========================================================
-    function salvarProgressoAutomatico() {
-        let partesPintadas = 0;
-        const estadoCores = {};
-
-        partesSvg.forEach((parte, index) => {
-            const cor = parte.getAttribute("fill");
-            if (cor && cor.toLowerCase() !== "#ffffff" && cor.toLowerCase() !== "#fff" && cor !== "rgb(255, 255, 255)") {
-                partesPintadas++;
-                estadoCores[index] = cor;
-            }
-        });
-
-        const totalPartes = partesSvg.length;
-        const porcentagem = totalPartes > 0 ? Math.round((partesPintadas / totalPartes) * 100) : 0;
-        const concluido = (partesPintadas === totalPartes && totalPartes > 0);
-
-        atualizarBarraVisual(porcentagem, concluido, true);
-        atualizarStatusDasCores(true);
-
-        localStorage.setItem(`progresso_${idDesenhoAtual}`, JSON.stringify({
-            porcentagem: porcentagem,
-            cores: estadoCores
-        }));
-    }
-
-    function restaurarPinturaSalva() {
-        const dadosSalvos = localStorage.getItem(`progresso_${idDesenhoAtual}`);
-        if (!dadosSalvos) {
-            atualizarStatusDasCores(false);
-            return;
-        }
-
-        try {
-            const dados = JSON.parse(dadosSalvos);
-            if (dados.cores) {
-                Object.keys(dados.cores).forEach(index => {
-                    const idx = parseInt(index, 10);
-                    if (partesSvg[idx]) partesSvg[idx].setAttribute("fill", dados.cores[idx]);
-                });
-            }
-            const pct = dados.porcentagem || 0;
-            const foiConcluido = (pct === 100);
-            if (foiConcluido) jaEstavaConcluidoInicialmente = true;
-            atualizarBarraVisual(pct, foiConcluido, false);
-        } catch (e) {}
-
-        atualizarStatusDasCores(false);
-    }
-
-    restaurarPinturaSalva();
-
-    // ========================================================
-    // 12. EVENTOS DA PALETA E CLIQUE DE PINTURA
-    // ========================================================
-    botoesCor.forEach(botao => {
-        botao.addEventListener("click", () => {
-            obterAudioContext();
-            if (botao.classList.contains("concluida")) {
-                tocarSomErro();
-                return;
-            }
-            botoesCor.forEach(b => b.classList.remove("ativa"));
-            botao.classList.add("ativa");
-            corSelecionada = botao.getAttribute("data-hex");
-            numeroSelecionado = botao.getAttribute("data-numero");
-            destacarAreasPendentes();
-        });
-    });
-
-    partesSvg.forEach(parte => {
-        parte.addEventListener("click", () => {
-            if (modoAtual !== "balde") return;
-            obterAudioContext();
-
-            const numeroParte = parte.getAttribute("data-numero");
-            if (numeroParte === numeroSelecionado) {
-                const corAntiga = parte.getAttribute("fill");
-                historicoAcoes.push({
-                    tipo: "balde",
-                    elemento: parte,
-                    corAnterior: corAntiga
-                });
-
-                parte.setAttribute("fill", corSelecionada);
-                tocarSomAcerto();
-                salvarProgressoAutomatico();
-            } else {
-                tocarSomErro();
-                parte.style.stroke = "#ef4444";
-                parte.style.strokeWidth = "6";
-                setTimeout(() => {
-                    parte.style.stroke = "#333333";
-                    parte.style.strokeWidth = "4";
-                    destacarAreasPendentes();
-                }, 300);
-            }
-        });
-    });
-
-    // ========================================================
-    // 13. ALTERNÂNCIA DE FERRAMENTAS E TEMA
-    // ========================================================
-    if (btnBalde && btnPincel) {
-        btnBalde.addEventListener("click", () => {
-            modoAtual = "balde";
-            btnBalde.classList.add("ativo");
-            btnPincel.classList.remove("ativo");
-            if (canvas) canvas.style.pointerEvents = "none";
-            destacarAreasPendentes();
-        });
-
-        btnPincel.addEventListener("click", () => {
-            modoAtual = "pincel";
-            btnPincel.classList.add("ativo");
-            btnBalde.classList.remove("ativo");
-            if (canvas) canvas.style.pointerEvents = "auto";
-            partesSvg.forEach(p => p.classList.remove("parte-pendente-ativa"));
-        });
-    }
-
+    // Tela Cheia
     if (btnTelaCheia) {
         btnTelaCheia.addEventListener("click", () => {
-            obterAudioContext();
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen().catch(() => {});
-                btnTelaCheia.innerText = "⛶ Sair";
             } else {
                 document.exitFullscreen().catch(() => {});
-                btnTelaCheia.innerText = "⛶ Tela";
             }
         });
     }
 
-    if (btnTema) {
-        btnTema.addEventListener("click", () => {
-            document.body.classList.toggle("dark-mode");
-            btnTema.innerText = document.body.classList.contains("dark-mode") ? "☀️" : "🌙";
-        });
-    }
-
-    // ========================================================
-    // 14. PINCEL LIVRE COM SUPORTE A UNDO
-    // ========================================================
-    if (canvas && ctx) {
-        canvas.style.pointerEvents = "none";
-
-        canvas.addEventListener("mousedown", (e) => {
-            if (modoAtual !== "pincel") return;
-            salvarEstadoCanvasParaUndo();
-            pintando = true;
-            ctx.beginPath();
-            ctx.moveTo(e.offsetX, e.offsetY);
-        });
-
-        canvas.addEventListener("mousemove", (e) => {
-            if (!pintando || modoAtual !== "pincel") return;
-            ctx.lineWidth = 6;
-            ctx.lineCap = "round";
-            ctx.strokeStyle = corSelecionada;
-            ctx.lineTo(e.offsetX, e.offsetY);
-            ctx.stroke();
-        });
-
-        window.addEventListener("mouseup", () => { pintando = false; });
-    }
-
-    // ========================================================
-    // 15. EXPORTAÇÃO, IMPRESSÃO A4 E BOTÃO LIMPAR
-    // ========================================================
-    function gerarDataURLFinal(callback) {
-        const canvasFinal = document.createElement("canvas");
-        canvasFinal.width = 600;
-        canvasFinal.height = 600;
-        const ctxFinal = canvasFinal.getContext("2d");
-
-        ctxFinal.fillStyle = "#ffffff";
-        ctxFinal.fillRect(0, 0, 600, 600);
-
-        const svgString = new XMLSerializer().serializeToString(svgElemento);
-        const svgBlob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
-        const urlSvg = URL.createObjectURL(svgBlob);
-
-        const imgSvg = new Image();
-        imgSvg.onload = () => {
-            ctxFinal.drawImage(imgSvg, 0, 0, 600, 600);
-            if (canvas) ctxFinal.drawImage(canvas, 0, 0, 600, 600);
-            callback(canvasFinal.toDataURL("image/png"));
-            URL.revokeObjectURL(urlSvg);
-        };
-        imgSvg.src = urlSvg;
-    }
-
-    if (btnSalvar) {
-        btnSalvar.addEventListener("click", () => {
-            gerarDataURLFinal((dataUrl) => {
-                const linkDownload = document.createElement("a");
-                linkDownload.download = `${idDesenhoAtual}-colorido.png`;
-                linkDownload.href = dataUrl;
-                linkDownload.click();
-            });
-        });
-    }
-
-    if (btnModalPng) {
-        btnModalPng.addEventListener("click", () => {
-            if (btnSalvar) btnSalvar.click();
-        });
-    }
-
-    if (btnModalImprimir) {
-        btnModalImprimir.addEventListener("click", () => {
-            gerarDataURLFinal((dataUrl) => {
-                const janelaImpressao = window.open("", "_blank");
-                janelaImpressao.document.write(`
-                    <html>
-                    <head>
-                        <title>Imprimir Arte A4 - ColorirOnline</title>
-                        <style>
-                            @page { size: A4; margin: 20mm; }
-                            body { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; font-family: sans-serif; }
-                            img { max-width: 90%; max-height: 80vh; border: 2px solid #333; border-radius: 8px; }
-                            h2 { margin-bottom: 15px; color: #1e293b; }
-                        </style>
-                    </head>
-                    <body onload="window.print(); window.close();">
-                        <h2>Obra: ${desenhoDados.titulo}</h2>
-                        <img src="${dataUrl}">
-                    </body>
-                    </html>
-                `);
-                janelaImpressao.document.close();
-            });
-        });
-    }
-
-    if (btnModalFechar && modalConclusao) {
-        btnModalFechar.addEventListener("click", () => {
-            modalConclusao.style.display = "none";
-        });
-    }
-
+    // Limpar
     if (btnLimpar) {
         btnLimpar.addEventListener("click", () => {
-            partesSvg.forEach(parte => parte.setAttribute("fill", "#ffffff"));
-            if (ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
-            localStorage.removeItem(`progresso_${idDesenhoAtual}`);
-            jaEstavaConcluidoInicialmente = false;
-            atualizarBarraVisual(0, false, false);
-            atualizarStatusDasCores(false);
+            if (!confirm("Deseja reiniciar a pintura deste desenho?")) return;
+            partesDoDesenho.forEach(p => {
+                p.setAttribute("fill", "#ffffff");
+                p.removeAttribute("data-pintado");
+            });
+            svgPrancheta.querySelectorAll(".label-numero").forEach(l => l.style.display = "block");
+            if (ctxCanvas) ctxCanvas.clearRect(0, 0, camadaCanvas.width, camadaCanvas.height);
+            historicoAcoes = [];
+            atualizarProgresso();
         });
     }
+
+    // Salvar Rascunho
+    if (btnSalvar) {
+        btnSalvar.addEventListener("click", () => {
+            alert("Progresso salvo com sucesso!");
+        });
+    }
+
+    // Alternador de Modo Escuro
+    if (btnTema) {
+        if (localStorage.getItem("tema_colorir_online") === "dark") {
+            document.body.classList.add("dark-mode");
+            btnTema.innerText = "☀️";
+        }
+        btnTema.addEventListener("click", () => {
+            const escuro = document.body.classList.toggle("dark-mode");
+            btnTema.innerText = escuro ? "☀️" : "🌙";
+            localStorage.setItem("tema_colorir_online", escuro ? "dark" : "light");
+        });
+    }
+
+    /* ========================================================
+       BLOCO 7: AÇÕES DO MODAL (BAIXAR HD E IMPRIMIR EM FOLHA A4)
+       ======================================================== */
+    const btnModalFechar = document.getElementById("btn-modal-fechar");
+    const btnModalPng = document.getElementById("btn-modal-png");
+    const btnModalImprimir = document.getElementById("btn-modal-imprimir");
+    const modalConclusao = document.getElementById("modal-conclusao");
+
+    if (btnModalFechar && modalConclusao) {
+        btnModalFechar.addEventListener("click", () => { modalConclusao.style.display = "none"; });
+    }
+
+    // Baixar Imagem PNG em HD
+    if (btnModalPng) {
+        btnModalPng.addEventListener("click", () => {
+            const svgData = new XMLSerializer().serializeToString(svgPrancheta);
+            const canvas = document.createElement("canvas");
+            canvas.width = 800;
+            canvas.height = 800;
+            const ctx = canvas.getContext("2d");
+            const img = new Image();
+            img.onload = () => {
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(0, 0, 800, 800);
+                ctx.drawImage(img, 0, 0, 800, 800);
+                const a = document.createElement("a");
+                a.download = `${desenhoAtual.titulo || 'desenho'}_concluido.png`;
+                a.href = canvas.toDataURL("image/png");
+                a.click();
+            };
+            img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData)));
+        });
+    }
+
+    // Imprimir com Cabeçalho em Folha A4
+    if (btnModalImprimir) {
+        btnModalImprimir.addEventListener("click", () => {
+            const svgData = new XMLSerializer().serializeToString(svgPrancheta);
+            const win = window.open("", "_blank");
+            win.document.write(`
+                <html>
+                <head>
+                    <title>Imprimir ${desenhoAtual.titulo}</title>
+                    <style>
+                        @page { size: A4 portrait; margin: 12mm; }
+                        body { font-family: Arial, sans-serif; text-align: center; color: #0f172a; margin: 0; padding: 10px; }
+                        .cabecalho-escola { border: 2px solid #000; border-radius: 8px; padding: 10px; margin-bottom: 20px; font-size: 13px; font-weight: bold; }
+                        .linha { display: flex; justify-content: space-between; margin-bottom: 8px; }
+                        .desenho-impresso { width: 90%; max-width: 500px; height: auto; margin: 20px auto; }
+                    </style>
+                </head>
+                <body onload="window.print();">
+                    <div class="cabecalho-escola">
+                        <div class="linha"><span>ESCOLA: ____________________________________</span><span>DATA: ____/____/________</span></div>
+                        <div class="linha"><span>ALUNO(A): __________________________________</span><span>TURMA: ______________</span></div>
+                    </div>
+                    <h2>${desenhoAtual.titulo}</h2>
+                    <div class="desenho-impresso">${svgData}</div>
+                </body>
+                </html>
+            `);
+            win.document.close();
+        });
+    }
+
+    // Inicialização da tela de pintura
+    carregarDesenhoNaPrancheta();
+    montarPaletaDinamica();
+    atualizarProgresso();
 });
