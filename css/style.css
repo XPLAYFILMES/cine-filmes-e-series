@@ -290,157 +290,47 @@ body.dark-mode {
 }
 
 /* ========================================================
-   7. GRELHA DE 5 COLUNAS E CARTÕES COM PREVIEW SVG REAL
+   7. CATÁLOGO DE CARDS EM GRADE (PADRÃO: EXATAMENTE 5 POR LINHA)
    ======================================================== */
-.catalogo-desenhos {
-    max-width: 1350px;
-    margin: 0 auto 30px auto;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 18px;
-    padding: 0 20px;
-    min-height: 200px;
+.catalogo-desenhos,
+.grade-cadernos,
+#catalogo-jogos,
+#catalogo-atividades {
+    max-width: 1350px !important;
+    margin: 0 auto 35px auto !important;
+    padding: 0 20px !important;
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important; /* Exatamente 5 itens por linha */
+    gap: 16px !important;
+    box-sizing: border-box !important;
 }
 
+/* Responsividade proporcional para telas menores */
 @media (max-width: 1200px) {
-    .catalogo-desenhos { grid-template-columns: repeat(4, 1fr); }
-}
-@media (max-width: 900px) {
-    .catalogo-desenhos { grid-template-columns: repeat(3, 1fr); }
-}
-@media (max-width: 600px) {
-    .catalogo-desenhos { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-}
-
-.card-desenho {
-    background-color: #f1f5f9;
-    border: 2px solid #94a3b8;
-    border-radius: 16px;
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    .catalogo-desenhos,
+    .grade-cadernos,
+    #catalogo-jogos,
+    #catalogo-atividades {
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    }
 }
 
-body.dark-mode .card-desenho {
-    background-color: #1e293b;
-    border-color: #334155;
+@media (max-width: 992px) {
+    .catalogo-desenhos,
+    .grade-cadernos,
+    #catalogo-jogos,
+    #catalogo-atividades {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
 }
 
-.card-desenho:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.16);
-}
-
-.cabecalho-card {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 6px;
-}
-
-.tag-categoria {
-    background-color: #e0e7ff;
-    color: #3730a3;
-    font-size: 0.65rem;
-    font-weight: 800;
-    padding: 3px 8px;
-    border-radius: 10px;
-    text-transform: uppercase;
-}
-
-.badge-complexidade {
-    font-size: 0.65rem;
-    font-weight: 800;
-    color: #64748b;
-}
-
-/* Área da Miniatura SVG Real */
-.preview-svg-container {
-    width: 100%;
-    height: 120px;
-    background-color: #ffffff;
-    border: 1px solid #cbd5e1;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px;
-    margin-bottom: 8px;
-    overflow: hidden;
-}
-
-body.dark-mode .preview-svg-container {
-    background-color: #0f172a;
-    border-color: #334155;
-}
-
-.preview-svg-container svg {
-    max-width: 100%;
-    max-height: 100%;
-    pointer-events: none;
-}
-
-.titulo-card {
-    font-size: 0.9rem;
-    font-weight: 800;
-    color: #1e293b;
-    margin-bottom: 6px;
-    text-align: center;
-}
-
-body.dark-mode .titulo-card {
-    color: #f1f5f9;
-}
-
-.container-progresso {
-    width: 100%;
-    height: 7px;
-    background-color: #cbd5e1;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-body.dark-mode .container-progresso {
-    background-color: #334155;
-}
-
-.barra-progresso {
-    height: 100%;
-    background: linear-gradient(90deg, #2563eb, #10b981);
-    transition: width 0.3s ease;
-}
-
-.texto-progresso {
-    font-size: 0.72rem;
-    font-weight: bold;
-    color: #64748b;
-    margin: 4px 0 8px 0;
-}
-
-body.dark-mode .texto-progresso {
-    color: #94a3b8;
-}
-
-.btn-jogar {
-    display: block;
-    width: 100%;
-    background-color: #10b981;
-    color: #ffffff;
-    text-align: center;
-    padding: 7px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 0.85rem;
-    transition: background-color 0.2s ease;
-}
-
-.btn-jogar:hover {
-    background-color: #059669;
+@media (max-width: 640px) {
+    .catalogo-desenhos,
+    .grade-cadernos,
+    #catalogo-jogos,
+    #catalogo-atividades {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
 }
 
 /* ========================================================
