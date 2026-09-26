@@ -43,11 +43,38 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    const listaDesenhos = [
+    let listaDesenhos = [
         { id: "desenho_1", titulo: catalogoSVG.desenho_1.titulo, categoria: catalogoSVG.desenho_1.categoria, complexidade: catalogoSVG.desenho_1.complexidade },
         { id: "desenho_2", titulo: catalogoSVG.desenho_2.titulo, categoria: catalogoSVG.desenho_2.categoria, complexidade: catalogoSVG.desenho_2.complexidade },
         { id: "desenho_3", titulo: catalogoSVG.desenho_3.titulo, categoria: catalogoSVG.desenho_3.categoria, complexidade: catalogoSVG.desenho_3.complexidade }
     ];
+
+    // INJEÇÃO AUTOMÁTICA DOS DESENHOS CADASTRADOS NO PAINEL ADMIN
+    const desenhosDoPainel = JSON.parse(localStorage.getItem("db_desenhos") || "[]");
+    desenhosDoPainel.forEach(d => {
+        // Evita duplicar os três primeiros se já estiverem no banco
+        if (!listaDesenhos.some(item => item.id === d.id)) {
+            listaDesenhos.unshift({
+                id: d.id,
+                titulo: d.titulo,
+                categoria: d.categoria,
+                complexidade: d.complexidade || "Fácil",
+                imagem: d.imagem || null,
+                svgPersonalizado: d.svg || null
+            });
+
+            // Se for SVG vindo do painel, registra no catálogo para renderizar o vetor real
+            if (d.svg && !d.imagem) {
+                catalogoSVG[d.id] = {
+                    titulo: d.titulo,
+                    categoria: d.categoria,
+                    complexidade: d.complexidade || "Fácil",
+                    viewBox: "0 0 100 100",
+                    svg: d.svg
+                };
+            }
+        }
+    });
 
     // Gerando mais desenhos de demonstração para testar as 5 colunas e 30 itens por página
     const categoriasMock = ["animais", "infantil", "mandalas"];
@@ -155,6 +182,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const statusItem = porcentagem === 100 ? "finalizados" : (porcentagem > 0 ? "progresso" : "novo");
+            
+            // Suporte para ambas as nomenclaturas de data-filtro ou data-status
             const bateuStatus = (statusAtual === "todos") || (statusAtual === statusItem);
             const bateuCat = (categoriaAtual === "todos") || (item.categoria === categoriaAtual);
             const bateuBusca = item.titulo.toLowerCase().includes(termoBusca);
@@ -168,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================================
-    // 7. RENDERIZAR CARTÕES COM MINIATURAS SVG VIVAS
+    // 7. RENDERIZAR CARTÕES COM MINIATURAS (SVG OU IMAGEM DO PAINEL)
     // ========================================================
     function renderizarGrade() {
         if (!gradeCatalogo) return;
@@ -199,9 +228,17 @@ document.addEventListener("DOMContentLoaded", () => {
             const card = document.createElement("div");
             card.className = "card-desenho";
 
-            // Se for um dos 3 modelos principais, injeta o SVG real pré-colorido na miniatura
+            // CONSTRUÇÃO INTELIGENTE DA MINIATURA (UPLOAD / LINK / SVG)
             let conteudoMiniatura = "";
-            if (catalogoSVG[item.id]) {
+
+            // Caso 1: O desenho veio do painel como imagem (upload de arquivo ou link URL)
+            if (item.imagem) {
+                conteudoMiniatura = `
+                    <img src="${item.imagem}" alt="${item.titulo}" style="max-width: 90%; max-height: 90%; object-fit: contain;">
+                `;
+            }
+            // Caso 2: O desenho tem SVG definido (seja dos 3 originais ou cadastrado no painel)
+            else if (catalogoSVG[item.id]) {
                 const dadosSvg = catalogoSVG[item.id];
                 const tempDiv = document.createElement("div");
                 tempDiv.innerHTML = dadosSvg.svg;
@@ -213,11 +250,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
 
                 conteudoMiniatura = `
-                    <svg viewBox="${dadosSvg.viewBox}">
+                    <svg viewBox="${dadosSvg.viewBox || '0 0 100 100'}">
                         ${tempDiv.innerHTML}
                     </svg>
                 `;
-            } else {
+            } 
+            // Caso 3: Desenho gerado pelo loop de mock
+            else {
                 conteudoMiniatura = `<span style="font-size: 2.2rem;">🎨</span>`;
             }
 
@@ -303,7 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
         aba.addEventListener("click", () => {
             botoesAba.forEach(a => a.classList.remove("ativa"));
             aba.classList.add("ativa");
-            statusAtual = aba.getAttribute("data-filtro");
+            statusAtual = aba.getAttribute("data-filtro") || aba.getAttribute("data-status");
             filtrarDesenhos();
         });
     });
@@ -312,7 +351,7 @@ document.addEventListener("DOMContentLoaded", () => {
         cat.addEventListener("click", () => {
             botoesCat.forEach(c => c.classList.remove("ativo"));
             cat.classList.add("ativo");
-            categoriaAtual = cat.getAttribute("data-cat");
+            categoriaAtual = cat.getAttribute("data-cat") || cat.getAttribute("data-categoria");
             filtrarDesenhos();
         });
     });
@@ -324,7 +363,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Inicialização
+    // Inicialização da tela
     atualizarContadoresGlobais();
     renderizarHeroContinuar();
     filtrarDesenhos();
