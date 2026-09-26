@@ -1,5 +1,208 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+    /* ========================================================
+   BLOCO 1: INICIALIZAÇÃO DO BANCO CENTRALIZADO (LOCALSTORAGE)
+   ======================================================== */
+const DB = {
+    init() {
+        if (!localStorage.getItem("db_desenhos")) {
+            const desenhosIniciais = [
+                { id: "estrela", titulo: "Estrela Mágica", categoria: "animais", complexidade: "Fácil", svg: '<polygon points="50,5 64,36 98,36 70,57 81,91 50,70 19,91 30,57 2,36 36,36" fill="#ef4444" stroke="#000" stroke-width="2"/>' },
+                { id: "foguete", titulo: "Foguetão Espacial", categoria: "infantil", complexidade: "Médio", svg: '<path d="M50,10 L75,60 L60,60 L60,85 L40,85 L40,60 L25,60 Z" fill="#f97316" stroke="#000" stroke-width="2"/>' },
+                { id: "flor", titulo: "Flor Mágica", categoria: "mandalas", complexidade: "Fácil", svg: '<circle cx="50" cy="50" r="22" fill="#ef4444" stroke="#000" stroke-width="2"/>' }
+            ];
+            for (let i = 4; i <= 35; i++) {
+                desenhosIniciais.push({
+                    id: `desenho_${i}`,
+                    titulo: `Desenho ${i}`,
+                    categoria: i % 3 === 0 ? "animais" : (i % 2 === 0 ? "infantil" : "mandalas"),
+                    complexidade: i % 2 === 0 ? "Médio" : "Fácil",
+                    svg: '<circle cx="50" cy="50" r="28" fill="#eab308" stroke="#000" stroke-width="2"/>'
+                });
+            }
+            localStorage.setItem("db_desenhos", JSON.stringify(desenhosIniciais));
+        }
+
+        if (!localStorage.getItem("db_jogos")) {
+            const jogosIniciais = [
+                {
+                    id: "jogo_1",
+                    titulo: "Caça-Palavras: Animais",
+                    tipo: "caca-palavras",
+                    tipoNome: "Caça-Palavras",
+                    publico: "infantil",
+                    publicoNome: "Infantil",
+                    icone: "🦁"
+                },
+                {
+                    id: "jogo_2",
+                    titulo: "Jogo da Memória: Cores & Frutas",
+                    tipo: "memoria",
+                    tipoNome: "Memória",
+                    publico: "infantil",
+                    publicoNome: "Infantil",
+                    icone: "🍓"
+                }
+            ];
+            localStorage.setItem("db_jogos", JSON.stringify(jogosIniciais));
+        }
+
+        if (!localStorage.getItem("db_atividades")) {
+            const atividadesIniciais = [
+                {
+                    id: "ativ_1",
+                    titulo: "Classificação das Vogais e Alfabeto",
+                    serie: "infantil",
+                    serieNome: "Educação Infantil",
+                    materia: "portugues",
+                    materiaNome: "Português",
+                    icone: "🔤",
+                    enunciado: "Quais são as 5 vogais do nosso alfabeto? Escreva-as na caixa abaixo."
+                },
+                {
+                    id: "ativ_2",
+                    titulo: "Continhas de Adição: Frutas e Animais",
+                    serie: "1ano",
+                    serieNome: "1º Ano",
+                    materia: "matematica",
+                    materiaNome: "Matemática",
+                    icone: "🍎",
+                    enunciado: "Se você tem 4 maçãs e ganha mais 3, com quantas maçãs você fica no total?"
+                },
+                {
+                    id: "ativ_3",
+                    titulo: "Reconhecimento das Partes de uma Planta",
+                    serie: "2ano",
+                    serieNome: "2º Ano",
+                    materia: "ciencias",
+                    materiaNome: "Ciências",
+                    icone: "🌱",
+                    enunciado: "Cite quais são as principais partes de uma planta completa (ex: raiz, caule...)."
+                },
+                {
+                    id: "ativ_4",
+                    titulo: "Desafio da Tabuada do 3 e do 4",
+                    serie: "3ano",
+                    serieNome: "3º Ano",
+                    materia: "matematica",
+                    materiaNome: "Matemática",
+                    icone: "✖️",
+                    enunciado: "Quanto é 3 x 7? E quanto é 4 x 6? Coloque as duas respostas."
+                },
+                {
+                    id: "ativ_5",
+                    titulo: "Operações com Centenas e Dezenas",
+                    serie: "4e5ano",
+                    serieNome: "4º e 5º Ano",
+                    materia: "matematica",
+                    materiaNome: "Matemática",
+                    icone: "🔢",
+                    enunciado: "Quanto é 150 + 250? E qual é a metade de 500?"
+                }
+            ];
+            localStorage.setItem("db_atividades", JSON.stringify(atividadesIniciais));
+        }
+
+        if (!localStorage.getItem("admin_submissoes_atividades")) {
+            localStorage.setItem("admin_submissoes_atividades", JSON.stringify([]));
+        }
+    },
+
+    /* ========================================================
+       BLOCO 2: MÉTODOS DE CONSULTA E GRAVAÇÃO
+       ======================================================== */
+    getDesenhos() { return JSON.parse(localStorage.getItem("db_desenhos") || "[]"); },
+    getJogos() { return JSON.parse(localStorage.getItem("db_jogos") || "[]"); },
+    getAtividades() { return JSON.parse(localStorage.getItem("db_atividades") || "[]"); },
+    getSubmissoes() { return JSON.parse(localStorage.getItem("admin_submissoes_atividades") || "[]"); },
+    salvarSubmissao(item) {
+        const lista = this.getSubmissoes();
+        lista.unshift(item);
+        localStorage.setItem("admin_submissoes_atividades", JSON.stringify(lista));
+    }
+};
+
+DB.init();
+
+/* ========================================================
+   BLOCO 3: RECEPTOR UNIVERSAL DO MODO MANUTENÇÃO E AVISOS
+   (FUNCIONA EM TODAS AS PÁGINAS DO SITE)
+   ======================================================== */
+document.addEventListener("DOMContentLoaded", () => {
+    const nomePagina = window.location.pathname.split("/").pop() || "index.html";
+
+    // 1. VERIFICAÇÃO DO MODO MANUTENÇÃO
+    const manutencao = JSON.parse(localStorage.getItem("sistema_manutencao") || "{}");
+    let paginaBloqueada = false;
+
+    // Se a manutenção geral estiver ativa e não for o admin
+    if (manutencao.geral === true && nomePagina !== "admin.html") {
+        paginaBloqueada = true;
+    } 
+    // Manutenção individual por página
+    else if (manutencao.colorir && (nomePagina === "index.html" || nomePagina === "" || nomePagina === "pintar.html")) {
+        paginaBloqueada = true;
+    } else if (manutencao.jogos && nomePagina === "jogos.html") {
+        paginaBloqueada = true;
+    } else if (manutencao.atividades && nomePagina === "atividades.html") {
+        paginaBloqueada = true;
+    } else if (manutencao.conquistas && nomePagina === "conquistas.html") {
+        paginaBloqueada = true;
+    } else if (manutencao.imprimir && nomePagina === "imprimir.html") {
+        paginaBloqueada = true;
+    }
+
+    // Se estiver bloqueada, monta a tela limpa de manutenção
+    if (paginaBloqueada) {
+        const textoMsg = manutencao.textoAviso || "Estamos preparando novidades incríveis! Esta seção volta em instantes.";
+        document.body.innerHTML = `
+            <div style="min-height: 100vh; background-color: #070d1e; color: #f8fafc; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 25px; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                <div style="font-size: 5rem; margin-bottom: 20px;">🛠️</div>
+                <h1 style="font-size: 2.2rem; margin-bottom: 12px; color: #38bdf8;">Área em Manutenção Programada</h1>
+                <p style="font-size: 1.1rem; max-width: 580px; color: #cbd5e1; line-height: 1.6; margin-bottom: 25px;">${textoMsg}</p>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+                    <a href="index.html" style="background-color: #2563eb; color: #fff; text-decoration: none; padding: 10px 22px; border-radius: 20px; font-weight: bold; font-size: 0.95rem;">Ir para a Página Inicial</a>
+                    <button onclick="window.location.reload()" style="background-color: #111c38; color: #38bdf8; border: 1px solid #1e293b; padding: 10px 22px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 0.95rem;">Tentar Novamente</button>
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    // 2. EXIBIÇÃO DA BARRA DE AVISO NO TOPO DO SITE
+    const configAviso = JSON.parse(localStorage.getItem("sistema_aviso_topo") || "{}");
+    if (configAviso.ativo && configAviso.texto && configAviso.texto.trim() !== "" && nomePagina !== "admin.html") {
+        let corFundo = "#0284c7"; // Azul
+        if (configAviso.tipo === "alerta") corFundo = "#d97706"; // Amarelo
+        if (configAviso.tipo === "urgente") corFundo = "#dc2626"; // Vermelho
+
+        const barraAviso = document.createElement("div");
+        barraAviso.id = "barra-aviso-topo-portal";
+        barraAviso.style.cssText = `
+            width: 100%;
+            background-color: ${corFundo};
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-weight: 700;
+            padding: 9px 20px;
+            text-align: center;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            position: relative;
+            z-index: 2000;
+        `;
+        barraAviso.innerHTML = `
+            <span>📢 ${configAviso.texto}</span>
+            <button onclick="this.parentElement.remove()" style="background: transparent; border: none; color: #fff; font-size: 1.15rem; cursor: pointer; line-height: 1; padding: 0 4px; margin-left: 8px;">✕</button>
+        `;
+
+        document.body.insertAdjacentElement("afterbegin", barraAviso);
+    }
+});
+
     // ========================================================
     // 1. CARREGAMENTO DAS ATIVIDADES VIA BANCO CENTRAL
     // ========================================================
