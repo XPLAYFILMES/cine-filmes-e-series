@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <!-- ========================================================
-       1. CABEÇALHO DO DOCUMENTO E ESTILOS DO PAINEL PRO
+       BLOCO 1: METADADOS E ESTILOS GERAIS DO PAINEL
        ======================================================== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -411,7 +411,7 @@
 <body>
 
     <!-- ========================================================
-       2. TELA DE LOGIN MESTRE
+       BLOCO 2: TELA DE LOGIN MESTRE DO ADMINISTRADOR
        ======================================================== -->
     <div id="tela-login-admin">
         <div class="caixa-login">
@@ -432,7 +432,7 @@
     </div>
 
     <!-- ========================================================
-       3. ESTRUTURA GERAL DO PAINEL
+       BLOCO 3: MENU LATERAL (SIDEBAR) E ESTRUTURA GERAL
        ======================================================== -->
     <div id="painel-container">
 
@@ -458,10 +458,12 @@
             </div>
         </aside>
 
-        <!-- CONTEÚDO PRINCIPAL -->
+        <!-- ÁREA DE CONTEÚDO PRINCIPAL -->
         <main class="conteudo-principal">
 
-            <!-- MÓDULO 0: DASHBOARD / VISÃO GERAL -->
+            <!-- ========================================================
+               BLOCO 4: SEÇÃO DASHBOARD (MÉTRICAS)
+               ======================================================== -->
             <section id="secao-dashboard" class="secao-painel ativa">
                 <div class="cabecalho-secao">
                     <div>
@@ -505,7 +507,9 @@
                 </div>
             </section>
 
-            <!-- MÓDULO 1: MODO MANUTENÇÃO (KILL SWITCH MODULAR) -->
+            <!-- ========================================================
+               BLOCO 5: SEÇÃO MODO MANUTENÇÃO (KILL SWITCH MODULAR)
+               ======================================================== -->
             <section id="secao-manutencao" class="secao-painel">
                 <div class="cabecalho-secao">
                     <div>
@@ -599,7 +603,9 @@
                 </div>
             </section>
 
-            <!-- MÓDULO 2: AVISOS NO TOPO (BARRA GLOBAL) -->
+            <!-- ========================================================
+               BLOCO 6: SEÇÃO AVISOS NO TOPO (BARRA GLOBAL)
+               ======================================================== -->
             <section id="secao-avisos" class="secao-painel">
                 <div class="cabecalho-secao">
                     <div>
@@ -641,12 +647,14 @@
                 </div>
             </section>
 
-            <!-- MÓDULO 3: GESTÃO DE DESENHOS -->
+            <!-- ========================================================
+               BLOCO 7: SEÇÃO GESTÃO DE DESENHOS (COM UPLOAD, LINK E SVG)
+               ======================================================== -->
             <section id="secao-desenhos" class="secao-painel">
                 <div class="cabecalho-secao">
                     <div>
                         <h1>🎨 Cadastro e Moderação de Desenhos</h1>
-                        <p>Adicione novas ilustrações vetoriais com suporte a preview instantâneo.</p>
+                        <p>Adicione novas ilustrações por arquivo local, link da internet ou código SVG.</p>
                     </div>
                 </div>
 
@@ -673,11 +681,43 @@
                                 <option value="Difícil">Difícil</option>
                             </select>
                         </div>
+                        <div class="form-grupo">
+                            <label>Forma de Envio da Imagem:</label>
+                            <select id="desenho-tipo-envio" class="input-admin" onchange="alternarCamposEnvio()">
+                                <option value="upload">📁 Upload do Computador / Celular</option>
+                                <option value="url">🔗 Link Direto da Imagem (URL da Web)</option>
+                                <option value="svg">📐 Código Vetorial SVG</option>
+                            </select>
+                        </div>
                     </div>
 
-                    <div class="form-grupo" style="margin-bottom: 16px;">
+                    <!-- CAMPO 1: UPLOAD DE ARQUIVO -->
+                    <div class="form-grupo" id="box-envio-upload" style="margin-bottom: 16px;">
+                        <label>Selecione a Imagem (PNG, JPG, SVG, WebP):</label>
+                        <input type="file" id="desenho-arquivo" class="input-admin" accept="image/*" onchange="processarUploadArquivo(event)">
+                    </div>
+
+                    <!-- CAMPO 2: LINK DA WEB -->
+                    <div class="form-grupo" id="box-envio-url" style="margin-bottom: 16px; display: none;">
+                        <label>Cole a URL Direta da Imagem:</label>
+                        <input type="url" id="desenho-url" class="input-admin" placeholder="https://exemplo.com/desenho.png" oninput="atualizarPreviewUrl()">
+                    </div>
+
+                    <!-- CAMPO 3: CÓDIGO SVG -->
+                    <div class="form-grupo" id="box-envio-svg" style="margin-bottom: 16px; display: none;">
                         <label>Código Vetorial SVG:</label>
-                        <textarea id="desenho-svg" class="input-admin" rows="3" placeholder='<circle cx="50" cy="50" r="30" fill="#ef4444"/>'></textarea>
+                        <textarea id="desenho-svg" class="input-admin" rows="3" placeholder='<circle cx="50" cy="50" r="30" fill="#ef4444"/>' oninput="atualizarPreviewSvg()"></textarea>
+                    </div>
+
+                    <!-- PRÉ-VISUALIZAÇÃO EM TEMPO REAL -->
+                    <div style="margin-bottom: 18px; background: #0b1329; border: 1px dashed #38bdf8; border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 15px;">
+                        <div id="preview-desenho-box" style="width: 80px; height: 80px; background: #ffffff; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid #1e293b;">
+                            <span style="font-size: 0.75rem; color: #94a3b8;">Sem Preview</span>
+                        </div>
+                        <div>
+                            <strong style="color: #38bdf8; font-size: 0.9rem;">Pré-visualização Instantânea</strong>
+                            <p style="font-size: 0.78rem; color: #94a3b8; margin: 0;">Aparecerá exatamente como a imagem ficará no catálogo público.</p>
+                        </div>
                     </div>
 
                     <button onclick="cadastrarDesenho()" class="btn-salvar">
@@ -704,7 +744,9 @@
                 </div>
             </section>
 
-            <!-- MÓDULO 4: GESTÃO DE JOGOS -->
+            <!-- ========================================================
+               BLOCO 8: SEÇÃO GESTÃO DE JOGOS
+               ======================================================== -->
             <section id="secao-jogos" class="secao-painel">
                 <div class="cabecalho-secao">
                     <div>
@@ -762,7 +804,9 @@
                 </div>
             </section>
 
-            <!-- MÓDULO 5: ATIVIDADES ESCOLARES -->
+            <!-- ========================================================
+               BLOCO 9: SEÇÃO ATIVIDADES ESCOLARES
+               ======================================================== -->
             <section id="secao-atividades" class="secao-painel">
                 <div class="cabecalho-secao">
                     <div>
@@ -830,7 +874,9 @@
                 </div>
             </section>
 
-            <!-- MÓDULO 6: SALA DOS PROFESSORES (CORREÇÃO DE NOTAS) -->
+            <!-- ========================================================
+               BLOCO 10: SEÇÃO SALA DOS PROFESSORES (CORREÇÃO DE NOTAS)
+               ======================================================== -->
             <section id="secao-professores" class="secao-painel">
                 <div class="cabecalho-secao">
                     <div>
@@ -863,7 +909,9 @@
                 </div>
             </section>
 
-            <!-- MÓDULO 7: CONQUISTAS & TROFÉUS -->
+            <!-- ========================================================
+               BLOCO 11: SEÇÃO CONQUISTAS E MEDALHAS
+               ======================================================== -->
             <section id="secao-conquistas" class="secao-painel">
                 <div class="cabecalho-secao">
                     <div>
@@ -894,7 +942,9 @@
                 </div>
             </section>
 
-            <!-- MÓDULO 8: CADERNOS PARA IMPRESSÃO A4 -->
+            <!-- ========================================================
+               BLOCO 12: SEÇÃO CADERNOS PARA IMPRESSÃO A4
+               ======================================================== -->
             <section id="secao-imprimir" class="secao-painel">
                 <div class="cabecalho-secao">
                     <div>
@@ -925,7 +975,9 @@
                 </div>
             </section>
 
-            <!-- MÓDULO 9: SEGURANÇA E BACKUP DO COFRE -->
+            <!-- ========================================================
+               BLOCO 13: SEÇÃO CONFIGURAÇÕES, SEGURANÇA E BACKUP
+               ======================================================== -->
             <section id="secao-configuracoes" class="secao-painel">
                 <div class="cabecalho-secao">
                     <div>
@@ -972,7 +1024,7 @@
     </div>
 
     <!-- ========================================================
-       4. MODAL DE AVALIAÇÃO E LANÇAMENTO DE NOTAS
+       BLOCO 14: MODAL DE AVALIAÇÃO E LANÇAMENTO DE NOTAS
        ======================================================== -->
     <div id="modal-correcao" class="modal-correcao-fundo">
         <div class="caixa-modal-correcao">
@@ -1021,12 +1073,13 @@
     </div>
 
     <!-- ========================================================
-       5. MOTOR DE CONTROLE E SINCRONIZAÇÃO EM TEMPO REAL
+       BLOCO 15: MOTOR DE CONTROLE, LÓGICA E BANCO DO PAINEL
        ======================================================== -->
     <script>
         let submissaoEmCorrecaoId = null;
+        let imagemCarregadaBase64 = "";
 
-        /* AUTENTICAÇÃO */
+        /* 15.1 - AUTENTICAÇÃO E SESSÃO */
         function autenticarAdmin() {
             const u = document.getElementById("login-usuario").value.trim();
             const s = document.getElementById("login-senha").value.trim();
@@ -1057,7 +1110,7 @@
             }
         });
 
-        /* NAVEGAÇÃO */
+        /* 15.2 - NAVEGAÇÃO ENTRE ABAS DO PAINEL */
         function trocarSecao(secaoId) {
             document.querySelectorAll(".sidebar-item").forEach(item => item.classList.remove("ativo"));
             document.querySelectorAll(".secao-painel").forEach(sec => sec.classList.remove("ativa"));
@@ -1067,7 +1120,7 @@
             event.currentTarget.classList.add("ativo");
         }
 
-        /* CARREGAMENTO DE DADOS */
+        /* 15.3 - CARREGAMENTO DE DADOS E MÉTRICAS */
         function carregarTudo() {
             atualizarMetricas();
             carregarTabelaDesenhos();
@@ -1092,7 +1145,7 @@
             document.getElementById("total-pendentes-dash").innerText = pendentes;
         }
 
-        /* MANUTENÇÃO MODULAR */
+        /* 15.4 - MANUTENÇÃO MODULAR */
         function salvarStatusManutencao() {
             const status = {
                 geral: document.getElementById("manut-geral").checked,
@@ -1118,7 +1171,7 @@
             if (status.textoAviso) document.getElementById("texto-aviso-manutencao").value = status.textoAviso;
         }
 
-        /* AVISOS DO TOPO */
+        /* 15.5 - AVISOS DO TOPO */
         function salvarConfigAvisos() {
             const config = {
                 ativo: document.getElementById("aviso-ativo").checked,
@@ -1136,14 +1189,63 @@
             if (config.texto) document.getElementById("aviso-texto").value = config.texto;
         }
 
-        /* GESTÃO DE DESENHOS */
+        /* 15.6 - GESTÃO DE DESENHOS COM UPLOAD, URL E SVG */
+        function alternarCamposEnvio() {
+            const tipo = document.getElementById("desenho-tipo-envio").value;
+            document.getElementById("box-envio-upload").style.display = (tipo === "upload") ? "block" : "none";
+            document.getElementById("box-envio-url").style.display = (tipo === "url") ? "block" : "none";
+            document.getElementById("box-envio-svg").style.display = (tipo === "svg") ? "block" : "none";
+        }
+
+        function processarUploadArquivo(event) {
+            const arquivo = event.target.files[0];
+            if (!arquivo) return;
+            const leitor = new FileReader();
+            leitor.onload = function(e) {
+                imagemCarregadaBase64 = e.target.result;
+                document.getElementById("preview-desenho-box").innerHTML = `<img src="${imagemCarregadaBase64}" style="max-width: 90%; max-height: 90%; object-fit: contain;">`;
+            };
+            leitor.readAsDataURL(arquivo);
+        }
+
+        function atualizarPreviewUrl() {
+            const url = document.getElementById("desenho-url").value.trim();
+            if (url) {
+                document.getElementById("preview-desenho-box").innerHTML = `<img src="${url}" style="max-width: 90%; max-height: 90%; object-fit: contain;" onerror="this.parentElement.innerHTML='<span style=\'color:red;font-size:10px;\'>Erro URL</span>'">`;
+            }
+        }
+
+        function atualizarPreviewSvg() {
+            const svg = document.getElementById("desenho-svg").value.trim();
+            if (svg) {
+                document.getElementById("preview-desenho-box").innerHTML = `<svg viewBox="0 0 100 100" style="width: 90%; height: 90%;">${svg}</svg>`;
+            }
+        }
+
         function cadastrarDesenho() {
             const titulo = document.getElementById("desenho-titulo").value.trim();
             const categoria = document.getElementById("desenho-categoria").value;
             const complexidade = document.getElementById("desenho-complexidade").value;
-            const svg = document.getElementById("desenho-svg").value.trim();
+            const tipoEnvio = document.getElementById("desenho-tipo-envio").value;
 
-            if (!titulo || !svg) { alert("Preencha o título e o código SVG!"); return; }
+            let conteudoVisual = "";
+            let ehImagemReal = false;
+
+            if (tipoEnvio === "upload") {
+                if (!imagemCarregadaBase64) { alert("Selecione um arquivo de imagem do computador ou celular!"); return; }
+                conteudoVisual = imagemCarregadaBase64;
+                ehImagemReal = true;
+            } else if (tipoEnvio === "url") {
+                conteudoVisual = document.getElementById("desenho-url").value.trim();
+                if (!conteudoVisual) { alert("Cole o link direto da imagem!"); return; }
+                ehImagemReal = true;
+            } else {
+                conteudoVisual = document.getElementById("desenho-svg").value.trim();
+                if (!conteudoVisual) { alert("Insira o código SVG!"); return; }
+                ehImagemReal = false;
+            }
+
+            if (!titulo) { alert("Preencha o nome do desenho!"); return; }
 
             const desenhos = JSON.parse(localStorage.getItem("db_desenhos") || "[]");
             desenhos.unshift({
@@ -1151,15 +1253,22 @@
                 titulo,
                 categoria,
                 complexidade,
-                svg
+                imagem: ehImagemReal ? conteudoVisual : null,
+                svg: !ehImagemReal ? conteudoVisual : null
             });
 
             localStorage.setItem("db_desenhos", JSON.stringify(desenhos));
+
             document.getElementById("desenho-titulo").value = "";
+            document.getElementById("desenho-url").value = "";
             document.getElementById("desenho-svg").value = "";
+            document.getElementById("desenho-arquivo").value = "";
+            imagemCarregadaBase64 = "";
+            document.getElementById("preview-desenho-box").innerHTML = `<span style="font-size: 0.75rem; color: #94a3b8;">Sem Preview</span>`;
+
             carregarTabelaDesenhos();
             atualizarMetricas();
-            alert("Desenho publicado no catálogo!");
+            alert("Desenho cadastrado e publicado com sucesso no catálogo!");
         }
 
         function carregarTabelaDesenhos() {
@@ -1169,8 +1278,12 @@
 
             desenhos.forEach(d => {
                 const tr = document.createElement("tr");
+                const miniatura = d.imagem 
+                    ? `<img src="${d.imagem}" style="width: 34px; height: 34px; border-radius: 6px; object-fit: contain; background: #fff; padding: 2px;">`
+                    : `<span style="font-size: 1.3rem;">🎨</span>`;
+
                 tr.innerHTML = `
-                    <td><code>${d.id}</code></td>
+                    <td>${miniatura} <code>${d.id}</code></td>
                     <td><strong>${d.titulo}</strong></td>
                     <td>${d.categoria}</td>
                     <td>${d.complexidade}</td>
@@ -1189,7 +1302,7 @@
             atualizarMetricas();
         }
 
-        /* GESTÃO DE JOGOS */
+        /* 15.7 - GESTÃO DE JOGOS */
         function cadastrarJogo() {
             const titulo = document.getElementById("jogo-titulo").value.trim();
             const tipo = document.getElementById("jogo-tipo").value;
@@ -1242,7 +1355,7 @@
             atualizarMetricas();
         }
 
-        /* GESTÃO DE ATIVIDADES */
+        /* 15.8 - GESTÃO DE ATIVIDADES */
         function cadastrarAtividade() {
             const titulo = document.getElementById("ativ-titulo").value.trim();
             const serie = document.getElementById("ativ-serie").value;
@@ -1298,7 +1411,7 @@
             atualizarMetricas();
         }
 
-        /* SALA DOS PROFESSORES: CORREÇÃO E NOTAS */
+        /* 15.9 - SALA DOS PROFESSORES: CORREÇÃO E NOTAS */
         function carregarTabelaCorrecao() {
             const submissoes = JSON.parse(localStorage.getItem("admin_submissoes_atividades") || "[]");
             const tbody = document.getElementById("lista-correcao-tabela");
@@ -1421,7 +1534,7 @@
             win.document.close();
         }
 
-        /* CONQUISTAS E CADERNOS A4 */
+        /* 15.10 - CONQUISTAS E CADERNOS A4 */
         function cadastrarTrofeu() {
             const nome = document.getElementById("trofeu-nome").value.trim();
             const icone = document.getElementById("trofeu-icone").value.trim() || "⭐";
@@ -1452,7 +1565,7 @@
             alert("Caderno A4 cadastrado com sucesso!");
         }
 
-        /* SEGURANÇA E BACKUP */
+        /* 15.11 - SEGURANÇA E BACKUP */
         function alterarCredenciais() {
             const u = document.getElementById("novo-admin-usuario").value.trim();
             const s = document.getElementById("novo-admin-senha").value.trim();
